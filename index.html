@@ -1167,35 +1167,10 @@
       line-height: 1.45;
     }
 
-    .city-stay {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.55rem 0.85rem;
-      margin-bottom: 1.5rem;
-      padding: 0.85rem 1rem;
-      background: rgba(47, 93, 74, 0.06);
-      border-left: 2px solid var(--gold);
-      font-size: 0.85rem;
-      color: var(--ink-soft);
-    }
-
-    .city-stay-label {
-      font-weight: 500;
-      color: var(--moss-deep);
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-    }
-
+    .city-stay,
+    .city-stay-label,
     .city-stay-sub {
-      flex: 1 1 100%;
-      font-size: 0.78rem;
-      color: var(--ink-soft);
-    }
-
-    .city-stay-sub.is-over {
-      color: #a63d2f;
-      font-weight: 500;
+      display: none !important;
     }
 
     .note {
@@ -3592,16 +3567,8 @@
     }
 
     function updateCityStayUI(city) {
-      const n = getCityNights(city);
-      const input = city.querySelector(".city-stay [data-city-night-input]");
-      if (input && String(input.value) !== String(n)) input.value = String(n);
-      const sub = city.querySelector(".city-stay-sub");
-      if (sub) {
-        const used = sumCityNights();
-        const left = TRIP_NIGHTS - used;
-        sub.textContent = `${nightsToDaysHint(n)} · ${used}/${TRIP_NIGHTS} nuits planifiées` + (left < 0 ? ` · dépassement ${-left}` : left === 0 ? " · complet" : ` · ${left} restantes`);
-        sub.classList.toggle("is-over", left < 0);
-      }
+      // Contrôles uniquement dans le popup « 23 j · nuits »
+      city.querySelectorAll(".city-stay").forEach((el) => el.remove());
     }
 
     function ensureCityStay(root = document) {
@@ -3609,23 +3576,7 @@
         if (city.dataset.nights === undefined || city.dataset.nights === "") {
           city.dataset.nights = String(DEFAULT_CITY_NIGHTS[city.id] ?? 2);
         }
-        let bar = city.querySelector(".city-stay");
-        const body = city.querySelector(".city-body");
-        if (!bar && body) {
-          bar = document.createElement("div");
-          bar.className = "city-stay";
-          bar.innerHTML = `
-            <span class="city-stay-label">Séjour</span>
-            <div class="hotel-nights-ctrl">
-              <button type="button" data-city-night-act="minus" aria-label="Moins une nuit">−</button>
-              <input type="number" min="0" max="${TRIP_NIGHTS}" value="${getCityNights(city)}" data-city-night-input aria-label="Nuits dans cette ville" />
-              <button type="button" data-city-night-act="plus" aria-label="Plus une nuit">+</button>
-            </div>
-            <span class="city-stay-sub"></span>
-          `;
-          body.insertBefore(bar, body.firstChild);
-        }
-        updateCityStayUI(city);
+        city.querySelectorAll(".city-stay").forEach((el) => el.remove());
       });
       refreshTripPanel();
     }
