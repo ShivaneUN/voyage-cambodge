@@ -1035,6 +1035,41 @@
       padding-right: 4.5rem;
     }
 
+    body.edit-mode .city {
+      position: relative;
+    }
+
+    .edit-del-city {
+      display: none;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      z-index: 5;
+      border: none;
+      background: #8b3a3a;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.4rem 0.65rem;
+      cursor: pointer;
+    }
+
+    body.edit-mode .edit-del-city { display: block; }
+
+    .edit-city-bar {
+      display: none;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0 0;
+      padding: 0 1.25rem 1rem;
+    }
+
+    body.edit-mode .edit-city-bar { display: flex; }
+
+    .budget-box[data-auto="true"] .budget-amount {
+      border-bottom: 1px dashed rgba(201, 162, 77, 0.5);
+    }
+
     body.edit-mode [contenteditable="true"] {
       outline: 1px dashed var(--gold);
       outline-offset: 2px;
@@ -2305,25 +2340,25 @@
           <li>Bus longue distance : <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a>, <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a>, <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a>.</li>
         </ul>
         <div class="budget-stack">
-          <div class="budget-box">
+          <div class="budget-box" data-budget="hotels">
             <h3>Budget hébergement</h3>
             <p class="budget-amount">$700 – $1200</p>
-            <p>2 personnes · 8 étapes · milieu de gamme · décembre</p>
+            <p class="budget-note">Auto · ~2 nuits / ville (fourchette min–max des hôtels)</p>
           </div>
-          <div class="budget-box">
+          <div class="budget-box" data-budget="activities">
             <h3>Budget activités</h3>
             <p class="budget-amount">$350 – $800</p>
-            <p>Entrées, guides, excursions (Angkor, îles, Bokor, Phnom Penh…)</p>
+            <p class="budget-note">Auto · somme des prix × 2 personnes</p>
           </div>
-          <div class="budget-box">
+          <div class="budget-box" data-budget="transport">
             <h3>Budget transport</h3>
             <p class="budget-amount">$200 – $650</p>
-            <p>Bus / ferry / bateaux entre villes + tuktuks locaux (+ taxi privé = haut de fourchette)</p>
+            <p class="budget-note">Auto · trajets entre villes × 2 personnes</p>
           </div>
-          <div class="budget-box budget-total">
+          <div class="budget-box budget-total" data-budget="total">
             <h3>Total estimé</h3>
             <p class="budget-amount">$1250 – $2650</p>
-            <p>Hébergement + activités + transport · 2 personnes · hors vols &amp; repas hors excursions</p>
+            <p class="budget-note">Hébergement + activités + transport · hors vols &amp; repas</p>
           </div>
         </div>
       </div>
@@ -2337,8 +2372,10 @@
   <button type="button" class="edit-fab" id="editFab" title="Modifier le contenu">Modifier</button>
 
   <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
-    <p class="edit-hint">Clique un texte pour le changer · Ajoute / supprime hôtels &amp; activités · Enregistre pour garder sur cet appareil</p>
+    <p class="edit-hint">Villes → carte &amp; trajet · Prix → budget auto · Hôtels / activités / transports modifiables</p>
     <button type="button" class="primary" id="editSave">Enregistrer</button>
+    <button type="button" id="editAddCity">+ Ville</button>
+    <button type="button" id="editBudget">Recalculer budget</button>
     <button type="button" id="editDownload">Télécharger HTML</button>
     <button type="button" id="editReset">Réinitialiser</button>
     <button type="button" id="editExit">Quitter</button>
@@ -2382,16 +2419,16 @@
 
     document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
-    /* —— Carte itinéraire —— */
-    const stops = [
-      { n: 1, name: "Siem Reap", lat: 13.3633, lng: 103.8564, id: "siem-reap", note: "Angkor, Phnom Kulen, Old Market" },
-      { n: 2, name: "Battambang", lat: 13.0957, lng: 103.2022, id: "battambang", note: "Train de bambou, Phnom Sampov" },
-      { n: 3, name: "Koh Kong / Tatai", lat: 11.586, lng: 103.128, id: "koh-kong", note: "Cascade de Tatai, Peam Krasaop" },
-      { n: 4, name: "Sihanoukville", lat: 10.6271, lng: 103.5221, id: "sihanoukville", note: "Wat Leu, Independence Beach" },
-      { n: 5, name: "Koh Rong Samloem", lat: 10.5917, lng: 103.2975, id: "koh-rong", note: "Saracen, Lazy, Sunset Beach" },
-      { n: 6, name: "Koh Ta Kiev", lat: 10.485, lng: 103.595, id: "koh-ta-kiev", note: "Paddle, Elephant Rock, snorkeling" },
-      { n: 7, name: "Kampot", lat: 10.6104, lng: 104.1819, id: "kampot", note: "Bokor, Kep" },
-      { n: 8, name: "Phnom Penh", lat: 11.5564, lng: 104.9282, id: "phnom-penh", note: "Palais Royal, musée, croisière" },
+    /* —— Carte + itinéraire (recalculable) —— */
+    const DEFAULT_STOPS = [
+      { name: "Siem Reap", lat: 13.3633, lng: 103.8564, id: "siem-reap", note: "Angkor, Phnom Kulen, Old Market" },
+      { name: "Battambang", lat: 13.0957, lng: 103.2022, id: "battambang", note: "Train de bambou, Phnom Sampov" },
+      { name: "Koh Kong / Tatai", lat: 11.586, lng: 103.128, id: "koh-kong", note: "Cascade de Tatai, Peam Krasaop" },
+      { name: "Sihanoukville", lat: 10.6271, lng: 103.5221, id: "sihanoukville", note: "Wat Leu, Independence Beach" },
+      { name: "Koh Rong Samloem", lat: 10.5917, lng: 103.2975, id: "koh-rong", note: "Saracen, Lazy, Sunset Beach" },
+      { name: "Koh Ta Kiev", lat: 10.485, lng: 103.595, id: "koh-ta-kiev", note: "Paddle, Elephant Rock, snorkeling" },
+      { name: "Kampot", lat: 10.6104, lng: 104.1819, id: "kampot", note: "Bokor, Kep" },
+      { name: "Phnom Penh", lat: 11.5564, lng: 104.9282, id: "phnom-penh", note: "Palais Royal, musée, croisière" },
     ];
 
     const map = L.map("itineraire-map", {
@@ -2409,51 +2446,143 @@
     map.getContainer().addEventListener("mouseenter", () => map.scrollWheelZoom.enable());
     map.getContainer().addEventListener("mouseleave", () => map.scrollWheelZoom.disable());
 
-    const latlngs = stops.map((s) => [s.lat, s.lng]);
+    const mapRouteLayer = L.layerGroup().addTo(map);
 
-    L.polyline(latlngs, {
-      color: "#1c3a2e",
-      weight: 3,
-      opacity: 0.85,
-      dashArray: "8 10",
-    }).addTo(map);
+    function slugify(name) {
+      return name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "") || "ville";
+    }
 
-    const bounds = L.latLngBounds(latlngs);
+    function seedCityCoords() {
+      DEFAULT_STOPS.forEach((s) => {
+        const el = document.getElementById(s.id);
+        if (!el) return;
+        if (!el.dataset.lat) el.dataset.lat = String(s.lat);
+        if (!el.dataset.lng) el.dataset.lng = String(s.lng);
+        if (!el.dataset.stopName) el.dataset.stopName = s.name;
+        if (!el.dataset.note) el.dataset.note = s.note;
+        if (!el.dataset.nights) el.dataset.nights = "2";
+      });
+    }
 
-    stops.forEach((s) => {
-      const icon = L.divIcon({
-        className: "",
-        html: `<div class="map-marker">${s.n}</div>`,
-        iconSize: [28, 28],
-        iconAnchor: [14, 14],
-        popupAnchor: [0, -14],
+    function getStopsFromDom() {
+      return [...document.querySelectorAll(".cities-wrap .city")].map((el, i) => {
+        const name =
+          el.dataset.stopName ||
+          el.querySelector(".city-visual-label h2")?.textContent?.trim() ||
+          `Étape ${i + 1}`;
+        return {
+          n: i + 1,
+          id: el.id || slugify(name),
+          name,
+          lat: parseFloat(el.dataset.lat) || 12.5,
+          lng: parseFloat(el.dataset.lng) || 104.5,
+          note: el.dataset.note || "",
+          nights: parseInt(el.dataset.nights || "2", 10) || 2,
+        };
+      });
+    }
+
+    function rebuildItineraryUI() {
+      const stops = getStopsFromDom();
+
+      // Menu
+      const navLinks = document.getElementById("navLinks");
+      navLinks.innerHTML =
+        `<li><a href="#carte">Carte</a></li>` +
+        stops
+          .map((s) => {
+            const short = s.name.split("/")[0].trim();
+            return `<li><a href="#${s.id}">${short}</a></li>`;
+          })
+          .join("");
+      navLinks.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => navLinks.classList.remove("open"));
       });
 
-      L.marker([s.lat, s.lng], { icon })
-        .addTo(map)
-        .bindPopup(
-          `<strong>${s.n}. ${s.name}</strong>${s.note}<br><a href="#${s.id}">Voir l'étape →</a>`
-        );
-    });
+      // Bandeau trajet
+      const track = document.querySelector(".route-track");
+      if (track) {
+        track.innerHTML = stops
+          .map((s, i) => {
+            const short = s.name.split("/")[0].trim();
+            const stop = `<div class="route-stop"><span class="route-dot"></span><a href="#${s.id}">${short}</a></div>`;
+            return i < stops.length - 1 ? stop + '<span class="route-line"></span>' : stop;
+          })
+          .join("");
+      }
 
-    map.fitBounds(bounds.pad(0.18));
+      // Carte
+      mapRouteLayer.clearLayers();
+      if (stops.length) {
+        const latlngs = stops.map((s) => [s.lat, s.lng]);
+        L.polyline(latlngs, {
+          color: "#1c3a2e",
+          weight: 3,
+          opacity: 0.85,
+          dashArray: "8 10",
+        }).addTo(mapRouteLayer);
 
-    document.getElementById("map-legend").innerHTML = stops
-      .map((s) => `<span><i>${s.n}</i> ${s.name}</span>`)
-      .join("");
+        stops.forEach((s) => {
+          const icon = L.divIcon({
+            className: "",
+            html: `<div class="map-marker">${s.n}</div>`,
+            iconSize: [28, 28],
+            iconAnchor: [14, 14],
+            popupAnchor: [0, -14],
+          });
+          L.marker([s.lat, s.lng], { icon })
+            .addTo(mapRouteLayer)
+            .bindPopup(
+              `<strong>${s.n}. ${s.name}</strong>${s.note ? "<br>" + s.note : ""}<br><a href="#${s.id}">Voir l'étape →</a>`
+            );
+        });
 
-    // Recalculate size after fonts/layout settle
+        map.fitBounds(L.latLngBounds(latlngs).pad(0.18));
+      }
+
+      const legend = document.getElementById("map-legend");
+      if (legend) {
+        legend.innerHTML = stops.map((s) => `<span><i>${s.n}</i> ${s.name}</span>`).join("");
+      }
+
+      // Numéros d'étape dans les fiches
+      document.querySelectorAll(".cities-wrap .city").forEach((el, i) => {
+        const num = el.querySelector(".city-visual-label .num");
+        if (num) num.textContent = `Étape ${String(i + 1).padStart(2, "0")}`;
+      });
+
+      const footer = document.querySelector("footer p");
+      if (footer) {
+        footer.innerHTML = `<span>Cambodge</span> — Voyage décembre · ${stops.length} étape${stops.length > 1 ? "s" : ""} · temples, jungle & îles`;
+      }
+
+      const mapDesc = document.querySelector("#carte .section-desc");
+      if (mapDesc) {
+        mapDesc.textContent = `Les ${stops.length} étapes du voyage — cliquez un point pour ouvrir la fiche.`;
+      }
+
+      setTimeout(() => map.invalidateSize(), 100);
+    }
+
+    seedCityCoords();
+    rebuildItineraryUI();
     setTimeout(() => map.invalidateSize(), 200);
     window.addEventListener("resize", () => map.invalidateSize());
 
-    /* —— Mode édition (ajouter / modifier / supprimer) —— */
-    const EDIT_KEY = "voyageCambodgeContent_v2";
-    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1"];
+    /* —— Mode édition (villes + budget auto) —— */
+    const EDIT_KEY = "voyageCambodgeContent_v3";
+    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2"];
     OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
 
     const citiesWrap = document.querySelector(".cities-wrap");
     const budgetStack = document.querySelector(".budget-stack");
     const toastEl = document.getElementById("editToast");
+    let budgetTimer = null;
 
     function showToast(msg) {
       toastEl.textContent = msg;
@@ -2461,8 +2590,74 @@
       setTimeout(() => toastEl.classList.remove("show"), 2200);
     }
 
+    function scheduleBudget() {
+      clearTimeout(budgetTimer);
+      budgetTimer = setTimeout(recalculateBudget, 120);
+    }
+
+    function parseMoney(text) {
+      const t = (text || "").trim();
+      if (!t || /gratuit|free/i.test(t)) return { min: 0, max: 0 };
+      const nums = [...t.replace(/,/g, "").matchAll(/(\d+(?:\.\d+)?)/g)].map((m) => parseFloat(m[1]));
+      if (!nums.length) return { min: 0, max: 0 };
+      if (nums.length === 1) return { min: nums[0], max: nums[0] };
+      return { min: Math.min(...nums), max: Math.max(...nums) };
+    }
+
+    function formatRange(min, max) {
+      const a = Math.round(min);
+      const b = Math.round(max);
+      if (a === b) return `$${a}`;
+      return `$${a} – $${b}`;
+    }
+
+    function setBudget(key, min, max, note) {
+      const box = budgetStack.querySelector(`[data-budget="${key}"]`);
+      if (!box) return;
+      const amount = box.querySelector(".budget-amount");
+      const noteEl = box.querySelector(".budget-note");
+      if (amount) amount.textContent = formatRange(min, max);
+      if (noteEl && note) noteEl.textContent = note;
+      box.dataset.auto = "true";
+    }
+
+    function recalculateBudget() {
+      const nCities = document.querySelectorAll(".cities-wrap .city").length;
+
+      let actMin = 0;
+      let actMax = 0;
+      document.querySelectorAll(".activity-price").forEach((el) => {
+        const p = parseMoney(el.textContent);
+        actMin += p.min * 2;
+        actMax += p.max * 2;
+      });
+
+      let trMin = 0;
+      let trMax = 0;
+      document.querySelectorAll(".leg-price").forEach((el) => {
+        const p = parseMoney(el.textContent);
+        trMin += p.min * 2;
+        trMax += p.max * 2;
+      });
+
+      let hotMin = 0;
+      let hotMax = 0;
+      document.querySelectorAll(".cities-wrap .city").forEach((city) => {
+        const nights = parseInt(city.dataset.nights || "2", 10) || 2;
+        const prices = [...city.querySelectorAll(".hotel-price")].map((el) => parseMoney(el.textContent));
+        if (!prices.length) return;
+        hotMin += Math.min(...prices.map((p) => p.min)) * nights;
+        hotMax += Math.max(...prices.map((p) => p.max)) * nights;
+      });
+
+      setBudget("hotels", hotMin, hotMax, `Auto · ~2 nuits / ville · ${nCities} étape${nCities > 1 ? "s" : ""}`);
+      setBudget("activities", actMin, actMax, "Auto · somme des activités × 2 personnes");
+      setBudget("transport", trMin, trMax, "Auto · trajets entre villes × 2 personnes");
+      setBudget("total", hotMin + actMin + trMin, hotMax + actMax + trMax, "Hébergement + activités + transport · hors vols & repas");
+    }
+
     function cleanEditChrome(root) {
-      root.querySelectorAll(".edit-del, .edit-add-row, .edit-link-btn").forEach((el) => el.remove());
+      root.querySelectorAll(".edit-del, .edit-add-row, .edit-link-btn, .edit-del-city, .edit-city-bar").forEach((el) => el.remove());
       root.querySelectorAll("[contenteditable]").forEach((el) => {
         el.removeAttribute("contenteditable");
       });
@@ -2486,25 +2681,20 @@
           a.setAttribute("target", "_blank");
           a.setAttribute("rel", "noopener noreferrer");
           let href = (a.getAttribute("href") || "").trim();
-          if (href.startsWith("http://www.thecommunitytravel.com")) {
-            href = "https://www.thecommunitytravel.com/";
-          } else if (href.startsWith("http://rainbowlodgecambodia.com")) {
-            href = href.replace("http://", "https://");
-          } else if (href.includes("islandcenterpoint.asia")) {
-            href = "https://islandcenterpoint.asia/";
-          } else if (href.includes("thepavilion.asia")) {
-            href = "https://www.thepavilion.asia/";
-          } else if (href.includes("islandspeedferry.com")) {
-            href = "https://islandspeedferry.com/";
-          } else if (href.startsWith("http://") && !href.includes("cambanalariviere.com")) {
-            href = href.replace(/^http:\/\//, "https://");
-          }
+          if (href.startsWith("http://www.thecommunitytravel.com")) href = "https://www.thecommunitytravel.com/";
+          else if (href.startsWith("http://rainbowlodgecambodia.com")) href = href.replace("http://", "https://");
+          else if (href.includes("islandcenterpoint.asia")) href = "https://islandcenterpoint.asia/";
+          else if (href.includes("thepavilion.asia")) href = "https://www.thepavilion.asia/";
+          else if (href.includes("islandspeedferry.com")) href = "https://islandspeedferry.com/";
+          else if (href.startsWith("http://") && !href.includes("cambanalariviere.com")) href = href.replace(/^http:\/\//, "https://");
           a.setAttribute("href", href || "#");
         }
       });
     }
 
     function saveContent() {
+      rebuildItineraryUI();
+      recalculateBudget();
       const citiesClone = citiesWrap.cloneNode(true);
       const budgetClone = budgetStack.cloneNode(true);
       cleanEditChrome(citiesClone);
@@ -2518,7 +2708,7 @@
           savedAt: new Date().toISOString(),
         })
       );
-      showToast("Enregistré sur cet appareil");
+      showToast("Enregistré · carte & budget à jour");
     }
 
     function loadContent() {
@@ -2529,13 +2719,16 @@
         if (data.cities) citiesWrap.innerHTML = data.cities;
         if (data.budget) budgetStack.innerHTML = data.budget;
         repairHotelLinks(citiesWrap);
+        seedCityCoords();
         document.querySelectorAll(".reveal").forEach((el) => {
           el.classList.add("visible");
           observer.observe(el);
         });
         document.querySelectorAll(".activity").forEach((el) => el.classList.add("visible"));
+        rebuildItineraryUI();
+        recalculateBudget();
       } catch (_) {
-        /* ignore corrupt storage */
+        /* ignore */
       }
     }
 
@@ -2564,6 +2757,63 @@
       </div>`;
     }
 
+    function transportLegTemplate(nextName) {
+      return `<div class="transport-leg">
+        <div class="transport-leg-top">
+          <h4 class="transport-leg-title">Aller à ${nextName || "…"}</h4>
+          <p class="leg-price">$0–0</p>
+        </div>
+        <p class="transport-leg-note">Horaires et prix à confirmer.</p>
+        <div class="leg-option">
+          <div class="leg-option-name">Option principale <span>~$0–0</span></div>
+          Détails du trajet…
+        </div>
+      </div>`;
+    }
+
+    function cityTemplate(name, id, lat, lng) {
+      return `<article class="city" id="${id}" data-lat="${lat}" data-lng="${lng}" data-stop-name="${name}" data-note="" data-nights="2">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Angkor_Wat_with_its_reflection_%28cropped%29.jpg/1280px-Angkor_Wat_with_its_reflection_%28cropped%29.jpg" alt="${name}" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape</p>
+          <h2>${name}</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal visible">
+          <h3 class="block-title">Activités</h3>
+          ${activityTemplate()}
+        </div>
+        <div class="reveal visible">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">${hotelTemplate()}</div>
+        </div>
+        <div class="reveal visible city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">Centre-ville</div>
+              <div class="transport-modes">Tuktuk · <strong>~$1–5</strong></div>
+            </div>
+          </div>
+          ${transportLegTemplate("prochaine étape")}
+        </div>
+      </div>
+    </article>`;
+    }
+
+    function afterContentChange() {
+      rebuildItineraryUI();
+      scheduleBudget();
+      if (document.body.classList.contains("edit-mode")) {
+        wireAddButtons();
+        wireItemControls(document);
+        wireCityControls();
+        enableEditable(document);
+      }
+    }
+
     function wireItemControls(scope) {
       scope.querySelectorAll(".hotel, .activity").forEach((item) => {
         if (item.querySelector(".edit-del")) return;
@@ -2572,9 +2822,28 @@
         btn.className = "edit-del";
         btn.textContent = "Supprimer";
         btn.addEventListener("click", () => {
-          if (confirm("Supprimer cet élément ?")) item.remove();
+          if (confirm("Supprimer cet élément ?")) {
+            item.remove();
+            afterContentChange();
+          }
         });
         item.appendChild(btn);
+      });
+
+      scope.querySelectorAll(".transport-leg").forEach((leg) => {
+        if (leg.querySelector(".edit-del")) return;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "edit-del";
+        btn.textContent = "Supprimer";
+        btn.addEventListener("click", () => {
+          if (confirm("Supprimer ce trajet ?")) {
+            leg.remove();
+            afterContentChange();
+          }
+        });
+        leg.style.position = "relative";
+        leg.appendChild(btn);
       });
 
       scope.querySelectorAll(".hotel-name").forEach((nameEl) => {
@@ -2595,6 +2864,26 @@
       });
     }
 
+    function wireCityControls() {
+      document.querySelectorAll(".cities-wrap .city").forEach((city) => {
+        const visual = city.querySelector(".city-visual");
+        if (visual && !visual.querySelector(".edit-del-city")) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "edit-del-city";
+          btn.textContent = "Supprimer la ville";
+          btn.addEventListener("click", () => {
+            const name = city.dataset.stopName || city.querySelector("h2")?.textContent || "cette ville";
+            if (!confirm(`Supprimer ${name} ? La carte et le trajet seront mis à jour.`)) return;
+            city.remove();
+            afterContentChange();
+            showToast("Ville supprimée · carte mise à jour");
+          });
+          visual.appendChild(btn);
+        }
+      });
+    }
+
     function wireAddButtons() {
       document.querySelectorAll(".city").forEach((city) => {
         const hotels = city.querySelector(".hotels");
@@ -2607,37 +2896,55 @@
           btn.textContent = "+ Ajouter un hôtel";
           btn.addEventListener("click", () => {
             hotels.insertAdjacentHTML("beforeend", hotelTemplate());
-            wireItemControls(hotels);
-            enableEditable(hotels);
+            afterContentChange();
           });
           row.appendChild(btn);
           hotels.after(row);
         }
 
-        const acts = [...city.querySelectorAll(".activity")];
-        if (acts.length) {
-          const actParent = acts[0].parentElement;
-          if (!actParent.querySelector(".edit-add-activities")) {
-            const row = document.createElement("div");
-            row.className = "edit-add-row edit-add-activities";
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "edit-add-btn";
-            btn.textContent = "+ Ajouter une activité";
-            btn.addEventListener("click", () => {
-              row.insertAdjacentHTML("beforebegin", activityTemplate());
-              wireItemControls(actParent);
-              enableEditable(actParent);
-            });
-            row.appendChild(btn);
-            actParent.appendChild(row);
-          }
+        let actParent = city.querySelector(".activity")?.parentElement;
+        if (!actParent) {
+          actParent = [...city.querySelectorAll(".reveal")].find((r) =>
+            r.querySelector(".block-title")?.textContent?.includes("Activité")
+          );
+        }
+        if (actParent && !actParent.querySelector(".edit-add-activities")) {
+          const row = document.createElement("div");
+          row.className = "edit-add-row edit-add-activities";
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "edit-add-btn";
+          btn.textContent = "+ Ajouter une activité";
+          btn.addEventListener("click", () => {
+            const anchor = actParent.querySelector(".edit-add-activities");
+            if (anchor) anchor.insertAdjacentHTML("beforebegin", activityTemplate());
+            else actParent.insertAdjacentHTML("beforeend", activityTemplate());
+            afterContentChange();
+          });
+          row.appendChild(btn);
+          actParent.appendChild(row);
+        }
+
+        const transport = city.querySelector(".city-transport");
+        if (transport && !transport.querySelector(".edit-add-transport")) {
+          const row = document.createElement("div");
+          row.className = "edit-add-row edit-add-transport";
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "edit-add-btn";
+          btn.textContent = "+ Ajouter un trajet";
+          btn.addEventListener("click", () => {
+            const next = prompt("Vers quelle ville ?", "Prochaine étape");
+            transport.insertAdjacentHTML("beforeend", transportLegTemplate(next || "…"));
+            afterContentChange();
+          });
+          row.appendChild(btn);
+          transport.appendChild(row);
         }
       });
     }
 
     function enableEditable(root) {
-      // Ne jamais rendre contenteditable un bloc qui contient un lien (sinon le clic est bloqué)
       const selectors = [
         ".hotel-price",
         ".hotel-meta",
@@ -2647,12 +2954,11 @@
         ".activity-top h3",
         ".activity-price",
         ".activity-info > p",
-        ".budget-amount",
-        ".budget-box > p:not(.budget-amount)",
-        ".budget-box h3",
         ".leg-price",
         ".transport-dest",
+        ".transport-leg-title",
         ".block-title",
+        ".city-visual-label h2",
       ];
       root.querySelectorAll(selectors.join(",")).forEach((el) => {
         el.setAttribute("contenteditable", "true");
@@ -2662,7 +2968,36 @@
             el.blur();
           }
         });
+        el.addEventListener("blur", () => {
+          if (el.classList.contains("activity-price") || el.classList.contains("leg-price") || el.classList.contains("hotel-price")) {
+            scheduleBudget();
+          }
+          if (el.matches(".city-visual-label h2")) {
+            const city = el.closest(".city");
+            if (city) city.dataset.stopName = el.textContent.trim();
+            rebuildItineraryUI();
+          }
+        });
       });
+    }
+
+    function addCity() {
+      const name = prompt("Nom de la nouvelle ville :");
+      if (!name || !name.trim()) return;
+      let id = slugify(name.trim());
+      if (document.getElementById(id)) id = id + "-" + Date.now().toString().slice(-4);
+      const latStr = prompt("Latitude (ex. 11.55)", "11.55");
+      const lngStr = prompt("Longitude (ex. 104.92)", "104.92");
+      const lat = parseFloat(latStr) || 11.55;
+      const lng = parseFloat(lngStr) || 104.92;
+      citiesWrap.insertAdjacentHTML("beforeend", cityTemplate(name.trim(), id, lat, lng));
+      const city = document.getElementById(id);
+      if (city) {
+        city.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+      }
+      afterContentChange();
+      showToast("Ville ajoutée · carte mise à jour");
+      city?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function enterEditMode() {
@@ -2670,14 +3005,17 @@
       repairHotelLinks(document);
       wireAddButtons();
       wireItemControls(document);
+      wireCityControls();
       enableEditable(document);
-      showToast("Mode édition · bouton Lien pour l’URL hôtel");
+      showToast("Mode édition · + Ville / budget auto");
     }
 
     function exitEditMode() {
       document.body.classList.remove("edit-mode");
       cleanEditChrome(document);
       repairHotelLinks(document);
+      rebuildItineraryUI();
+      recalculateBudget();
       showToast("Mode édition quitté");
     }
 
@@ -2688,6 +3026,8 @@
         cleanEditChrome(document);
         repairHotelLinks(document);
       }
+      rebuildItineraryUI();
+      recalculateBudget();
       const clone = document.documentElement.cloneNode(true);
       clone.querySelectorAll(".edit-fab, .edit-panel, .edit-toast").forEach((el) => el.remove());
       const html = "<!DOCTYPE html>\n" + clone.outerHTML;
@@ -2706,6 +3046,11 @@
     document.getElementById("editExit").addEventListener("click", exitEditMode);
     document.getElementById("editSave").addEventListener("click", saveContent);
     document.getElementById("editDownload").addEventListener("click", downloadHtml);
+    document.getElementById("editAddCity").addEventListener("click", addCity);
+    document.getElementById("editBudget").addEventListener("click", () => {
+      recalculateBudget();
+      showToast("Budget recalculé");
+    });
     document.getElementById("editReset").addEventListener("click", () => {
       if (!confirm("Effacer tes modifications et revenir à la version d’origine ?")) return;
       localStorage.removeItem(EDIT_KEY);
@@ -2713,20 +3058,12 @@
       location.reload();
     });
 
-    // En mode lecture : les liens hôtels doivent toujours s’ouvrir
-    document.addEventListener("click", (e) => {
-      const a = e.target.closest(".hotel-name a");
-      if (!a) return;
-      if (document.body.classList.contains("edit-mode")) {
-        // En édition, le texte est modifiable ; l’URL se change via le bouton « Lien »
-        return;
-      }
-      // Laisser le navigateur ouvrir target=_blank normalement
-    });
-
     repairHotelLinks(document);
     loadContent();
     repairHotelLinks(document);
+    seedCityCoords();
+    rebuildItineraryUI();
+    recalculateBudget();
   </script>
 </body>
 </html>
