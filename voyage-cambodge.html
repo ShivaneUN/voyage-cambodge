@@ -733,6 +733,33 @@
 
     .hotel-name a:hover { color: var(--moss); text-decoration: underline; }
 
+    body:not(.edit-mode) .hotel-name a {
+      pointer-events: auto;
+      cursor: pointer;
+      position: relative;
+      z-index: 1;
+    }
+
+    body.edit-mode .hotel-name a {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .edit-link-btn {
+      display: none;
+      margin-left: 0.35rem;
+      border: 1px solid var(--moss);
+      background: rgba(47, 93, 74, 0.08);
+      color: var(--moss-deep);
+      font-size: 0.65rem;
+      font-weight: 500;
+      padding: 0.15rem 0.4rem;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+
+    body.edit-mode .edit-link-btn { display: inline-block; }
+
     .hotel-price {
       font-size: 0.85rem;
       color: var(--moss);
@@ -1268,7 +1295,7 @@
           <div class="hotels">
             <div class="hotel">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="http://www.thecommunitytravel.com/" target="_blank" rel="noopener">The Community – Siem Reap</a> ★4.9</p>
+                <p class="hotel-name"><a href="https://www.thecommunitytravel.com/" target="_blank" rel="noopener noreferrer">The Community – Siem Reap</a> ★4.9</p>
                 <p class="hotel-price">$30–50</p>
               </div>
               <p class="hotel-meta">4,5 km d’Angkor (~12 min tuktuk)</p>
@@ -1407,7 +1434,7 @@
             </div>
             <div class="hotel">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="http://www.cambanalariviere.com/" target="_blank" rel="noopener">Cambana La Rivière Hotel</a> ★4.6</p>
+                <p class="hotel-name"><a href="http://www.cambanalariviere.com/" target="_blank" rel="noopener noreferrer">Cambana La Rivière Hotel</a> ★4.6</p>
                 <p class="hotel-price">$55–85</p>
               </div>
               <p class="hotel-meta">Au bord de la rivière Sangker</p>
@@ -1455,13 +1482,13 @@
             <div class="leg-option">
               <div class="leg-option-name">Taxi / van privé <span>~$100–180 · ~6–8 h</span></div>
               Porte-à-porte jusqu’au lodge. Demander à Seng Hout, Cambana, ou directement
-              <a href="http://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">Rainbow Lodge – Getting here</a> /
+              <a href="https://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">Rainbow Lodge – Getting here</a> /
               <a href="https://canvasandorchids.com/" target="_blank" rel="noopener">Canvas &amp; Orchids</a>.
             </div>
             <div class="leg-option">
               <div class="leg-option-name">Bus + descente Tatai <span>depuis la côte · ~$12–15</span></div>
               Si vous passez par Sihanoukville : Virak Buntham / VET (~5–5,5 h), descente à Tatai. Infos :
-              <a href="http://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">rainbowlodgecambodia.com/getting-here</a>
+              <a href="https://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">rainbowlodgecambodia.com/getting-here</a>
             </div>
           </div>
         </div>
@@ -1513,7 +1540,7 @@
           <div class="hotels">
             <div class="hotel">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="http://rainbowlodgecambodia.com/" target="_blank" rel="noopener">Rainbow Lodge</a> ★4.9</p>
+                <p class="hotel-name"><a href="https://rainbowlodgecambodia.com/" target="_blank" rel="noopener noreferrer">Rainbow Lodge</a> ★4.9</p>
                 <p class="hotel-price">$120–160</p>
               </div>
               <p class="hotel-meta">Pension complète · ~15–20 min de la cascade</p>
@@ -1566,7 +1593,7 @@
             <div class="leg-option">
               <div class="leg-option-name">Taxi privé lodge → Sihanoukville <span>~$78–133 · &lt;3,5 h</span></div>
               Tarif indicatif Rainbow Lodge (SUV 4 pers. / minivan 7 pers., péage inclus) :
-              <a href="http://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">Getting here</a>
+              <a href="https://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">Getting here</a>
             </div>
             <div class="leg-option">
               <div class="leg-option-name">Taxi partagé <span>~$15 / place · ~4–5 h</span></div>
@@ -1707,7 +1734,7 @@
             </div>
             <div class="leg-option">
               <div class="leg-option-name">Island Speed Ferry <span>~$15 / ~$25 A/R</span></div>
-              <a href="https://www.islandspeedferry.com/" target="_blank" rel="noopener">islandspeedferry.com</a>
+              <a href="https://islandspeedferry.com/" target="_blank" rel="noopener">islandspeedferry.com</a>
               <ul class="ferry-schedule">
                 <li>→ Samloem : <strong>9h · 12h · 15h</strong> (parfois 8h)</li>
                 <li>← retour : <strong>10h30 · 13h30 · 16h30</strong></li>
@@ -1801,7 +1828,7 @@
             </div>
             <div class="hotel">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="http://www.islandcenterpoint.asia/" target="_blank" rel="noopener">Island Center Point</a> ★4.7</p>
+                <p class="hotel-name"><a href="https://islandcenterpoint.asia/" target="_blank" rel="noopener noreferrer">Island Center Point</a> ★4.7</p>
                 <p class="hotel-price">$110–170</p>
               </div>
               <p class="hotel-meta">Position centrale sur l’île</p>
@@ -1862,7 +1889,7 @@
               Même opérateurs :
               <a href="https://www.gtvcspeedboatcambodia.com/" target="_blank" rel="noopener">GTVC</a> ·
               <a href="https://buvasea.com/" target="_blank" rel="noopener">Buva Sea</a> ·
-              <a href="https://www.islandspeedferry.com/" target="_blank" rel="noopener">Island Speed Ferry</a>
+              <a href="https://islandspeedferry.com/" target="_blank" rel="noopener">Island Speed Ferry</a>
               <ul class="ferry-schedule">
                 <li>Retours typiques Saracen : <strong>9h30–10h30 · 12h30–13h30 · 15h30–16h30</strong></li>
               </ul>
@@ -2196,7 +2223,7 @@
             </div>
             <div class="hotel">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="http://www.thepavilion.asia/" target="_blank" rel="noopener">Pavilion Hotel</a> ★4.7</p>
+                <p class="hotel-name"><a href="https://www.thepavilion.asia/" target="_blank" rel="noopener noreferrer">Pavilion Hotel</a> ★4.7</p>
                 <p class="hotel-price">$70–115</p>
               </div>
               <p class="hotel-meta">7 min à pied du Palais Royal</p>
@@ -2274,7 +2301,7 @@
           <li>Transferts bateau à prévoir : Sihanoukville ↔ Koh Rong Samloem ↔ Koh Ta Kiev, et pour Tatai / Koh Kong.</li>
           <li>M'Pay Bay (Koh Rong Samloem) : bateau-taxi obligatoire, pas de sentier direct praticable.</li>
           <li>Tarifs transport indicatifs (tuktuk, ferry, bus) — négocier ou comparer Grab / PassApp / 12Go avant de partir.</li>
-          <li>Ferries îles : <a href="https://www.gtvcspeedboatcambodia.com/" target="_blank" rel="noopener">GTVC</a>, <a href="https://buvasea.com/" target="_blank" rel="noopener">Buva Sea</a>, <a href="https://www.islandspeedferry.com/" target="_blank" rel="noopener">Island Speed Ferry</a> — horaires variables, reconfirmer.</li>
+          <li>Ferries îles : <a href="https://www.gtvcspeedboatcambodia.com/" target="_blank" rel="noopener">GTVC</a>, <a href="https://buvasea.com/" target="_blank" rel="noopener">Buva Sea</a>, <a href="https://islandspeedferry.com/" target="_blank" rel="noopener">Island Speed Ferry</a> — horaires variables, reconfirmer.</li>
           <li>Bus longue distance : <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a>, <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a>, <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a>.</li>
         </ul>
         <div class="budget-stack">
@@ -2420,7 +2447,10 @@
     window.addEventListener("resize", () => map.invalidateSize());
 
     /* —— Mode édition (ajouter / modifier / supprimer) —— */
-    const EDIT_KEY = "voyageCambodgeContent_v1";
+    const EDIT_KEY = "voyageCambodgeContent_v2";
+    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1"];
+    OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
+
     const citiesWrap = document.querySelector(".cities-wrap");
     const budgetStack = document.querySelector(".budget-stack");
     const toastEl = document.getElementById("editToast");
@@ -2432,9 +2462,45 @@
     }
 
     function cleanEditChrome(root) {
-      root.querySelectorAll(".edit-del, .edit-add-row").forEach((el) => el.remove());
+      root.querySelectorAll(".edit-del, .edit-add-row, .edit-link-btn").forEach((el) => el.remove());
       root.querySelectorAll("[contenteditable]").forEach((el) => {
         el.removeAttribute("contenteditable");
+      });
+    }
+
+    function repairHotelLinks(root) {
+      root.querySelectorAll(".hotel-name").forEach((nameEl) => {
+        let a = nameEl.querySelector("a");
+        if (!a) {
+          const text = nameEl.textContent.replace(/★.*$/, "").trim() || "Hôtel";
+          const stars = (nameEl.textContent.match(/★[0-9.]+/) || [""])[0];
+          nameEl.innerHTML = "";
+          a = document.createElement("a");
+          a.href = "#";
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = text;
+          nameEl.appendChild(a);
+          if (stars) nameEl.appendChild(document.createTextNode(" " + stars));
+        } else {
+          a.setAttribute("target", "_blank");
+          a.setAttribute("rel", "noopener noreferrer");
+          let href = (a.getAttribute("href") || "").trim();
+          if (href.startsWith("http://www.thecommunitytravel.com")) {
+            href = "https://www.thecommunitytravel.com/";
+          } else if (href.startsWith("http://rainbowlodgecambodia.com")) {
+            href = href.replace("http://", "https://");
+          } else if (href.includes("islandcenterpoint.asia")) {
+            href = "https://islandcenterpoint.asia/";
+          } else if (href.includes("thepavilion.asia")) {
+            href = "https://www.thepavilion.asia/";
+          } else if (href.includes("islandspeedferry.com")) {
+            href = "https://islandspeedferry.com/";
+          } else if (href.startsWith("http://") && !href.includes("cambanalariviere.com")) {
+            href = href.replace(/^http:\/\//, "https://");
+          }
+          a.setAttribute("href", href || "#");
+        }
       });
     }
 
@@ -2443,6 +2509,7 @@
       const budgetClone = budgetStack.cloneNode(true);
       cleanEditChrome(citiesClone);
       cleanEditChrome(budgetClone);
+      repairHotelLinks(citiesClone);
       localStorage.setItem(
         EDIT_KEY,
         JSON.stringify({
@@ -2461,6 +2528,7 @@
         const data = JSON.parse(raw);
         if (data.cities) citiesWrap.innerHTML = data.cities;
         if (data.budget) budgetStack.innerHTML = data.budget;
+        repairHotelLinks(citiesWrap);
         document.querySelectorAll(".reveal").forEach((el) => {
           el.classList.add("visible");
           observer.observe(el);
@@ -2474,7 +2542,7 @@
     function hotelTemplate() {
       return `<div class="hotel">
         <div class="hotel-top">
-          <p class="hotel-name"><a href="#" target="_blank" rel="noopener">Nouvel hôtel</a></p>
+          <p class="hotel-name"><a href="#" target="_blank" rel="noopener noreferrer">Nouvel hôtel</a></p>
           <p class="hotel-price">$0–0</p>
         </div>
         <p class="hotel-meta">Emplacement / note</p>
@@ -2507,6 +2575,23 @@
           if (confirm("Supprimer cet élément ?")) item.remove();
         });
         item.appendChild(btn);
+      });
+
+      scope.querySelectorAll(".hotel-name").forEach((nameEl) => {
+        if (nameEl.querySelector(".edit-link-btn")) return;
+        const a = nameEl.querySelector("a");
+        if (!a) return;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "edit-link-btn";
+        btn.textContent = "Lien";
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const url = prompt("Lien de l’hôtel (URL) :", a.getAttribute("href") || "");
+          if (url !== null) a.setAttribute("href", url.trim() || "#");
+        });
+        nameEl.appendChild(btn);
       });
     }
 
@@ -2552,12 +2637,13 @@
     }
 
     function enableEditable(root) {
+      // Ne jamais rendre contenteditable un bloc qui contient un lien (sinon le clic est bloqué)
       const selectors = [
-        ".hotel-name",
         ".hotel-price",
         ".hotel-meta",
         ".hotel-pick",
         ".hotel-atypical",
+        ".hotel-name a",
         ".activity-top h3",
         ".activity-price",
         ".activity-info > p",
@@ -2577,29 +2663,21 @@
           }
         });
       });
-      // Keep links editable via the parent hotel-name
-      root.querySelectorAll(".hotel-name a").forEach((a) => {
-        a.addEventListener("click", (e) => {
-          if (document.body.classList.contains("edit-mode")) {
-            e.preventDefault();
-            const url = prompt("Lien de l’hôtel (URL) :", a.getAttribute("href") || "");
-            if (url !== null) a.setAttribute("href", url.trim() || "#");
-          }
-        });
-      });
     }
 
     function enterEditMode() {
       document.body.classList.add("edit-mode");
+      repairHotelLinks(document);
       wireAddButtons();
       wireItemControls(document);
       enableEditable(document);
-      showToast("Mode édition activé");
+      showToast("Mode édition · bouton Lien pour l’URL hôtel");
     }
 
     function exitEditMode() {
       document.body.classList.remove("edit-mode");
       cleanEditChrome(document);
+      repairHotelLinks(document);
       showToast("Mode édition quitté");
     }
 
@@ -2608,6 +2686,7 @@
       if (wasEditing) {
         document.body.classList.remove("edit-mode");
         cleanEditChrome(document);
+        repairHotelLinks(document);
       }
       const clone = document.documentElement.cloneNode(true);
       clone.querySelectorAll(".edit-fab, .edit-panel, .edit-toast").forEach((el) => el.remove());
@@ -2630,10 +2709,24 @@
     document.getElementById("editReset").addEventListener("click", () => {
       if (!confirm("Effacer tes modifications et revenir à la version d’origine ?")) return;
       localStorage.removeItem(EDIT_KEY);
+      OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
       location.reload();
     });
 
+    // En mode lecture : les liens hôtels doivent toujours s’ouvrir
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest(".hotel-name a");
+      if (!a) return;
+      if (document.body.classList.contains("edit-mode")) {
+        // En édition, le texte est modifiable ; l’URL se change via le bouton « Lien »
+        return;
+      }
+      // Laisser le navigateur ouvrir target=_blank normalement
+    });
+
+    repairHotelLinks(document);
     loadContent();
+    repairHotelLinks(document);
   </script>
 </body>
 </html>
