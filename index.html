@@ -992,6 +992,198 @@
       right: 11.5rem;
     }
 
+    .trip-fab {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 26.5rem;
+      z-index: 200;
+      border: none;
+      background: var(--moss);
+      color: var(--sand);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.85rem 1.15rem;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(20, 32, 26, 0.2);
+    }
+
+    .trip-fab:hover { filter: brightness(1.08); }
+
+    body.edit-mode .trip-fab {
+      bottom: 5.75rem;
+      right: 19.5rem;
+    }
+
+    .trip-pop {
+      position: fixed;
+      top: 50%;
+      right: 1.25rem;
+      transform: translateY(-50%) translateX(120%);
+      z-index: 230;
+      width: min(380px, calc(100vw - 2rem));
+      max-height: min(85vh, 640px);
+      overflow: auto;
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--sand-deep);
+      box-shadow: 0 16px 48px rgba(20, 32, 26, 0.22);
+      padding: 1.15rem 1.2rem 1.25rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.35s var(--ease), opacity 0.35s var(--ease);
+    }
+
+    .trip-pop.open {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .trip-pop-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--sand-deep);
+    }
+
+    .trip-pop-head h3 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      color: var(--moss-deep);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .trip-pop-close {
+      border: none;
+      background: transparent;
+      color: var(--ink-soft);
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0.15rem 0.35rem;
+    }
+
+    .trip-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+    }
+
+    .trip-summary div {
+      background: rgba(47, 93, 74, 0.06);
+      padding: 0.65rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .trip-summary strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      color: var(--moss-deep);
+      font-weight: 600;
+      margin-top: 0.15rem;
+    }
+
+    .trip-summary .is-warn strong { color: #a63d2f; }
+    .trip-summary .is-ok strong { color: var(--moss); }
+
+    .trip-city-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid var(--sand-deep);
+      font-size: 0.85rem;
+    }
+
+    .trip-city-row a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 500;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .trip-city-row a:hover { color: var(--moss); }
+
+    .trip-city-meta {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      display: block;
+      font-weight: 400;
+      margin-top: 0.1rem;
+    }
+
+    .trip-pop-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .trip-pop-actions button {
+      border: 1px solid var(--sand-deep);
+      background: var(--white);
+      color: var(--moss-deep);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+    }
+
+    .trip-pop-actions button.primary {
+      background: var(--moss);
+      color: var(--sand);
+      border-color: var(--moss);
+    }
+
+    .trip-pop-note {
+      margin-top: 0.85rem;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      font-style: italic;
+      line-height: 1.45;
+    }
+
+    .city-stay {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem 0.85rem;
+      margin-bottom: 1.5rem;
+      padding: 0.85rem 1rem;
+      background: rgba(47, 93, 74, 0.06);
+      border-left: 2px solid var(--gold);
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+
+    .city-stay-label {
+      font-weight: 500;
+      color: var(--moss-deep);
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+    }
+
+    .city-stay-sub {
+      flex: 1 1 100%;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+    }
+
+    .city-stay-sub.is-over {
+      color: #a63d2f;
+      font-weight: 500;
+    }
+
     .note {
       margin-top: 1.25rem;
       font-size: 0.85rem;
@@ -1308,6 +1500,13 @@
         font-size: 0.75rem;
       }
 
+      .trip-fab {
+        right: 0.75rem;
+        bottom: 10.45rem;
+        font-size: 0.78rem;
+        padding: 0.7rem 0.9rem;
+      }
+
       body.edit-mode .budget-fab {
         bottom: 5.5rem;
         right: 0.75rem;
@@ -1318,15 +1517,22 @@
         right: 0.75rem;
       }
 
-      .budget-pop {
+      body.edit-mode .trip-fab {
+        bottom: 12.1rem;
         right: 0.75rem;
-        top: auto;
-        bottom: 11rem;
-        transform: translateY(20px) translateX(0);
-        max-height: 50vh;
       }
 
-      .budget-pop.open {
+      .budget-pop,
+      .trip-pop {
+        right: 0.75rem;
+        top: auto;
+        bottom: 14rem;
+        transform: translateY(20px) translateX(0);
+        max-height: 45vh;
+      }
+
+      .budget-pop.open,
+      .trip-pop.open {
         transform: translateY(0) translateX(0);
       }
     }
@@ -1605,7 +1811,7 @@
     <div class="hero-content">
       <p class="hero-brand">Cambodge</p>
       <h1 class="hero-title">Voyage · Décembre</h1>
-      <p class="hero-lead">Huit étapes, des temples millénaires aux plages de l’archipel — votre itinéraire détaillé.</p>
+      <p class="hero-lead">23 jours · 22 nuits — huit étapes, des temples millénaires aux plages de l’archipel.</p>
       <a href="#carte" class="hero-cta">Voir le trajet →</a>
     </div>
     <p class="hero-scroll">Défiler</p>
@@ -1647,7 +1853,7 @@
   <main class="cities-wrap">
 
     <!-- 1. Siem Reap -->
-    <article class="city" id="siem-reap">
+    <article class="city" id="siem-reap" data-nights="4">
       <div class="city-visual">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/20171126_Angkor_Wat_4712_DxO.jpg/1280px-20171126_Angkor_Wat_4712_DxO.jpg" alt="Angkor Wat, Siem Reap" loading="lazy" />
         <div class="city-visual-label">
@@ -1792,7 +1998,7 @@
     </article>
 
     <!-- 2. Battambang -->
-    <article class="city" id="battambang">
+    <article class="city" id="battambang" data-nights="2">
       <div class="city-visual">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Aerial_view_of_Battambang_city.jpg/1280px-Aerial_view_of_Battambang_city.jpg" alt="Vue aérienne de Battambang" loading="lazy" />
         <div class="city-visual-label">
@@ -1919,7 +2125,7 @@
     </article>
 
     <!-- 3. Koh Kong / Tatai -->
-    <article class="city" id="koh-kong">
+    <article class="city" id="koh-kong" data-nights="2">
       <div class="city-visual">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Koh_Kong_mangrove_forest.jpg/1280px-Koh_Kong_mangrove_forest.jpg" alt="Mangrove de Koh Kong" loading="lazy" />
         <div class="city-visual-label">
@@ -2028,7 +2234,7 @@
     </article>
 
     <!-- 4. Sihanoukville -->
-    <article class="city" id="sihanoukville">
+    <article class="city" id="sihanoukville" data-nights="1">
       <div class="city-visual">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Sihanoukville_-_Independence_beach_in_the_morning.jpg/1280px-Sihanoukville_-_Independence_beach_in_the_morning.jpg" alt="Independence Beach, Sihanoukville" loading="lazy" />
         <div class="city-visual-label">
@@ -2173,7 +2379,7 @@
     </article>
 
     <!-- 5. Koh Rong Samloem -->
-    <article class="city" id="koh-rong">
+    <article class="city" id="koh-rong" data-nights="4">
       <div class="city-visual">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Saracen_Bay_panoramic_view%2C_Koh_Rong_Sanloem%2C_Cambodia%2C_June_2014.jpg/1280px-Saracen_Bay_panoramic_view%2C_Koh_Rong_Sanloem%2C_Cambodia%2C_June_2014.jpg" alt="Saracen Bay, Koh Rong Samloem" loading="lazy" />
         <div class="city-visual-label">
@@ -2334,7 +2540,7 @@
     </article>
 
     <!-- 6. Koh Ta Kiev -->
-    <article class="city" id="koh-ta-kiev">
+    <article class="city" id="koh-ta-kiev" data-nights="2">
       <div class="city-visual">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Koh_Ta_Kiev_island_%28Cambodia%29.jpg/1280px-Koh_Ta_Kiev_island_%28Cambodia%29.jpg" alt="Île de Koh Ta Kiev" loading="lazy" />
         <div class="city-visual-label">
@@ -2472,7 +2678,7 @@
     </article>
 
     <!-- 7. Kampot -->
-    <article class="city" id="kampot">
+    <article class="city" id="kampot" data-nights="3">
       <div class="city-visual">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Kampot_Riverfront_Scene_-_Kampot_-_Cambodia_%2848501740381%29.jpg/1280px-Kampot_Riverfront_Scene_-_Kampot_-_Cambodia_%2848501740381%29.jpg" alt="Front de rivière à Kampot" loading="lazy" />
         <div class="city-visual-label">
@@ -2580,7 +2786,7 @@
     </article>
 
     <!-- 8. Phnom Penh -->
-    <article class="city" id="phnom-penh">
+    <article class="city" id="phnom-penh" data-nights="4">
       <div class="city-visual">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Royal_Palace%2C_Phnom_Penh_Cambodia_1.jpg/1280px-Royal_Palace%2C_Phnom_Penh_Cambodia_1.jpg" alt="Palais Royal de Phnom Penh" loading="lazy" />
         <div class="city-visual-label">
@@ -2765,8 +2971,40 @@
       <button type="button" data-people-act="plus" aria-label="Plus une personne">+</button>
     </div>
   </div>
+  <button type="button" class="trip-fab" id="tripFab">23 j · nuits</button>
   <button type="button" class="budget-fab" id="budgetFab">Calculer le budget</button>
   <button type="button" class="edit-fab" id="editFab" title="Modifier le contenu">Modifier</button>
+
+  <aside class="trip-pop" id="tripPop" aria-live="polite" hidden>
+    <div class="trip-pop-head">
+      <h3>Répartition du séjour</h3>
+      <button type="button" class="trip-pop-close" id="tripPopClose" aria-label="Fermer">×</button>
+    </div>
+    <div class="trip-summary">
+      <div>
+        Durée voyage
+        <strong id="tripDaysLabel">23 jours</strong>
+      </div>
+      <div>
+        Nuits d’hôtel
+        <strong id="tripNightsLabel">22 nuits</strong>
+      </div>
+      <div id="tripUsedBox">
+        Nuits allouées
+        <strong id="tripUsedLabel">0 / 22</strong>
+      </div>
+      <div id="tripLeftBox">
+        Nuits restantes
+        <strong id="tripLeftLabel">22</strong>
+      </div>
+    </div>
+    <div id="tripCityList"></div>
+    <div class="trip-pop-actions">
+      <button type="button" class="primary" id="tripDistribute">Répartir équitablement</button>
+      <button type="button" id="tripApplyHotels">Appliquer aux hôtels</button>
+    </div>
+    <p class="trip-pop-note">23 jours ≈ 22 nuits (arrivée J1, départ le dernier jour). Ajuste les nuits par ville : ≈ N nuits = N à N+1 jours sur place.</p>
+  </aside>
 
   <aside class="budget-pop" id="budgetPop" aria-live="polite" hidden>
     <div class="budget-pop-head">
@@ -2959,7 +3197,7 @@
           L.marker([s.lat, s.lng], { icon })
             .addTo(mapRouteLayer)
             .bindPopup(
-              `<strong>${s.n}. ${s.name}</strong>${s.note ? "<br>" + s.note : ""}<br><a href="#${s.id}">Voir l'étape →</a>`
+              `<strong>${s.n}. ${s.name}</strong>${s.note ? "<br>" + s.note : ""}<br>${s.nights || 0} nuit${(s.nights || 0) > 1 ? "s" : ""} · <a href="#${s.id}">Voir l'étape →</a>`
             );
         });
 
@@ -2979,12 +3217,12 @@
 
       const footer = document.querySelector("footer p");
       if (footer) {
-        footer.innerHTML = `<span>Cambodge</span> — Voyage décembre · ${stops.length} étape${stops.length > 1 ? "s" : ""} · temples, jungle & îles`;
+        footer.innerHTML = `<span>Cambodge</span> — Voyage décembre · 23 jours · 22 nuits · ${stops.length} étape${stops.length > 1 ? "s" : ""}`;
       }
 
       const mapDesc = document.querySelector("#carte .section-desc");
       if (mapDesc) {
-        mapDesc.textContent = `Les ${stops.length} étapes du voyage — cliquez un point pour ouvrir la fiche.`;
+        mapDesc.textContent = `23 jours · 22 nuits · ${stops.length} étapes — cliquez un point pour ouvrir la fiche.`;
       }
 
       setTimeout(() => map.invalidateSize(), 100);
@@ -2996,9 +3234,21 @@
     window.addEventListener("resize", () => map.invalidateSize());
 
     /* —— Mode édition (villes + budget auto) —— */
-    const EDIT_KEY = "voyageCambodgeContent_v8";
-    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4", "voyageCambodgeContent_v5", "voyageCambodgeContent_v6", "voyageCambodgeContent_v7"];
+    const EDIT_KEY = "voyageCambodgeContent_v9";
+    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4", "voyageCambodgeContent_v5", "voyageCambodgeContent_v6", "voyageCambodgeContent_v7", "voyageCambodgeContent_v8"];
     const PEOPLE_KEY = "voyageCambodgePeople";
+    const TRIP_DAYS = 23;
+    const TRIP_NIGHTS = 22;
+    const DEFAULT_CITY_NIGHTS = {
+      "siem-reap": 4,
+      battambang: 2,
+      "koh-kong": 2,
+      sihanoukville: 1,
+      "koh-rong": 4,
+      "koh-ta-kiev": 2,
+      kampot: 3,
+      "phnom-penh": 4,
+    };
     OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
 
     const citiesWrap = document.querySelector(".cities-wrap");
@@ -3294,6 +3544,197 @@
       showToast("Budget calculé");
     }
 
+    function getCityNights(city) {
+      return Math.max(0, parseInt(city.dataset.nights || "0", 10) || 0);
+    }
+
+    function sumCityNights() {
+      return [...document.querySelectorAll(".cities-wrap .city")].reduce((sum, city) => sum + getCityNights(city), 0);
+    }
+
+    function nightsToDaysHint(n) {
+      if (n <= 0) return "0 jour sur place";
+      if (n === 1) return "≈ 1–2 jours sur place";
+      return `≈ ${n}–${n + 1} jours sur place`;
+    }
+
+    function syncHotelsFromCity(city, { force = false } = {}) {
+      const nights = getCityNights(city);
+      const hotels = [...city.querySelectorAll(".hotel")];
+      if (!hotels.length) return;
+      const target =
+        hotels.find((h) => h.dataset.inBudget !== "0" && h.querySelector(".hotel-pick")) ||
+        hotels.find((h) => h.dataset.inBudget !== "0") ||
+        hotels.find((h) => h.querySelector(".hotel-pick")) ||
+        hotels[0];
+      hotels.forEach((h) => {
+        if (h === target) {
+          h.dataset.nights = String(nights);
+          if (nights > 0) h.dataset.inBudget = "1";
+          const input = h.querySelector(".hotel-nights-ctrl input");
+          if (input) input.value = String(nights);
+          const cb = h.querySelector('.budget-pick input[type="checkbox"]');
+          if (cb) cb.checked = h.dataset.inBudget !== "0";
+        } else if (force) {
+          h.dataset.nights = "0";
+          const input = h.querySelector(".hotel-nights-ctrl input");
+          if (input) input.value = "0";
+        }
+      });
+    }
+
+    function syncCityFromHotels(city) {
+      const hotels = [...city.querySelectorAll(".hotel")];
+      const sum = hotels
+        .filter((h) => h.dataset.inBudget !== "0")
+        .reduce((a, h) => a + (parseInt(h.dataset.nights || "0", 10) || 0), 0);
+      city.dataset.nights = String(sum);
+      updateCityStayUI(city);
+      refreshTripPanel();
+    }
+
+    function setCityNights(city, nights, { applyHotels = true } = {}) {
+      const n = Math.max(0, Math.min(TRIP_NIGHTS, parseInt(nights, 10) || 0));
+      city.dataset.nights = String(n);
+      updateCityStayUI(city);
+      if (applyHotels) syncHotelsFromCity(city);
+      refreshTripPanel();
+      scheduleBudget();
+    }
+
+    function updateCityStayUI(city) {
+      const n = getCityNights(city);
+      const input = city.querySelector(".city-stay [data-city-night-input]");
+      if (input && String(input.value) !== String(n)) input.value = String(n);
+      const sub = city.querySelector(".city-stay-sub");
+      if (sub) {
+        const used = sumCityNights();
+        const left = TRIP_NIGHTS - used;
+        sub.textContent = `${nightsToDaysHint(n)} · ${used}/${TRIP_NIGHTS} nuits planifiées` + (left < 0 ? ` · dépassement ${-left}` : left === 0 ? " · complet" : ` · ${left} restantes`);
+        sub.classList.toggle("is-over", left < 0);
+      }
+    }
+
+    function ensureCityStay(root = document) {
+      root.querySelectorAll(".cities-wrap .city").forEach((city) => {
+        if (city.dataset.nights === undefined || city.dataset.nights === "") {
+          city.dataset.nights = String(DEFAULT_CITY_NIGHTS[city.id] ?? 2);
+        }
+        let bar = city.querySelector(".city-stay");
+        const body = city.querySelector(".city-body");
+        if (!bar && body) {
+          bar = document.createElement("div");
+          bar.className = "city-stay";
+          bar.innerHTML = `
+            <span class="city-stay-label">Séjour</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-city-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="${TRIP_NIGHTS}" value="${getCityNights(city)}" data-city-night-input aria-label="Nuits dans cette ville" />
+              <button type="button" data-city-night-act="plus" aria-label="Plus une nuit">+</button>
+            </div>
+            <span class="city-stay-sub"></span>
+          `;
+          body.insertBefore(bar, body.firstChild);
+        }
+        updateCityStayUI(city);
+      });
+      refreshTripPanel();
+    }
+
+    function refreshTripPanel() {
+      const used = sumCityNights();
+      const left = TRIP_NIGHTS - used;
+      const daysEl = document.getElementById("tripDaysLabel");
+      const nightsEl = document.getElementById("tripNightsLabel");
+      const usedEl = document.getElementById("tripUsedLabel");
+      const leftEl = document.getElementById("tripLeftLabel");
+      const usedBox = document.getElementById("tripUsedBox");
+      const leftBox = document.getElementById("tripLeftBox");
+      if (daysEl) daysEl.textContent = `${TRIP_DAYS} jours`;
+      if (nightsEl) nightsEl.textContent = `${TRIP_NIGHTS} nuits`;
+      if (usedEl) usedEl.textContent = `${used} / ${TRIP_NIGHTS}`;
+      if (leftEl) leftEl.textContent = String(left);
+      if (usedBox) usedBox.classList.toggle("is-warn", used > TRIP_NIGHTS);
+      if (leftBox) {
+        leftBox.classList.toggle("is-ok", left === 0);
+        leftBox.classList.toggle("is-warn", left < 0);
+      }
+
+      const list = document.getElementById("tripCityList");
+      if (!list) return;
+      const cities = [...document.querySelectorAll(".cities-wrap .city")];
+      list.innerHTML = cities
+        .map((city) => {
+          const n = getCityNights(city);
+          const name =
+            city.dataset.stopName ||
+            city.querySelector(".city-visual-label h2")?.textContent?.trim() ||
+            city.id;
+          return `<div class="trip-city-row" data-trip-city="${city.id}">
+            <a href="#${city.id}">${name}<span class="trip-city-meta">${nightsToDaysHint(n)}</span></a>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-trip-night-act="minus" aria-label="Moins">−</button>
+              <input type="number" min="0" max="${TRIP_NIGHTS}" value="${n}" data-trip-night-input aria-label="Nuits" />
+              <button type="button" data-trip-night-act="plus" aria-label="Plus">+</button>
+            </div>
+          </div>`;
+        })
+        .join("");
+
+      const fab = document.getElementById("tripFab");
+      if (fab) fab.textContent = left === 0 ? `23 j · OK` : `23 j · ${left > 0 ? left + " rest." : "trop"}`;
+    }
+
+    function distributeCityNights() {
+      const cities = [...document.querySelectorAll(".cities-wrap .city")];
+      if (!cities.length) return;
+      const useDefaults = cities.length === 8 && cities.every((c) => DEFAULT_CITY_NIGHTS[c.id] != null);
+      if (useDefaults) {
+        cities.forEach((city) => {
+          city.dataset.nights = String(DEFAULT_CITY_NIGHTS[city.id]);
+          updateCityStayUI(city);
+          syncHotelsFromCity(city, { force: true });
+        });
+      } else {
+        const base = Math.floor(TRIP_NIGHTS / cities.length);
+        let rest = TRIP_NIGHTS - base * cities.length;
+        cities.forEach((city) => {
+          const n = base + (rest > 0 ? 1 : 0);
+          if (rest > 0) rest -= 1;
+          city.dataset.nights = String(n);
+          updateCityStayUI(city);
+          syncHotelsFromCity(city, { force: true });
+        });
+      }
+      refreshTripPanel();
+      scheduleBudget();
+      showToast("Nuits réparties · 22 nuits au total");
+    }
+
+    function applyAllCityNightsToHotels() {
+      document.querySelectorAll(".cities-wrap .city").forEach((city) => {
+        syncHotelsFromCity(city, { force: true });
+      });
+      scheduleBudget();
+      showToast("Nuits appliquées aux hôtels cochés");
+    }
+
+    function openTripPop() {
+      const pop = document.getElementById("tripPop");
+      ensureCityStay();
+      refreshTripPanel();
+      pop.hidden = false;
+      requestAnimationFrame(() => pop.classList.add("open"));
+    }
+
+    function closeTripPop() {
+      const pop = document.getElementById("tripPop");
+      pop.classList.remove("open");
+      setTimeout(() => {
+        if (!pop.classList.contains("open")) pop.hidden = true;
+      }, 350);
+    }
+
     function setHotelNights(hotel, nights) {
       const n = Math.max(0, Math.min(60, parseInt(nights, 10) || 0));
       hotel.dataset.nights = String(n);
@@ -3302,6 +3743,8 @@
       if (input && String(input.value) !== String(n)) input.value = String(n);
       const cb = hotel.querySelector('.budget-pick input[type="checkbox"]');
       if (cb) cb.checked = hotel.dataset.inBudget !== "0";
+      const city = hotel.closest(".city");
+      if (city) syncCityFromHotels(city);
       scheduleBudget();
     }
 
@@ -3402,11 +3845,20 @@
         });
       });
 
+      ensureCityStay(root);
       scheduleBudget();
     }
 
     // Délégation : marche même après reload localStorage
     citiesWrap.addEventListener("click", (e) => {
+      const cityBtn = e.target.closest("[data-city-night-act]");
+      if (cityBtn) {
+        const city = cityBtn.closest(".city");
+        if (!city) return;
+        const cur = getCityNights(city);
+        setCityNights(city, cityBtn.dataset.cityNightAct === "plus" ? cur + 1 : cur - 1);
+        return;
+      }
       const btn = e.target.closest("[data-night-act]");
       if (!btn) return;
       const hotel = btn.closest(".hotel");
@@ -3416,6 +3868,12 @@
     });
 
     citiesWrap.addEventListener("change", (e) => {
+      const cityInput = e.target.closest("[data-city-night-input]");
+      if (cityInput) {
+        const city = cityInput.closest(".city");
+        if (city) setCityNights(city, cityInput.value);
+        return;
+      }
       const budgetCb = e.target.closest(".budget-pick input[type='checkbox']");
       if (budgetCb) {
         const item = budgetCb.closest(".hotel, .activity, .leg-option, .transport-row");
@@ -3423,14 +3881,20 @@
         return;
       }
       const input = e.target.closest(".hotel-nights-ctrl input");
-      if (!input) return;
+      if (!input || input.hasAttribute("data-city-night-input")) return;
       const hotel = input.closest(".hotel");
       if (hotel) setHotelNights(hotel, input.value);
     });
 
     citiesWrap.addEventListener("input", (e) => {
+      const cityInput = e.target.closest("[data-city-night-input]");
+      if (cityInput) {
+        const city = cityInput.closest(".city");
+        if (city) setCityNights(city, cityInput.value);
+        return;
+      }
       const input = e.target.closest(".hotel-nights-ctrl input");
-      if (!input) return;
+      if (!input || input.hasAttribute("data-city-night-input")) return;
       const hotel = input.closest(".hotel");
       if (hotel) setHotelNights(hotel, input.value);
     });
@@ -3824,7 +4288,7 @@
       rebuildItineraryUI();
       recalculateBudget();
       const clone = document.documentElement.cloneNode(true);
-      clone.querySelectorAll(".edit-fab, .budget-fab, .people-fab, .edit-panel, .edit-toast, .budget-pop").forEach((el) => el.remove());
+      clone.querySelectorAll(".edit-fab, .budget-fab, .people-fab, .trip-fab, .edit-panel, .edit-toast, .budget-pop, .trip-pop").forEach((el) => el.remove());
       const html = "<!DOCTYPE html>\n" + clone.outerHTML;
       const blob = new Blob([html], { type: "text/html;charset=utf-8" });
       const url = URL.createObjectURL(blob);
@@ -3844,6 +4308,29 @@
     document.getElementById("editAddCity").addEventListener("click", addCity);
     document.getElementById("budgetFab").addEventListener("click", showBudgetPanel);
     document.getElementById("budgetPopClose").addEventListener("click", closeBudgetPop);
+    document.getElementById("tripFab").addEventListener("click", openTripPop);
+    document.getElementById("tripPopClose").addEventListener("click", closeTripPop);
+    document.getElementById("tripDistribute").addEventListener("click", distributeCityNights);
+    document.getElementById("tripApplyHotels").addEventListener("click", applyAllCityNightsToHotels);
+    document.getElementById("tripPop").addEventListener("click", (e) => {
+      const row = e.target.closest("[data-trip-city]");
+      if (!row) return;
+      const city = document.getElementById(row.dataset.tripCity);
+      if (!city) return;
+      const btn = e.target.closest("[data-trip-night-act]");
+      if (btn) {
+        const cur = getCityNights(city);
+        setCityNights(city, btn.dataset.tripNightAct === "plus" ? cur + 1 : cur - 1);
+        return;
+      }
+    });
+    document.getElementById("tripPop").addEventListener("change", (e) => {
+      const input = e.target.closest("[data-trip-night-input]");
+      if (!input) return;
+      const row = input.closest("[data-trip-city]");
+      const city = row && document.getElementById(row.dataset.tripCity);
+      if (city) setCityNights(city, input.value);
+    });
     document.getElementById("peopleCtrl").addEventListener("click", (e) => {
       const btn = e.target.closest("[data-people-act]");
       if (!btn) return;
@@ -3867,6 +4354,10 @@
     seedCityCoords();
     rebuildItineraryUI();
     ensureHotelNights();
+    if (!localStorage.getItem(EDIT_KEY)) {
+      document.querySelectorAll(".cities-wrap .city").forEach((city) => syncHotelsFromCity(city));
+      refreshTripPanel();
+    }
     // Budget affiché seulement via le bouton « Calculer le budget »
   </script>
 </body>
