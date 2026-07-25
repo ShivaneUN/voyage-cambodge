@@ -897,6 +897,142 @@
       color: var(--moss-deep);
     }
 
+    /* —— Mode édition —— */
+    .edit-fab {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      z-index: 200;
+      border: none;
+      background: var(--moss-deep);
+      color: var(--sand);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.85rem 1.15rem;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(20, 32, 26, 0.25);
+    }
+
+    .edit-fab:hover { background: var(--moss); }
+
+    .edit-panel {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 210;
+      background: var(--moss-deep);
+      color: var(--sand);
+      padding: 1rem 1.25rem 1.25rem;
+      box-shadow: 0 -8px 32px rgba(20, 32, 26, 0.3);
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body.edit-mode .edit-panel { display: flex; }
+    body.edit-mode .edit-fab { display: none; }
+    body.edit-mode { padding-bottom: 5.5rem; }
+
+    .edit-panel .edit-hint {
+      font-size: 0.78rem;
+      opacity: 0.85;
+      width: 100%;
+      text-align: center;
+      margin: 0 0 0.15rem;
+    }
+
+    .edit-panel button,
+    .edit-add-btn {
+      border: 1px solid rgba(232, 226, 214, 0.35);
+      background: transparent;
+      color: var(--sand);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 0.55rem 0.85rem;
+      cursor: pointer;
+    }
+
+    .edit-panel button.primary {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--moss-deep);
+    }
+
+    .edit-panel button:hover,
+    .edit-add-btn:hover { background: rgba(255, 252, 247, 0.1); }
+
+    .edit-panel button.primary:hover { background: var(--gold); filter: brightness(1.05); }
+
+    .edit-add-row {
+      display: none;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.75rem 0 0.25rem;
+    }
+
+    body.edit-mode .edit-add-row { display: flex; }
+
+    .edit-add-btn {
+      background: rgba(47, 93, 74, 0.1);
+      border-color: var(--moss);
+      color: var(--moss-deep);
+    }
+
+    .edit-del {
+      display: none;
+      position: absolute;
+      top: 0.35rem;
+      right: 0;
+      border: none;
+      background: #8b3a3a;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 500;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    body.edit-mode .edit-del { display: block; }
+
+    body.edit-mode .hotel,
+    body.edit-mode .activity {
+      position: relative;
+      outline: 1px dashed rgba(47, 93, 74, 0.35);
+      outline-offset: 4px;
+      padding-right: 4.5rem;
+    }
+
+    body.edit-mode [contenteditable="true"] {
+      outline: 1px dashed var(--gold);
+      outline-offset: 2px;
+      background: rgba(184, 148, 90, 0.08);
+      min-width: 2rem;
+    }
+
+    .edit-toast {
+      position: fixed;
+      bottom: 5.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 220;
+      background: var(--moss);
+      color: var(--white);
+      padding: 0.65rem 1.1rem;
+      font-size: 0.85rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      white-space: nowrap;
+    }
+
+    .edit-toast.show { opacity: 1; }
+
     /* —— Reveal —— */
     .reveal {
       opacity: 0;
@@ -971,6 +1107,13 @@
       .activity-price,
       .leg-price {
         white-space: normal;
+      }
+
+      .edit-fab {
+        right: 0.75rem;
+        bottom: 0.75rem;
+        font-size: 0.78rem;
+        padding: 0.7rem 0.9rem;
       }
 
       .nav { padding: 1rem 1.25rem; }
@@ -2164,6 +2307,17 @@
     <p><span>Cambodge</span> — Voyage décembre · 8 étapes · temples, jungle & îles</p>
   </footer>
 
+  <button type="button" class="edit-fab" id="editFab" title="Modifier le contenu">Modifier</button>
+
+  <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
+    <p class="edit-hint">Clique un texte pour le changer · Ajoute / supprime hôtels &amp; activités · Enregistre pour garder sur cet appareil</p>
+    <button type="button" class="primary" id="editSave">Enregistrer</button>
+    <button type="button" id="editDownload">Télécharger HTML</button>
+    <button type="button" id="editReset">Réinitialiser</button>
+    <button type="button" id="editExit">Quitter</button>
+  </div>
+  <div class="edit-toast" id="editToast" aria-live="polite"></div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
     const nav = document.getElementById("nav");
@@ -2264,6 +2418,222 @@
     // Recalculate size after fonts/layout settle
     setTimeout(() => map.invalidateSize(), 200);
     window.addEventListener("resize", () => map.invalidateSize());
+
+    /* —— Mode édition (ajouter / modifier / supprimer) —— */
+    const EDIT_KEY = "voyageCambodgeContent_v1";
+    const citiesWrap = document.querySelector(".cities-wrap");
+    const budgetStack = document.querySelector(".budget-stack");
+    const toastEl = document.getElementById("editToast");
+
+    function showToast(msg) {
+      toastEl.textContent = msg;
+      toastEl.classList.add("show");
+      setTimeout(() => toastEl.classList.remove("show"), 2200);
+    }
+
+    function cleanEditChrome(root) {
+      root.querySelectorAll(".edit-del, .edit-add-row").forEach((el) => el.remove());
+      root.querySelectorAll("[contenteditable]").forEach((el) => {
+        el.removeAttribute("contenteditable");
+      });
+    }
+
+    function saveContent() {
+      const citiesClone = citiesWrap.cloneNode(true);
+      const budgetClone = budgetStack.cloneNode(true);
+      cleanEditChrome(citiesClone);
+      cleanEditChrome(budgetClone);
+      localStorage.setItem(
+        EDIT_KEY,
+        JSON.stringify({
+          cities: citiesClone.innerHTML,
+          budget: budgetClone.innerHTML,
+          savedAt: new Date().toISOString(),
+        })
+      );
+      showToast("Enregistré sur cet appareil");
+    }
+
+    function loadContent() {
+      try {
+        const raw = localStorage.getItem(EDIT_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (data.cities) citiesWrap.innerHTML = data.cities;
+        if (data.budget) budgetStack.innerHTML = data.budget;
+        document.querySelectorAll(".reveal").forEach((el) => {
+          el.classList.add("visible");
+          observer.observe(el);
+        });
+        document.querySelectorAll(".activity").forEach((el) => el.classList.add("visible"));
+      } catch (_) {
+        /* ignore corrupt storage */
+      }
+    }
+
+    function hotelTemplate() {
+      return `<div class="hotel">
+        <div class="hotel-top">
+          <p class="hotel-name"><a href="#" target="_blank" rel="noopener">Nouvel hôtel</a></p>
+          <p class="hotel-price">$0–0</p>
+        </div>
+        <p class="hotel-meta">Emplacement / note</p>
+      </div>`;
+    }
+
+    function activityTemplate() {
+      return `<div class="activity visible">
+        <div class="activity-thumb">
+          <img src="https://live.staticflickr.com/65535/49449516907_214a812894_b.jpg" alt="Nouvelle activité" loading="lazy" />
+        </div>
+        <div class="activity-info">
+          <div class="activity-top">
+            <h3>Nouvelle activité</h3>
+            <p class="activity-price">$0</p>
+          </div>
+          <p>Description de l’activité…</p>
+        </div>
+      </div>`;
+    }
+
+    function wireItemControls(scope) {
+      scope.querySelectorAll(".hotel, .activity").forEach((item) => {
+        if (item.querySelector(".edit-del")) return;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "edit-del";
+        btn.textContent = "Supprimer";
+        btn.addEventListener("click", () => {
+          if (confirm("Supprimer cet élément ?")) item.remove();
+        });
+        item.appendChild(btn);
+      });
+    }
+
+    function wireAddButtons() {
+      document.querySelectorAll(".city").forEach((city) => {
+        const hotels = city.querySelector(".hotels");
+        if (hotels && !hotels.parentElement.querySelector(".edit-add-hotels")) {
+          const row = document.createElement("div");
+          row.className = "edit-add-row edit-add-hotels";
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "edit-add-btn";
+          btn.textContent = "+ Ajouter un hôtel";
+          btn.addEventListener("click", () => {
+            hotels.insertAdjacentHTML("beforeend", hotelTemplate());
+            wireItemControls(hotels);
+            enableEditable(hotels);
+          });
+          row.appendChild(btn);
+          hotels.after(row);
+        }
+
+        const acts = [...city.querySelectorAll(".activity")];
+        if (acts.length) {
+          const actParent = acts[0].parentElement;
+          if (!actParent.querySelector(".edit-add-activities")) {
+            const row = document.createElement("div");
+            row.className = "edit-add-row edit-add-activities";
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "edit-add-btn";
+            btn.textContent = "+ Ajouter une activité";
+            btn.addEventListener("click", () => {
+              row.insertAdjacentHTML("beforebegin", activityTemplate());
+              wireItemControls(actParent);
+              enableEditable(actParent);
+            });
+            row.appendChild(btn);
+            actParent.appendChild(row);
+          }
+        }
+      });
+    }
+
+    function enableEditable(root) {
+      const selectors = [
+        ".hotel-name",
+        ".hotel-price",
+        ".hotel-meta",
+        ".hotel-pick",
+        ".hotel-atypical",
+        ".activity-top h3",
+        ".activity-price",
+        ".activity-info > p",
+        ".budget-amount",
+        ".budget-box > p:not(.budget-amount)",
+        ".budget-box h3",
+        ".leg-price",
+        ".transport-dest",
+        ".block-title",
+      ];
+      root.querySelectorAll(selectors.join(",")).forEach((el) => {
+        el.setAttribute("contenteditable", "true");
+        el.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && !e.shiftKey && el.tagName !== "P") {
+            e.preventDefault();
+            el.blur();
+          }
+        });
+      });
+      // Keep links editable via the parent hotel-name
+      root.querySelectorAll(".hotel-name a").forEach((a) => {
+        a.addEventListener("click", (e) => {
+          if (document.body.classList.contains("edit-mode")) {
+            e.preventDefault();
+            const url = prompt("Lien de l’hôtel (URL) :", a.getAttribute("href") || "");
+            if (url !== null) a.setAttribute("href", url.trim() || "#");
+          }
+        });
+      });
+    }
+
+    function enterEditMode() {
+      document.body.classList.add("edit-mode");
+      wireAddButtons();
+      wireItemControls(document);
+      enableEditable(document);
+      showToast("Mode édition activé");
+    }
+
+    function exitEditMode() {
+      document.body.classList.remove("edit-mode");
+      cleanEditChrome(document);
+      showToast("Mode édition quitté");
+    }
+
+    function downloadHtml() {
+      const wasEditing = document.body.classList.contains("edit-mode");
+      if (wasEditing) {
+        document.body.classList.remove("edit-mode");
+        cleanEditChrome(document);
+      }
+      const clone = document.documentElement.cloneNode(true);
+      clone.querySelectorAll(".edit-fab, .edit-panel, .edit-toast").forEach((el) => el.remove());
+      const html = "<!DOCTYPE html>\n" + clone.outerHTML;
+      const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "voyage-cambodge.html";
+      a.click();
+      URL.revokeObjectURL(url);
+      if (wasEditing) enterEditMode();
+      showToast("HTML téléchargé");
+    }
+
+    document.getElementById("editFab").addEventListener("click", enterEditMode);
+    document.getElementById("editExit").addEventListener("click", exitEditMode);
+    document.getElementById("editSave").addEventListener("click", saveContent);
+    document.getElementById("editDownload").addEventListener("click", downloadHtml);
+    document.getElementById("editReset").addEventListener("click", () => {
+      if (!confirm("Effacer tes modifications et revenir à la version d’origine ?")) return;
+      localStorage.removeItem(EDIT_KEY);
+      location.reload();
+    });
+
+    loadContent();
   </script>
 </body>
 </html>
