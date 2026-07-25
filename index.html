@@ -865,6 +865,43 @@
       color: var(--ink-soft);
     }
 
+    .budget-pick {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin-top: 0.55rem;
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      user-select: none;
+    }
+
+    .budget-pick input {
+      width: 1rem;
+      height: 1rem;
+      accent-color: var(--moss);
+      cursor: pointer;
+    }
+
+    .budget-pick strong {
+      color: var(--moss);
+      font-weight: 500;
+    }
+
+    .hotel[data-in-budget="0"],
+    .activity[data-in-budget="0"],
+    .transport-leg[data-in-budget="0"] {
+      opacity: 0.55;
+    }
+
+    .activity .budget-pick,
+    .transport-leg .budget-pick {
+      margin-top: 0.4rem;
+    }
+
+    .transport-leg {
+      position: relative;
+    }
+
     .note {
       margin-top: 1.25rem;
       font-size: 0.85rem;
@@ -2416,22 +2453,22 @@
           <div class="budget-box" data-budget="hotels">
             <h3>Budget hébergement</h3>
             <p class="budget-amount">$700 – $1200</p>
-            <p class="budget-note">Auto · prix / nuit × nuits choisies par hôtel</p>
+            <p class="budget-note">Auto · cases cochées × nuits choisies</p>
           </div>
           <div class="budget-box" data-budget="activities">
             <h3>Budget activités</h3>
             <p class="budget-amount">$350 – $800</p>
-            <p class="budget-note">Auto · somme des prix × 2 personnes</p>
+            <p class="budget-note">Auto · activités cochées × 2 personnes</p>
           </div>
           <div class="budget-box" data-budget="transport">
             <h3>Budget transport</h3>
             <p class="budget-amount">$200 – $650</p>
-            <p class="budget-note">Auto · trajets entre villes × 2 personnes</p>
+            <p class="budget-note">Auto · trajets cochés × 2 personnes</p>
           </div>
           <div class="budget-box budget-total" data-budget="total">
             <h3>Total estimé</h3>
             <p class="budget-amount">$1250 – $2650</p>
-            <p class="budget-note">Hébergement + activités + transport · hors vols &amp; repas</p>
+            <p class="budget-note">Uniquement les choix cochés · hors vols &amp; repas</p>
           </div>
         </div>
       </div>
@@ -2445,7 +2482,7 @@
   <button type="button" class="edit-fab" id="editFab" title="Modifier le contenu">Modifier</button>
 
   <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
-    <p class="edit-hint">Nuits par hôtel (− / +) · budget auto · + Ville · hôtels / activités / trajets</p>
+    <p class="edit-hint">Coche « Dans le budget » · nuits par hôtel · total auto</p>
     <button type="button" class="primary" id="editSave">Enregistrer</button>
     <button type="button" id="editAddCity">+ Ville</button>
     <button type="button" id="editBudget">Recalculer budget</button>
@@ -2648,8 +2685,8 @@
     window.addEventListener("resize", () => map.invalidateSize());
 
     /* —— Mode édition (villes + budget auto) —— */
-    const EDIT_KEY = "voyageCambodgeContent_v4";
-    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3"];
+    const EDIT_KEY = "voyageCambodgeContent_v5";
+    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4"];
     OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
 
     const citiesWrap = document.querySelector(".cities-wrap");
@@ -2699,18 +2736,30 @@
 
       let actMin = 0;
       let actMax = 0;
-      document.querySelectorAll(".activity-price").forEach((el) => {
-        const p = parseMoney(el.textContent);
+      let actCount = 0;
+      document.querySelectorAll(".cities-wrap .activity").forEach((act) => {
+        const on = act.dataset.inBudget !== "0";
+        const p = parseMoney(act.querySelector(".activity-price")?.textContent || "");
+        const tag = act.querySelector(".budget-pick strong");
+        if (tag) tag.textContent = on ? formatRange(p.min * 2, p.max * 2) + " · 2 pers." : "exclu";
+        if (!on) return;
         actMin += p.min * 2;
         actMax += p.max * 2;
+        actCount += 1;
       });
 
       let trMin = 0;
       let trMax = 0;
-      document.querySelectorAll(".leg-price").forEach((el) => {
-        const p = parseMoney(el.textContent);
+      let trCount = 0;
+      document.querySelectorAll(".cities-wrap .transport-leg").forEach((leg) => {
+        const on = leg.dataset.inBudget !== "0";
+        const p = parseMoney(leg.querySelector(".leg-price")?.textContent || "");
+        const tag = leg.querySelector(".budget-pick strong");
+        if (tag) tag.textContent = on ? formatRange(p.min * 2, p.max * 2) + " · 2 pers." : "exclu";
+        if (!on) return;
         trMin += p.min * 2;
         trMax += p.max * 2;
+        trCount += 1;
       });
 
       let hotMin = 0;
@@ -2719,6 +2768,7 @@
       let bookedHotels = 0;
 
       document.querySelectorAll(".cities-wrap .hotel").forEach((hotel) => {
+        const on = hotel.dataset.inBudget !== "0";
         const nights = Math.max(0, parseInt(hotel.dataset.nights || "0", 10) || 0);
         hotel.dataset.nights = String(nights);
         const priceEl = hotel.querySelector(".hotel-price");
@@ -2726,14 +2776,16 @@
         const p = parseMoney(priceEl?.textContent || "");
 
         if (subEl) {
-          if (nights <= 0) {
-            subEl.textContent = "non réservé (0 nuit)";
+          if (!on) {
+            subEl.textContent = "exclu du budget";
+          } else if (nights <= 0) {
+            subEl.textContent = "coché · mets au moins 1 nuit";
           } else {
             subEl.textContent = `= ${formatRange(p.min * nights, p.max * nights)} (${nights} nuit${nights > 1 ? "s" : ""})`;
           }
         }
 
-        if (nights <= 0) return;
+        if (!on || nights <= 0) return;
         hotMin += p.min * nights;
         hotMax += p.max * nights;
         bookedNights += nights;
@@ -2744,19 +2796,48 @@
         "hotels",
         hotMin,
         hotMax,
-        `Auto · ${bookedHotels} hôtel${bookedHotels > 1 ? "s" : ""} · ${bookedNights} nuit${bookedNights > 1 ? "s" : ""} · ${nCities} étape${nCities > 1 ? "s" : ""}`
+        `Choix · ${bookedHotels} hôtel${bookedHotels > 1 ? "s" : ""} · ${bookedNights} nuit${bookedNights > 1 ? "s" : ""} · ${nCities} étape${nCities > 1 ? "s" : ""}`
       );
-      setBudget("activities", actMin, actMax, "Auto · somme des activités × 2 personnes");
-      setBudget("transport", trMin, trMax, "Auto · trajets entre villes × 2 personnes");
-      setBudget("total", hotMin + actMin + trMin, hotMax + actMax + trMax, "Hébergement + activités + transport · hors vols & repas");
+      setBudget("activities", actMin, actMax, `Choix · ${actCount} activité${actCount > 1 ? "s" : ""} × 2 personnes`);
+      setBudget("transport", trMin, trMax, `Choix · ${trCount} trajet${trCount > 1 ? "s" : ""} × 2 personnes`);
+      setBudget("total", hotMin + actMin + trMin, hotMax + actMax + trMax, "Uniquement les éléments cochés · hors vols & repas");
     }
 
     function setHotelNights(hotel, nights) {
       const n = Math.max(0, Math.min(60, parseInt(nights, 10) || 0));
       hotel.dataset.nights = String(n);
+      if (n > 0) hotel.dataset.inBudget = "1";
       const input = hotel.querySelector(".hotel-nights-ctrl input");
       if (input && String(input.value) !== String(n)) input.value = String(n);
+      const cb = hotel.querySelector('.budget-pick input[type="checkbox"]');
+      if (cb) cb.checked = hotel.dataset.inBudget !== "0";
       scheduleBudget();
+    }
+
+    function setInBudget(el, on) {
+      el.dataset.inBudget = on ? "1" : "0";
+      const cb = el.querySelector('.budget-pick input[type="checkbox"]');
+      if (cb) cb.checked = !!on;
+      if (el.classList.contains("hotel") && on) {
+        const nights = parseInt(el.dataset.nights || "0", 10) || 0;
+        if (nights <= 0) setHotelNights(el, 2);
+      }
+      scheduleBudget();
+    }
+
+    function ensureBudgetPick(el, defaultOn) {
+      if (el.dataset.inBudget === undefined || el.dataset.inBudget === "") {
+        el.dataset.inBudget = defaultOn ? "1" : "0";
+      }
+      if (el.querySelector(".budget-pick")) {
+        const cb = el.querySelector('.budget-pick input[type="checkbox"]');
+        if (cb) cb.checked = el.dataset.inBudget !== "0";
+        return;
+      }
+      const row = document.createElement("label");
+      row.className = "budget-pick";
+      row.innerHTML = `<input type="checkbox" ${el.dataset.inBudget !== "0" ? "checked" : ""} /> Dans le budget · <strong>—</strong>`;
+      el.appendChild(row);
     }
 
     function ensureHotelNights(root = document) {
@@ -2764,6 +2845,8 @@
         if (hotel.dataset.nights === undefined || hotel.dataset.nights === "") {
           hotel.dataset.nights = hotel.querySelector(".hotel-pick") ? "2" : "0";
         }
+        const defaultOn = hotel.querySelector(".hotel-pick") || (parseInt(hotel.dataset.nights || "0", 10) || 0) > 0;
+        ensureBudgetPick(hotel, defaultOn);
 
         if (!hotel.querySelector(".hotel-nights")) {
           const row = document.createElement("div");
@@ -2783,6 +2866,16 @@
         const input = hotel.querySelector(".hotel-nights-ctrl input");
         if (input) input.value = hotel.dataset.nights;
       });
+
+      root.querySelectorAll(".cities-wrap .activity").forEach((act) => {
+        ensureBudgetPick(act, true);
+      });
+
+      root.querySelectorAll(".cities-wrap .transport-leg").forEach((leg) => {
+        // Par défaut inclus ; si plusieurs trajets dans la même ville, l'utilisateur décoche
+        ensureBudgetPick(leg, true);
+      });
+
       scheduleBudget();
     }
 
@@ -2797,6 +2890,12 @@
     });
 
     citiesWrap.addEventListener("change", (e) => {
+      const budgetCb = e.target.closest(".budget-pick input[type='checkbox']");
+      if (budgetCb) {
+        const item = budgetCb.closest(".hotel, .activity, .transport-leg");
+        if (item) setInBudget(item, budgetCb.checked);
+        return;
+      }
       const input = e.target.closest(".hotel-nights-ctrl input");
       if (!input) return;
       const hotel = input.closest(".hotel");
@@ -2888,7 +2987,7 @@
     }
 
     function hotelTemplate() {
-      return `<div class="hotel" data-nights="2">
+      return `<div class="hotel" data-nights="2" data-in-budget="1">
         <div class="hotel-top">
           <p class="hotel-name"><a href="#" target="_blank" rel="noopener noreferrer">Nouvel hôtel</a></p>
           <p class="hotel-price">$0–0</p>
@@ -2898,7 +2997,7 @@
     }
 
     function activityTemplate() {
-      return `<div class="activity visible">
+      return `<div class="activity visible" data-in-budget="1">
         <div class="activity-thumb">
           <img src="https://live.staticflickr.com/65535/49449516907_214a812894_b.jpg" alt="Nouvelle activité" loading="lazy" />
         </div>
@@ -2913,7 +3012,7 @@
     }
 
     function transportLegTemplate(nextName) {
-      return `<div class="transport-leg">
+      return `<div class="transport-leg" data-in-budget="1">
         <div class="transport-leg-top">
           <h4 class="transport-leg-title">Aller à ${nextName || "…"}</h4>
           <p class="leg-price">$0–0</p>
