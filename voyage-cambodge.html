@@ -1,0 +1,2269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cambodge — Voyage Décembre</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <style>
+    :root {
+      --ink: #14201a;
+      --ink-soft: #3d4f45;
+      --sand: #e8e2d6;
+      --sand-deep: #d4cbb8;
+      --moss: #2f5d4a;
+      --moss-deep: #1c3a2e;
+      --water: #3a7d7a;
+      --gold: #b8945a;
+      --cream: #f7f4ee;
+      --white: #fffcf7;
+      --shadow: rgba(20, 32, 26, 0.12);
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-body: "Outfit", system-ui, sans-serif;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--ink);
+      background: var(--cream);
+      line-height: 1.6;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    a { color: var(--moss); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    a:hover { color: var(--moss-deep); }
+
+    /* —— Nav —— */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 2rem;
+      transition: background 0.4s var(--ease), backdrop-filter 0.4s, padding 0.3s;
+    }
+
+    .nav.scrolled {
+      background: rgba(247, 244, 238, 0.92);
+      backdrop-filter: blur(12px);
+      padding: 0.75rem 2rem;
+      box-shadow: 0 1px 0 var(--shadow);
+    }
+
+    .nav-brand {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav.scrolled .nav-brand { color: var(--moss-deep); }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255, 252, 247, 0.85);
+      text-decoration: none;
+      transition: color 0.25s, opacity 0.25s;
+    }
+
+    .nav.scrolled .nav-links a { color: var(--ink-soft); }
+    .nav-links a:hover { opacity: 0.7; }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 28px;
+      height: 20px;
+      position: relative;
+    }
+
+    .nav-toggle span,
+    .nav-toggle span::before,
+    .nav-toggle span::after {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: var(--white);
+      position: absolute;
+      left: 0;
+      transition: background 0.3s;
+    }
+
+    .nav.scrolled .nav-toggle span,
+    .nav.scrolled .nav-toggle span::before,
+    .nav.scrolled .nav-toggle span::after { background: var(--ink); }
+
+    .nav-toggle span { top: 9px; }
+    .nav-toggle span::before { content: ""; top: -8px; }
+    .nav-toggle span::after { content: ""; top: 8px; }
+
+    /* —— Hero —— */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 2rem 4.5rem;
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-bg img {
+      transform: scale(1.05);
+      animation: heroZoom 18s var(--ease) forwards;
+    }
+
+    @keyframes heroZoom {
+      from { transform: scale(1.08); }
+      to { transform: scale(1); }
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(20, 32, 26, 0.25) 0%, rgba(20, 32, 26, 0.08) 35%, rgba(20, 32, 26, 0.72) 100%),
+        linear-gradient(90deg, rgba(28, 58, 46, 0.25) 0%, transparent 55%);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 720px;
+      animation: fadeUp 1s var(--ease) 0.3s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-brand {
+      font-family: var(--font-display);
+      font-size: clamp(4.5rem, 14vw, 8.5rem);
+      font-weight: 700;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 400;
+      font-style: italic;
+      opacity: 0.95;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-lead {
+      font-size: 1.05rem;
+      font-weight: 300;
+      max-width: 420px;
+      opacity: 0.88;
+      margin-bottom: 2rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 1.6rem;
+      background: var(--white);
+      color: var(--moss-deep);
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      border: none;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      color: var(--moss-deep);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 1.5rem;
+      right: 2rem;
+      z-index: 2;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      writing-mode: vertical-rl;
+      animation: fadeUp 1s var(--ease) 0.8s both;
+    }
+
+    /* —— Route strip —— */
+    .route {
+      background: var(--moss-deep);
+      color: var(--sand);
+      padding: 2.5rem 0;
+      overflow: hidden;
+    }
+
+    .route-label {
+      text-align: center;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .route-track {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .route-stop {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .route-stop a {
+      color: var(--sand);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.35rem 0.6rem;
+      transition: color 0.25s;
+      white-space: nowrap;
+    }
+
+    .route-stop a:hover { color: var(--gold); }
+
+    .route-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .route-line {
+      width: 28px;
+      height: 1px;
+      background: rgba(232, 226, 214, 0.35);
+      margin: 0 0.15rem;
+    }
+
+    /* —— Map —— */
+    .map-section {
+      background: var(--cream);
+      padding: 4rem 2rem 5rem;
+    }
+
+    .map-section .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .map-section .section-head {
+      margin-bottom: 2rem;
+    }
+
+    #itineraire-map {
+      height: clamp(360px, 58vh, 560px);
+      width: 100%;
+      background: var(--sand);
+      border: 1px solid var(--sand-deep);
+      z-index: 1;
+    }
+
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.25rem;
+      margin-top: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--ink-soft);
+    }
+
+    .map-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .map-legend i {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--moss-deep);
+      color: var(--sand);
+      font-style: normal;
+      font-size: 0.65rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-body);
+    }
+
+    .leaflet-popup-content-wrapper {
+      border-radius: 0;
+      box-shadow: 0 8px 24px var(--shadow);
+      font-family: var(--font-body);
+    }
+
+    .leaflet-popup-content {
+      margin: 0.75rem 0.9rem;
+      font-size: 0.88rem;
+      line-height: 1.4;
+    }
+
+    .leaflet-popup-content strong {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--moss-deep);
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .leaflet-popup-content a {
+      color: var(--moss);
+      font-weight: 500;
+      font-size: 0.8rem;
+    }
+
+    .map-marker {
+      background: var(--moss-deep);
+      color: var(--sand);
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: var(--font-body);
+      box-shadow: 0 2px 8px rgba(20, 32, 26, 0.35);
+    }
+
+    /* —— Sections —— */
+    .section {
+      padding: 5rem 2rem;
+    }
+
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-head {
+      margin-bottom: 3rem;
+      max-width: 560px;
+    }
+
+    .section-num {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 3.5rem);
+      font-weight: 600;
+      line-height: 1.1;
+      color: var(--moss-deep);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--ink-soft);
+    }
+
+    /* —— City layout —— */
+    .city {
+      padding: 0;
+      margin-bottom: 0;
+    }
+
+    .city + .city { margin-top: 0; }
+
+    .city-visual {
+      position: relative;
+      height: clamp(320px, 55vh, 520px);
+      overflow: hidden;
+    }
+
+    .city-visual img {
+      transition: transform 8s var(--ease);
+    }
+
+    .city:hover .city-visual img {
+      transform: scale(1.04);
+    }
+
+    .city-visual-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 3rem 2rem 1.75rem;
+      background: linear-gradient(transparent, rgba(20, 32, 26, 0.85));
+      color: var(--white);
+    }
+
+    .city-visual-label .num {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 0.35rem;
+    }
+
+    .city-visual-label h2 {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3.2rem);
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .city-body {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2.5rem 2rem 4.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .city-transport {
+      grid-column: 1 / -1;
+    }
+
+    .transport-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--sand-deep);
+    }
+
+    .transport-row {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.9fr) 1.4fr;
+      gap: 1rem;
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--sand-deep);
+      font-size: 0.88rem;
+      align-items: start;
+    }
+
+    .transport-dest {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .transport-modes {
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    .transport-modes strong {
+      color: var(--moss);
+      font-weight: 500;
+    }
+
+    .transport-next {
+      margin-top: 1.25rem;
+      padding: 1rem 1.1rem;
+      background: rgba(47, 93, 74, 0.06);
+      border-left: 2px solid var(--gold);
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+    }
+
+    .transport-next strong {
+      color: var(--moss-deep);
+      font-weight: 500;
+    }
+
+    .transport-modes a,
+    .leg-option a {
+      color: var(--moss);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .transport-modes a:hover,
+    .leg-option a:hover {
+      color: var(--moss-deep);
+    }
+
+    .transport-leg {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--sand-deep);
+    }
+
+    .transport-leg-note {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .leg-option {
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--sand-deep);
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    .leg-option:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .leg-option-name {
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+
+    .leg-option-name span {
+      font-weight: 400;
+      color: var(--moss);
+      font-size: 0.82rem;
+    }
+
+    .ferry-schedule {
+      margin: 0.5rem 0 0.35rem;
+      padding: 0.65rem 0.85rem;
+      background: rgba(47, 93, 74, 0.05);
+      list-style: none;
+      font-size: 0.82rem;
+    }
+
+    .ferry-schedule li {
+      padding: 0.15rem 0;
+    }
+
+    .hotel-alt {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.82rem;
+    }
+
+    .block-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--moss-deep);
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--sand-deep);
+    }
+
+    .activity {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    }
+
+    .activity.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .activity-thumb {
+      width: 100px;
+      height: 100px;
+      overflow: hidden;
+      background: var(--sand);
+    }
+
+    .activity-info h3 {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin: 0;
+    }
+
+    .activity-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .activity-info p {
+      font-size: 0.88rem;
+      color: var(--ink-soft);
+      margin-bottom: 0.45rem;
+    }
+
+    .activity-info a {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .activity-price {
+      flex-shrink: 0;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--moss);
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .transport-leg-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .transport-leg-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--moss-deep);
+      margin: 0;
+    }
+
+    .leg-price {
+      flex-shrink: 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--moss);
+      white-space: nowrap;
+    }
+
+    .hotels {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .hotel {
+      padding: 1.15rem 0;
+      border-bottom: 1px solid var(--sand-deep);
+    }
+
+    .hotel:first-child { padding-top: 0; }
+
+    .hotel-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .hotel-name {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .hotel-name a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .hotel-name a:hover { color: var(--moss); text-decoration: underline; }
+
+    .hotel-price {
+      font-size: 0.85rem;
+      color: var(--moss);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .hotel-meta {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .hotel-pick {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .hotel-atypical {
+      display: inline-block;
+      margin-top: 0.4rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--moss);
+      font-weight: 500;
+    }
+
+    .note {
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+      font-style: italic;
+      padding-left: 0.85rem;
+      border-left: 2px solid var(--gold);
+    }
+
+    /* —— Alternating bg —— */
+    .city:nth-child(even) .city-body {
+      background: var(--white);
+    }
+
+    .city:nth-child(odd) .city-body {
+      background: var(--cream);
+    }
+
+    .cities-wrap {
+      background: var(--cream);
+    }
+
+    /* —— Notes & budget —— */
+    .practical {
+      background: var(--moss-deep);
+      color: var(--sand);
+      padding: 5rem 2rem;
+    }
+
+    .practical .section-title { color: var(--white); }
+    .practical .section-desc { color: rgba(232, 226, 214, 0.75); }
+    .practical a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .practical-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 3rem;
+      margin-top: 2.5rem;
+      max-width: 1100px;
+    }
+
+    .practical ul {
+      list-style: none;
+    }
+
+    .practical li {
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(232, 226, 214, 0.15);
+      font-size: 0.95rem;
+      padding-left: 1.25rem;
+      position: relative;
+    }
+
+    .practical li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1.25rem;
+      width: 6px;
+      height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+
+    .budget-box {
+      background: rgba(255, 252, 247, 0.06);
+      border: 1px solid rgba(232, 226, 214, 0.2);
+      padding: 1.5rem 1.75rem;
+      align-self: start;
+    }
+
+    .budget-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .budget-box h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+
+    .budget-amount {
+      font-family: var(--font-display);
+      font-size: 1.85rem;
+      font-weight: 600;
+      color: var(--gold);
+      line-height: 1.2;
+      margin-bottom: 0.4rem;
+    }
+
+    .budget-box.budget-total {
+      border-color: rgba(201, 162, 77, 0.45);
+      background: rgba(201, 162, 77, 0.1);
+      margin-top: 0.25rem;
+    }
+
+    .budget-box.budget-total h3 {
+      font-size: 1.35rem;
+    }
+
+    .budget-box.budget-total .budget-amount {
+      font-size: 2.2rem;
+    }
+
+    .budget-box p {
+      font-size: 0.82rem;
+      opacity: 0.75;
+      line-height: 1.45;
+    }
+
+    /* —— Footer —— */
+    footer {
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      background: var(--sand);
+    }
+
+    footer span {
+      font-family: var(--font-display);
+      font-style: italic;
+      color: var(--moss-deep);
+    }
+
+    /* —— Reveal —— */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* —— Responsive —— */
+    @media (max-width: 860px) {
+      .city-body {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .transport-row {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+      }
+
+      .practical-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links { display: none; }
+
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--moss-deep);
+        padding: 1.5rem 2rem 2rem;
+        gap: 1rem;
+      }
+
+      .nav-links.open a { color: var(--sand); }
+      .nav-toggle { display: block; }
+
+      .route-line { width: 12px; }
+      .route-stop a { font-size: 0.75rem; padding: 0.25rem 0.35rem; }
+
+      .map-section { padding: 3rem 1.25rem 4rem; }
+      #itineraire-map { height: 340px; }
+
+      .hero { padding-bottom: 3.5rem; }
+      .hero-scroll { display: none; }
+    }
+
+    @media (max-width: 520px) {
+      .activity {
+        grid-template-columns: 80px 1fr;
+      }
+
+      .activity-thumb {
+        width: 80px;
+        height: 80px;
+      }
+
+      .activity-top,
+      .transport-leg-top {
+        flex-wrap: wrap;
+        gap: 0.2rem 0.75rem;
+      }
+
+      .activity-price,
+      .leg-price {
+        white-space: normal;
+      }
+
+      .nav { padding: 1rem 1.25rem; }
+      .section, .city-body { padding-left: 1.25rem; padding-right: 1.25rem; }
+      .hero { padding-left: 1.25rem; padding-right: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav" id="nav">
+    <a href="#top" class="nav-brand">Cambodge</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#carte">Carte</a></li>
+      <li><a href="#siem-reap">Siem Reap</a></li>
+      <li><a href="#battambang">Battambang</a></li>
+      <li><a href="#koh-kong">Koh Kong</a></li>
+      <li><a href="#sihanoukville">Sihanoukville</a></li>
+      <li><a href="#koh-rong">Koh Rong</a></li>
+      <li><a href="#koh-ta-kiev">Koh Ta Kiev</a></li>
+      <li><a href="#kampot">Kampot</a></li>
+      <li><a href="#phnom-penh">Phnom Penh</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-bg">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Angkor_Wat_with_its_reflection_%28cropped%29.jpg/1920px-Angkor_Wat_with_its_reflection_%28cropped%29.jpg"
+        alt="Angkor Wat et son reflet, Siem Reap"
+        width="1920"
+        height="1080"
+      />
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-brand">Cambodge</p>
+      <h1 class="hero-title">Voyage · Décembre</h1>
+      <p class="hero-lead">Huit étapes, des temples millénaires aux plages de l’archipel — votre itinéraire détaillé.</p>
+      <a href="#carte" class="hero-cta">Voir le trajet →</a>
+    </div>
+    <p class="hero-scroll">Défiler</p>
+  </header>
+
+  <div class="route">
+    <p class="route-label">Itinéraire</p>
+    <div class="route-track">
+      <div class="route-stop"><span class="route-dot"></span><a href="#siem-reap">Siem Reap</a></div>
+      <span class="route-line"></span>
+      <div class="route-stop"><span class="route-dot"></span><a href="#battambang">Battambang</a></div>
+      <span class="route-line"></span>
+      <div class="route-stop"><span class="route-dot"></span><a href="#koh-kong">Koh Kong</a></div>
+      <span class="route-line"></span>
+      <div class="route-stop"><span class="route-dot"></span><a href="#sihanoukville">Sihanoukville</a></div>
+      <span class="route-line"></span>
+      <div class="route-stop"><span class="route-dot"></span><a href="#koh-rong">Koh Rong</a></div>
+      <span class="route-line"></span>
+      <div class="route-stop"><span class="route-dot"></span><a href="#koh-ta-kiev">Koh Ta Kiev</a></div>
+      <span class="route-line"></span>
+      <div class="route-stop"><span class="route-dot"></span><a href="#kampot">Kampot</a></div>
+      <span class="route-line"></span>
+      <div class="route-stop"><span class="route-dot"></span><a href="#phnom-penh">Phnom Penh</a></div>
+    </div>
+  </div>
+
+  <section class="map-section" id="carte">
+    <div class="section-inner">
+      <div class="section-head">
+        <p class="section-num">Carte</p>
+        <h2 class="section-title">Itinéraire sur le terrain</h2>
+        <p class="section-desc">Les 8 étapes du voyage, du nord au sud — cliquez un point pour ouvrir la fiche.</p>
+      </div>
+      <div id="itineraire-map" role="img" aria-label="Carte de l'itinéraire au Cambodge"></div>
+      <div class="map-legend" id="map-legend"></div>
+    </div>
+  </section>
+
+  <main class="cities-wrap">
+
+    <!-- 1. Siem Reap -->
+    <article class="city" id="siem-reap">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/20171126_Angkor_Wat_4712_DxO.jpg/1280px-20171126_Angkor_Wat_4712_DxO.jpg" alt="Angkor Wat, Siem Reap" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape 01</p>
+          <h2>Siem Reap</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal">
+          <h3 class="block-title">Activités</h3>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/8232/8473971301_c48a63e213_b.jpg" alt="Angkor Wat au lever du soleil" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Angkor Wat (avec guide)</h3>
+                <p class="activity-price">$37–72</p>
+              </div>
+              <p>Pass 1 / 3 / 7 jours. Guide en plus ~$25–50 / jour. Lever de soleil et circuit des temples.</p>
+              <a href="https://ticket.angkorenterprise.gov.kh/" target="_blank" rel="noopener">Billets officiels Angkor →</a>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/2873/33924229681_3190f53b3a_b.jpg" alt="Cascade de Phnom Kulen, Siem Reap" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Cascade Phnom Kulen (avec guide)</h3>
+                <p class="activity-price">$20–95</p>
+              </div>
+              <p>Entrée parc $20 (hors pass Angkor) + taxi A/R ~$65–75. Montagne sacrée et cascade.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/4425/36441720835_1359c42f2c_b.jpg" alt="Psar Chas (Old Market), Siem Reap" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Old Market (Psar Chas)</h3>
+                <p class="activity-price">Gratuit</p>
+              </div>
+              <p>Souvenirs, soie, épices et street food (~$1–5) au cœur de la vieille ville.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/7084/7288275208_756108ae2c_b.jpg" alt="Spectacle de danse Apsara, Siem Reap" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Dîner spectacle Apsara</h3>
+                <p class="activity-price">$20–35</p>
+              </div>
+              <p>Danse classique khmère et dîner traditionnel en soirée.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="http://www.thecommunitytravel.com/" target="_blank" rel="noopener">The Community – Siem Reap</a> ★4.9</p>
+                <p class="hotel-price">$30–50</p>
+              </div>
+              <p class="hotel-meta">4,5 km d’Angkor (~12 min tuktuk)</p>
+              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/koulen-central.html" target="_blank" rel="noopener">Koulen Central Mall and Hotel</a> ★4.7</p>
+                <p class="hotel-price">$65–130</p>
+              </div>
+              <p class="hotel-meta">0,4 km de l’Old Market (~5 min à pied)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">Angkor Wat</div>
+              <div class="transport-modes">
+                Tuktuk journée · <strong>~$15–25</strong> (+~$5 lever du soleil)
+                <span class="hotel-alt"><strong>The Community</strong> — ~12 min · plus proche des temples</span>
+                <span class="hotel-alt"><strong>Koulen Central</strong> — ~17 min · plus proche du centre</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Phnom Kulen</div>
+              <div class="transport-modes">
+                Voiture / taxi A/R (~1 h) — tuktuk déconseillé<br><strong>~$65–75</strong> véhicule (hors entrée $20)
+                <span class="hotel-alt">Temps similaire depuis les deux hôtels (~34–36 km)</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Old Market</div>
+              <div class="transport-modes">
+                <span class="hotel-alt"><strong>Koulen Central</strong> — à pied ~5 min (Gratuit)</span>
+                <span class="hotel-alt"><strong>The Community</strong> — tuktuk ~7 min · <strong>~$1–3</strong></span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Spectacle Apsara</div>
+              <div class="transport-modes">Tuktuk · <strong>~$2–5</strong> · souvent transfert inclus avec le dîner-spectacle</div>
+            </div>
+          </div>
+          <div class="transport-leg">
+            <div class="transport-leg-top">
+              <h4 class="transport-leg-title">Aller à Battambang</h4>
+              <p class="leg-price">$7–70</p>
+            </div>
+            <p class="transport-leg-note">Horaires et prix variables — vérifier le jour J sur les sites.</p>
+            <div class="leg-option">
+              <div class="leg-option-name">Bus / minivan VIP <span>~$7–12 · ~3–4 h</span></div>
+              Plusieurs départs / jour. Comparer :
+              <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a> ·
+              <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a> ·
+              <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a> ·
+              <a href="https://12go.asia/" target="_blank" rel="noopener">12Go</a>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Taxi / voiture privée <span>~$45–70 · ~2,5–3,5 h</span></div>
+              Plus flexible (départ de l’hôtel). Demander à la réception The Community ou Koulen.
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Grab / PassApp (si dispo) <span>tarif variable</span></div>
+              Parfois possible pour ce trajet ; sinon réserver un chauffeur via l’hôtel.
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. Battambang -->
+    <article class="city" id="battambang">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Aerial_view_of_Battambang_city.jpg/1280px-Aerial_view_of_Battambang_city.jpg" alt="Vue aérienne de Battambang" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape 02</p>
+          <h2>Battambang</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal">
+          <h3 class="block-title">Activités</h3>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/65535/49449516907_214a812894_b.jpg" alt="Tuk-tuk khmer au Cambodge" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Journée en tuktuk</h3>
+                <p class="activity-price">$15–25</p>
+              </div>
+              <p>Exploration des villages, rizières et architecture coloniale (souvent / pers. ou véhicule).</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/3862/14265275608_cbd2a68fea_b.jpg" alt="Train de bambou (Norry), Battambang" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Train de bambou (Norry)</h3>
+                <p class="activity-price">$5</p>
+              </div>
+              <p>Traversée unique sur rails en plateforme de bambou motorisée. + tuktuk A/R ~$2–4.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/65535/49854991557_6098d0b691_b.jpg" alt="Grotte aux chauves-souris, Phnom Sampov" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Grotte de la mort & chauves-souris</h3>
+                <p class="activity-price">$2–15</p>
+              </div>
+              <p>Entrée Phnom Sampov ~$2–3. Inclus dans une journée tuktuk ~$15 (bambou + grottes + sunset).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/seng-hout.html" target="_blank" rel="noopener">Seng Hout Hotel</a> ★3.5</p>
+                <p class="hotel-price">$18–28</p>
+              </div>
+              <p class="hotel-meta">~12 min du train de bambou</p>
+              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="http://www.cambanalariviere.com/" target="_blank" rel="noopener">Cambana La Rivière Hotel</a> ★4.6</p>
+                <p class="hotel-price">$55–85</p>
+              </div>
+              <p class="hotel-meta">Au bord de la rivière Sangker</p>
+            </div>
+          </div>
+          <p class="note">Grotte de la mort et grotte aux chauves-souris = même site (Phnom Sampov).</p>
+        </div>
+
+        <div class="reveal city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">Train de bambou</div>
+              <div class="transport-modes">
+                Tuktuk A/R · <strong>~$2–4</strong> (ou inclus journée tuktuk)
+                <span class="hotel-alt"><strong>Seng Hout</strong> — ~12 min · 4,3 km</span>
+                <span class="hotel-alt"><strong>Cambana La Rivière</strong> — ~10 min · 3,8 km</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Phnom Sampov (grottes)</div>
+              <div class="transport-modes">
+                Tuktuk ~28–30 min · journée type bambou + grottes + sunset <strong>~$15</strong> (hors ticket train $5)
+                <span class="hotel-alt">Temps quasi identique depuis Seng Hout et Cambana</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Journée en tuktuk</div>
+              <div class="transport-modes">Chauffeur à la journée depuis l’hôtel · <strong>~$15</strong> / pers. (formule type) ou véhicule privé</div>
+            </div>
+          </div>
+          <div class="transport-leg">
+            <div class="transport-leg-top">
+              <h4 class="transport-leg-title">Aller à Koh Kong / Tatai</h4>
+              <p class="leg-price">$15–180</p>
+            </div>
+            <p class="transport-leg-note">Peu de bus directs — souvent 2 segments ou chauffeur privé. Les lodges organisent souvent le transfert.</p>
+            <div class="leg-option">
+              <div class="leg-option-name">Bus via Phnom Penh <span>~$15–25 total · ~8–12 h</span></div>
+              Battambang → PP puis PP → Koh Kong (demander descente à <strong>Tatai</strong>, ~20 km avant Koh Kong).
+              <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a> ·
+              <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a> ·
+              <a href="https://bookmebus.com/" target="_blank" rel="noopener">BookMeBus</a>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Taxi / van privé <span>~$100–180 · ~6–8 h</span></div>
+              Porte-à-porte jusqu’au lodge. Demander à Seng Hout, Cambana, ou directement
+              <a href="http://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">Rainbow Lodge – Getting here</a> /
+              <a href="https://canvasandorchids.com/" target="_blank" rel="noopener">Canvas &amp; Orchids</a>.
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Bus + descente Tatai <span>depuis la côte · ~$12–15</span></div>
+              Si vous passez par Sihanoukville : Virak Buntham / VET (~5–5,5 h), descente à Tatai. Infos :
+              <a href="http://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">rainbowlodgecambodia.com/getting-here</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. Koh Kong / Tatai -->
+    <article class="city" id="koh-kong">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Koh_Kong_mangrove_forest.jpg/1280px-Koh_Kong_mangrove_forest.jpg" alt="Mangrove de Koh Kong" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape 03</p>
+          <h2>Koh Kong / Tatai</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal">
+          <h3 class="block-title">Activités</h3>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/1891/29420055277_1a47b445ce_b.jpg" alt="Cascade de Tatai, montagnes des Cardamomes" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Chute de Tatai</h3>
+                <p class="activity-price">$10–40</p>
+              </div>
+              <p>Souvent via le lodge (bateau / kayak). Cascade, baignade — tarif selon formule.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/1854/42531759550_5f3bf54888_b.jpg" alt="Mangrove de Peam Krasaop, Koh Kong" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Mangrove de Peam Krasaop</h3>
+                <p class="activity-price">$6–12</p>
+              </div>
+              <p>Entrée ~$1,25 + bateau court ~$5 / long ~$10. Crabes et oiseaux.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="http://rainbowlodgecambodia.com/" target="_blank" rel="noopener">Rainbow Lodge</a> ★4.9</p>
+                <p class="hotel-price">$120–160</p>
+              </div>
+              <p class="hotel-meta">Pension complète · ~15–20 min de la cascade</p>
+              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://canvasandorchids.com/" target="_blank" rel="noopener">Canvas & Orchids Retreat</a> ★4.8</p>
+                <p class="hotel-price">$180–250+</p>
+              </div>
+              <p class="hotel-meta">Lodge de luxe en pleine nature</p>
+            </div>
+          </div>
+          <p class="note">Excursions souvent organisées par les lodges. Réserver tôt en décembre.</p>
+        </div>
+
+        <div class="reveal city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">Cascade de Tatai</div>
+              <div class="transport-modes">
+                Souvent <strong>organisé par le lodge</strong> (bateau / kayak) — tarif sur place
+                <span class="hotel-alt"><strong>Rainbow Lodge</strong> — ~15–20 min · 3,4 km</span>
+                <span class="hotel-alt"><strong>Canvas &amp; Orchids</strong> — ~30 min · 8 km</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Peam Krasaop</div>
+              <div class="transport-modes">
+                Bateau + entrée 5 000 ៛ · court <strong>~$5</strong> · long <strong>~$10</strong>
+                <span class="hotel-alt"><strong>Rainbow Lodge</strong> — ~30–40 min bateau</span>
+                <span class="hotel-alt"><strong>Canvas &amp; Orchids</strong> — ~20–25 min bateau (plus proche)</span>
+              </div>
+            </div>
+          </div>
+          <div class="transport-leg">
+            <div class="transport-leg-top">
+              <h4 class="transport-leg-title">Aller à Sihanoukville</h4>
+              <p class="leg-price">$12–133</p>
+            </div>
+            <p class="transport-leg-note">Remonter d’abord vers la route (Tatai / Koh Kong) puis bus vers la côte.</p>
+            <div class="leg-option">
+              <div class="leg-option-name">Bus Virak Buntham / VET <span>~$12–15 · ~5–5,5 h</span></div>
+              Départs typiques Koh Kong → Sihanoukville vers <strong>8h15</strong> et <strong>13h–14h</strong> (à confirmer).
+              <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">vireakbuntham.com</a> ·
+              <a href="https://bookmebus.com/en/bus/koh-kong-to-sihanoukville" target="_blank" rel="noopener">BookMeBus</a>
+              <span class="hotel-alt">Rainbow / Canvas : transfert lodge → arrêt bus souvent arrangeable (~$15–40 selon véhicule)</span>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Taxi privé lodge → Sihanoukville <span>~$78–133 · &lt;3,5 h</span></div>
+              Tarif indicatif Rainbow Lodge (SUV 4 pers. / minivan 7 pers., péage inclus) :
+              <a href="http://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">Getting here</a>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Taxi partagé <span>~$15 / place · ~4–5 h</span></div>
+              Moins confortable, horaires moins fixes — le lodge peut réserver.
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4. Sihanoukville -->
+    <article class="city" id="sihanoukville">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Sihanoukville_-_Independence_beach_in_the_morning.jpg/1280px-Sihanoukville_-_Independence_beach_in_the_morning.jpg" alt="Independence Beach, Sihanoukville" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape 04</p>
+          <h2>Sihanoukville</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal">
+          <h3 class="block-title">Activités</h3>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/8634/16624020766_0580cfbffd_b.jpg" alt="Escaliers du temple Wat Leu, Sihanoukville" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Temple Wat Leu</h3>
+                <p class="activity-price">Gratuit</p>
+              </div>
+              <p>Temple sur la colline — vue panoramique. Tuktuk A/R ~$2–5.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/65535/33964046778_11168c5ae3_b.jpg" alt="Marché Phsar Leu, Sihanoukville" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Marché Phsar Leu</h3>
+                <p class="activity-price">Gratuit</p>
+              </div>
+              <p>Marché local — fruits, poissons. Street food ~$1–4. Tuktuk ~$2–5.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/Independence_Beach_%28Sihanoukville%29.jpg" alt="Independence Beach, Sihanoukville" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Independence Beach</h3>
+                <p class="activity-price">Gratuit</p>
+              </div>
+              <p>Plage longue et calme, idéale avant de partir vers les îles.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.darahotels.com/independencehotelbydara" target="_blank" rel="noopener">Independence Hotel by Dara</a> ★4.3</p>
+                <p class="hotel-price">$60–85</p>
+              </div>
+              <p class="hotel-meta">Sur la plage · ~3 min d’Independence Beach</p>
+              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/328488/onederz-sihanoukville/" target="_blank" rel="noopener">Onederz Sihanoukville</a> ★4.6</p>
+                <p class="hotel-price">$10–35</p>
+              </div>
+              <p class="hotel-meta">Proche Wat Leu (~5 min tuktuk)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">Wat Leu</div>
+              <div class="transport-modes">
+                Tuktuk A/R · <strong>~$2–5</strong>
+                <span class="hotel-alt"><strong>Independence Hotel</strong> — ~10 min · 3,5 km</span>
+                <span class="hotel-alt"><strong>Onederz</strong> — ~5 min · 1,9 km (plus proche)</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Phsar Leu</div>
+              <div class="transport-modes">
+                ~9–10 min tuktuk · <strong>~$2–5</strong>
+                <span class="hotel-alt">Independence ~3,8 km · Onederz ~3,2 km</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Independence Beach</div>
+              <div class="transport-modes">
+                <span class="hotel-alt"><strong>Independence Hotel</strong> — à pied / ~3 min (Gratuit)</span>
+                <span class="hotel-alt"><strong>Onederz</strong> — ~8 min tuktuk · <strong>~$2–4</strong></span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Port ferry (Autonomous Port)</div>
+              <div class="transport-modes">
+                Tuktuk / Grab · <strong>~$3–8</strong> selon l’hôtel · arriver <strong>30–45 min</strong> avant le ferry
+              </div>
+            </div>
+          </div>
+          <div class="transport-leg">
+            <div class="transport-leg-top">
+              <h4 class="transport-leg-title">Aller à Koh Rong Samloem (ferry)</h4>
+              <p class="leg-price">$12–25</p>
+            </div>
+            <p class="transport-leg-note">Départ : Sihanoukville Autonomous Port. ~45–60 min. A/R ouvert typique ~$25 · aller ~$12–15. Horaires indicatifs — reconfirmer en ligne.</p>
+            <div class="leg-option">
+              <div class="leg-option-name">GTVC Speedboat <span>~$15 / ~$25 A/R</span></div>
+              <a href="https://www.gtvcspeedboatcambodia.com/" target="_blank" rel="noopener">gtvcspeedboatcambodia.com</a>
+              <ul class="ferry-schedule">
+                <li>→ Samloem (Saracen) : <strong>9h · 12h · 15h</strong> (souvent aussi 8h, 11h, 14h, 16h)</li>
+                <li>← retour : ~<strong>9h45 · 12h45 · 15h45</strong></li>
+              </ul>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Buva Sea <span>~$25 A/R ouvert</span></div>
+              <a href="https://buvasea.com/" target="_blank" rel="noopener">buvasea.com</a>
+              <ul class="ferry-schedule">
+                <li>→ Samloem : <strong>8h30 · 11h30 · 14h30 · 17h</strong></li>
+                <li>← retour : <strong>6h30 · 9h30 · 12h30 · 15h30</strong></li>
+              </ul>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Island Speed Ferry <span>~$15 / ~$25 A/R</span></div>
+              <a href="https://www.islandspeedferry.com/" target="_blank" rel="noopener">islandspeedferry.com</a>
+              <ul class="ferry-schedule">
+                <li>→ Samloem : <strong>9h · 12h · 15h</strong> (parfois 8h)</li>
+                <li>← retour : <strong>10h30 · 13h30 · 16h30</strong></li>
+              </ul>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Selon l’hôtel sur l’île</div>
+              <span class="hotel-alt"><strong>Eden Beach / Island Center Point</strong> — débarquement Saracen Bay, puis ~25–30 min à pied (ou bateau-taxi si bagages)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5. Koh Rong Samloem -->
+    <article class="city" id="koh-rong">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Saracen_Bay_panoramic_view%2C_Koh_Rong_Sanloem%2C_Cambodia%2C_June_2014.jpg/1280px-Saracen_Bay_panoramic_view%2C_Koh_Rong_Sanloem%2C_Cambodia%2C_June_2014.jpg" alt="Saracen Bay, Koh Rong Samloem" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape 05</p>
+          <h2>Koh Rong Samloem</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal">
+          <h3 class="block-title">Activités</h3>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/4653/39815177501_d36c20dd53_b.jpg" alt="Saracen Bay, Koh Rong Samloem" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Saracen Bay</h3>
+                <p class="activity-price">Gratuit</p>
+              </div>
+              <p>Baie principale — snorkeling location ~$5–10. Bars de plage.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/4063/4295137567_3e7a11e86b_b.jpg" alt="Lazy Beach, Koh Rong Samloem" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Lazy Beach</h3>
+                <p class="activity-price">Gratuit</p>
+              </div>
+              <p>Plage isolée à l’ouest — ~30 min de marche dans la jungle.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/469/32850791766_8c2a4c8dba_b.jpg" alt="Coucher de soleil, côte ouest Koh Rong Samloem" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Sunset Beach</h3>
+                <p class="activity-price">Gratuit</p>
+              </div>
+              <p>Coucher de soleil mythique — boissons ~$2–6 sur place.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/1603/24605962591_84b30289a9_b.jpg" alt="Quai Koh Rong Samloem (secteur M'Pay Bay)" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>M'Pay Bay</h3>
+                <p class="activity-price">$10–20</p>
+              </div>
+              <p>Village côté est — bateau-taxi obligatoire (~20–30 min).</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://edenbyehm.beachresort.net/" target="_blank" rel="noopener">Eden Beach Resort by EHM</a> ★4.5</p>
+                <p class="hotel-price">$65–120</p>
+              </div>
+              <p class="hotel-meta">~25–30 min à pied des plages</p>
+              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="http://www.islandcenterpoint.asia/" target="_blank" rel="noopener">Island Center Point</a> ★4.7</p>
+                <p class="hotel-price">$110–170</p>
+              </div>
+              <p class="hotel-meta">Position centrale sur l’île</p>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.sunboobeachbungalows.com/" target="_blank" rel="noopener">SunBoo Beach Bungalows</a></p>
+                <p class="hotel-price">$40–90</p>
+              </div>
+              <p class="hotel-meta">Sunset Beach · bungalows bambou & tipis · solaire / off-grid</p>
+              <span class="hotel-atypical">Atypique · eco & yoga</span>
+            </div>
+          </div>
+          <p class="note">M'Pay Bay n’est pas accessible à pied — prévoir un bateau-taxi (~20–30 min). SunBoo : ~30 min de marche depuis Saracen (ou bateau-taxi).</p>
+        </div>
+
+        <div class="reveal city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">Saracen Bay</div>
+              <div class="transport-modes">
+                <strong>À pied</strong> (pas de tuktuk entre plages)
+                <span class="hotel-alt"><strong>Eden Beach</strong> — ~25 min · ~1,9 km</span>
+                <span class="hotel-alt"><strong>Island Center Point</strong> — ~25–30 min · 2,1 km</span>
+                <span class="hotel-alt"><strong>SunBoo</strong> — ~30 min de marche (ou bateau-taxi)</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Lazy Beach</div>
+              <div class="transport-modes">
+                <strong>À pied</strong> ~30–35 min depuis Eden / Island Center Point · ~15–20 min depuis SunBoo (Gratuit)
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Sunset Beach</div>
+              <div class="transport-modes">
+                <strong>À pied</strong> ~28–30 min depuis Eden / Island Center Point (Gratuit)
+                <span class="hotel-alt"><strong>SunBoo</strong> — sur place (Gratuit)</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">M'Pay Bay</div>
+              <div class="transport-modes">
+                Bateau-taxi obligatoire ~20–30 min · <strong>~$10–20</strong>
+                <span class="hotel-alt">Eden / Island Center Point / SunBoo — bateau-taxi depuis la plage ou via Saracen</span>
+              </div>
+            </div>
+          </div>
+          <div class="transport-leg">
+            <div class="transport-leg-top">
+              <h4 class="transport-leg-title">Aller à Koh Ta Kiev</h4>
+              <p class="leg-price">$25–45</p>
+            </div>
+            <p class="transport-leg-note">Pas de liaison directe fiable — via Sihanoukville puis bateau Otres / Ream. Total ferry + bateau île.</p>
+            <div class="leg-option">
+              <div class="leg-option-name">1) Ferry Samloem → Sihanoukville <span>~$12–15 · ~45–60 min</span></div>
+              Même opérateurs :
+              <a href="https://www.gtvcspeedboatcambodia.com/" target="_blank" rel="noopener">GTVC</a> ·
+              <a href="https://buvasea.com/" target="_blank" rel="noopener">Buva Sea</a> ·
+              <a href="https://www.islandspeedferry.com/" target="_blank" rel="noopener">Island Speed Ferry</a>
+              <ul class="ferry-schedule">
+                <li>Retours typiques Saracen : <strong>9h30–10h30 · 12h30–13h30 · 15h30–16h30</strong></li>
+              </ul>
+              <span class="hotel-alt"><strong>SunBoo</strong> — compter ~30 min de marche jusqu’à Saracen avant le ferry (ou bateau-taxi)</span>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">2) Port → Otres Beach <span>tuktuk ~$3–6 · ~15–25 min</span></div>
+              Puis bateau longtail vers Koh Ta Kiev (~1 h).
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">3) Bateau vers l’île <span>~$10–15 A/R · départ ~11h–12h</span></div>
+              <span class="hotel-alt"><strong>The Last Point</strong> — Banana Beach (Otres 2) à <strong>12h</strong> · <strong>$15</strong> A/R · <a href="https://www.lastpointisland.com/" target="_blank" rel="noopener">lastpointisland.com</a></span>
+              <span class="hotel-alt"><strong>Kactus</strong> — transfert bateau souvent inclus / arrangé · <a href="https://www.kactuscambodia.com/" target="_blank" rel="noopener">kactuscambodia.com</a></span>
+              <span class="hotel-alt"><strong>Koh Ta Kiev Island Resort</strong> — confirmer le quai Otres / Ream à la réservation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 6. Koh Ta Kiev -->
+    <article class="city" id="koh-ta-kiev">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Koh_Ta_Kiev_island_%28Cambodia%29.jpg/1280px-Koh_Ta_Kiev_island_%28Cambodia%29.jpg" alt="Île de Koh Ta Kiev" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape 06</p>
+          <h2>Koh Ta Kiev</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal">
+          <h3 class="block-title">Activités</h3>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/3900/14463693804_b98d8e1396_b.jpg" alt="Ponton à Koh Ta Kiev (The Last Point)" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Paddle à The Last Point</h3>
+                <p class="activity-price">$5–15</p>
+              </div>
+              <p>Stand-up paddle — location sur place. Eaux calmes et mangroves.</p>
+              <a href="https://www.lastpointisland.com/" target="_blank" rel="noopener">The Last Point →</a>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/8621/16084795888_f31dc0f519_b.jpg" alt="Côte de Koh Ta Kiev" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Elephant Rock</h3>
+                <p class="activity-price">Gratuit</p>
+              </div>
+              <p>Formation rocheuse — randonnée côtière (~45–60 min).</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/4141/4734545591_25336ff493_b.jpg" alt="Snorkeling au Cambodge" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Snorkeling</h3>
+                <p class="activity-price">$5–15</p>
+              </div>
+              <p>Location masque / palmes. Récifs et poissons tropicaux autour de l’île.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/324099/koh-ta-kiev-island-resort/" target="_blank" rel="noopener">Koh Ta Kiev Island Resort</a> ★4.2</p>
+                <p class="hotel-price">$35–45</p>
+              </div>
+              <p class="hotel-meta">~30–40 min d’Elephant Rock à pied</p>
+              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.kactuscambodia.com/" target="_blank" rel="noopener">Kactus Cambodia</a> ★4.5</p>
+                <p class="hotel-price">$10–90</p>
+              </div>
+              <p class="hotel-meta">Côté sunset · yoga & écovillage</p>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.lastpointisland.com/" target="_blank" rel="noopener">The Last Point</a></p>
+                <p class="hotel-price">$0–30</p>
+              </div>
+              <p class="hotel-meta">Plage privée est · bungalows jungle & dortoir face mer</p>
+              <span class="hotel-atypical">Atypique · camp island</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">The Last Point (paddle / bar)</div>
+              <div class="transport-modes">
+                <span class="hotel-alt"><strong>The Last Point</strong> — sur place (Gratuit)</span>
+                <span class="hotel-alt"><strong>Kactus</strong> — ~10–15 min à pied (côté opposé possible selon sentier)</span>
+                <span class="hotel-alt"><strong>Island Resort</strong> — ~10–20 min à pied</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Elephant Rock</div>
+              <div class="transport-modes">
+                <strong>À pied</strong> (Gratuit)
+                <span class="hotel-alt"><strong>Island Resort</strong> — ~30–40 min · 2,1 km</span>
+                <span class="hotel-alt"><strong>The Last Point</strong> — sentiers autour du camp (~45–60 min selon point)</span>
+                <span class="hotel-alt"><strong>Kactus</strong> — ~45–60 min · 3,6 km (côté sunset)</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Arrivée / départ île</div>
+              <div class="transport-modes">
+                <span class="hotel-alt"><strong>The Last Point</strong> — bateau Banana Beach Otres 2 à <strong>12h</strong> · <strong>$15</strong> A/R · <a href="https://www.lastpointisland.com/" target="_blank" rel="noopener">infos</a></span>
+                <span class="hotel-alt"><strong>Kactus</strong> — bateau souvent inclus · horaires à la réservation</span>
+                <span class="hotel-alt"><strong>Island Resort</strong> — bateau Otres / Ream ~11h–11h30 · ~$10–15 A/R</span>
+              </div>
+            </div>
+          </div>
+          <div class="transport-leg">
+            <div class="transport-leg-top">
+              <h4 class="transport-leg-title">Aller à Kampot</h4>
+              <p class="leg-price">$6–60</p>
+            </div>
+            <p class="transport-leg-note">Bateau retour le matin (~8h–9h selon resort ; Last Point : confirmer sur place) puis bus / van depuis Otres.</p>
+            <div class="leg-option">
+              <div class="leg-option-name">Bateau → Otres / Ream <span>~$5–15 (souvent inclus A/R) · ~1 h</span></div>
+              Confirmer l’horaire de retour avec The Last Point, Kactus ou Island Resort la veille.
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Bus / van Sihanoukville → Kampot <span>~$6–12 · ~2–3 h</span></div>
+              <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a> ·
+              <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a> ·
+              <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a> ·
+              <a href="https://12go.asia/" target="_blank" rel="noopener">12Go</a>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Taxi privé Otres → Kampot <span>~$40–60 · ~1,5–2 h</span></div>
+              Plus simple avec bagages après le bateau — Grab ou chauffeur via l’hôtel.
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 7. Kampot -->
+    <article class="city" id="kampot">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Kampot_Riverfront_Scene_-_Kampot_-_Cambodia_%2848501740381%29.jpg/1280px-Kampot_Riverfront_Scene_-_Kampot_-_Cambodia_%2848501740381%29.jpg" alt="Front de rivière à Kampot" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape 07</p>
+          <h2>Kampot</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal">
+          <h3 class="block-title">Activités</h3>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/1406/5139324435_f642e0382c_b.jpg" alt="Bokor Palace, parc national de Bokor" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Parc national de Bokor (avec guide)</h3>
+                <p class="activity-price">$15–40</p>
+              </div>
+              <p>Demi-journée / journée tuktuk ou tour. Plateau, station coloniale, vue golfe.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/65535/48347833146_9070b11646_b.jpg" alt="Côte entre Kampot et Kep" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Kampot & Kep (avec guide)</h3>
+                <p class="activity-price">$15–40</p>
+              </div>
+              <p>Poivre de Kampot et crabes à Kep. Scooter ~$5–10 / jour ou tuktuk demi-journée.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/272347/karma-traders-kampot/" target="_blank" rel="noopener">Karma Traders Kampot</a> ★4.6</p>
+                <p class="hotel-price">$8–20</p>
+              </div>
+              <p class="hotel-meta">~30 min de Bokor et de Kep</p>
+              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.montagneboutique.asia/en/" target="_blank" rel="noopener">Montagne Boutique</a> ★4.4</p>
+                <p class="hotel-price">$40–60</p>
+              </div>
+              <p class="hotel-meta">Boutique hôtel cosy en ville</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">Parc de Bokor</div>
+              <div class="transport-modes">
+                Scooter <strong>~$5–10 / jour</strong> · tuktuk / voiture journée <strong>~$15–25</strong>
+                <span class="hotel-alt"><strong>Karma Traders</strong> — ~30 min · 15,7 km</span>
+                <span class="hotel-alt"><strong>Montagne Boutique</strong> — ~30 min · 16,8 km</span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Kep</div>
+              <div class="transport-modes">
+                Scooter ou tuktuk · A/R / demi-journée <strong>~$15–25</strong>
+                <span class="hotel-alt"><strong>Karma Traders</strong> — ~30 min · 18,7 km</span>
+                <span class="hotel-alt"><strong>Montagne Boutique</strong> — ~30 min · 17,9 km (légèrement plus proche)</span>
+              </div>
+            </div>
+          </div>
+          <div class="transport-leg">
+            <div class="transport-leg-top">
+              <h4 class="transport-leg-title">Aller à Phnom Penh</h4>
+              <p class="leg-price">$7–80</p>
+            </div>
+            <p class="transport-leg-note">Plusieurs bus / jour. Départs tôt le matin fréquents.</p>
+            <div class="leg-option">
+              <div class="leg-option-name">Bus VIP <span>~$7–12 · ~3–4 h</span></div>
+              <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a> ·
+              <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a> ·
+              <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a> ·
+              <a href="https://12go.asia/" target="_blank" rel="noopener">12Go</a>
+              <span class="hotel-alt">Pick-up possible près de Karma Traders / Montagne — demander à la réception</span>
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Minivan / taxi privé <span>~$50–80 · ~2,5–3,5 h</span></div>
+              Porte-à-porte jusqu’à Cambodiana, Pavilion ou Apsor.
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Via Kep (si jour d’excursion) <span>+~30–45 min</span></div>
+              Possible de remonter Kep → Phnom Penh en bus / van (moins de fréquences).
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 8. Phnom Penh -->
+    <article class="city" id="phnom-penh">
+      <div class="city-visual">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Royal_Palace%2C_Phnom_Penh_Cambodia_1.jpg/1280px-Royal_Palace%2C_Phnom_Penh_Cambodia_1.jpg" alt="Palais Royal de Phnom Penh" loading="lazy" />
+        <div class="city-visual-label">
+          <p class="num">Étape 08</p>
+          <h2>Phnom Penh</h2>
+        </div>
+      </div>
+      <div class="city-body">
+        <div class="reveal">
+          <h3 class="block-title">Activités</h3>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/4318/35761843151_6122367723_b.jpg" alt="Palais Royal, Phnom Penh" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Palais Royal</h3>
+                <p class="activity-price">$10</p>
+              </div>
+              <p>Entrée. Résidence royale, Pagode d’Argent et architecture khmère.</p>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/173/408944028_dbf51c394d_b.jpg" alt="Musée national, Phnom Penh" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Musée national</h3>
+                <p class="activity-price">$5–10</p>
+              </div>
+              <p>Adultes $10 · 10–17 ans $5. Sculptures khmères et histoire.</p>
+              <a href="https://www.nmc.gov.kh/" target="_blank" rel="noopener">Musée national →</a>
+            </div>
+          </div>
+
+          <div class="activity">
+            <div class="activity-thumb">
+              <img src="https://live.staticflickr.com/3775/13240794274_8d835f8d0b_b.jpg" alt="Coucher de soleil sur Phnom Penh" loading="lazy" />
+            </div>
+            <div class="activity-info">
+              <div class="activity-top">
+                <h3>Croisière repas au coucher de soleil</h3>
+                <p class="activity-price">$15–30</p>
+              </div>
+              <p>Selon formule (croisière / dîner). Vue confluence Tonlé Sap / Mékong.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal">
+          <h3 class="block-title">Hébergements</h3>
+          <div class="hotels">
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/hotel-cambodiana.html" target="_blank" rel="noopener">Hotel Cambodiana</a> ★4.2</p>
+                <p class="hotel-price">$65–120</p>
+              </div>
+              <p class="hotel-meta">Embarcadère croisière juste devant</p>
+              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="http://www.thepavilion.asia/" target="_blank" rel="noopener">Pavilion Hotel</a> ★4.7</p>
+                <p class="hotel-price">$70–115</p>
+              </div>
+              <p class="hotel-meta">7 min à pied du Palais Royal</p>
+            </div>
+            <div class="hotel">
+              <div class="hotel-top">
+                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/apsor-palace-hotel.html" target="_blank" rel="noopener">Apsor Palace Hotel</a> ★4.1</p>
+                <p class="hotel-price">$40–115</p>
+              </div>
+              <p class="hotel-meta">Proche Palais Royal (~7 min à pied)</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal city-transport">
+          <h3 class="block-title">Transport depuis les hôtels</h3>
+          <div class="transport-list">
+            <div class="transport-row">
+              <div class="transport-dest">Palais Royal</div>
+              <div class="transport-modes">
+                <span class="hotel-alt"><strong>Pavilion</strong> — à pied ~7 min · 0,56 km (Gratuit)</span>
+                <span class="hotel-alt"><strong>Apsor Palace</strong> — à pied ~7 min · 0,54 km (Gratuit)</span>
+                <span class="hotel-alt"><strong>Hotel Cambodiana</strong> — à pied ~9 min · 0,71 km · ou Grab <strong>~$1–3</strong></span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Musée national</div>
+              <div class="transport-modes">
+                <span class="hotel-alt"><strong>Pavilion</strong> — à pied ~10 min</span>
+                <span class="hotel-alt"><strong>Apsor Palace</strong> — à pied ~11 min</span>
+                <span class="hotel-alt"><strong>Cambodiana</strong> — à pied ~13 min · ou tuktuk <strong>~$1–3</strong></span>
+              </div>
+            </div>
+            <div class="transport-row">
+              <div class="transport-dest">Croisière sunset</div>
+              <div class="transport-modes">
+                <span class="hotel-alt"><strong>Hotel Cambodiana</strong> — embarcadère <strong>devant l’hôtel</strong> (0 $)</span>
+                <span class="hotel-alt"><strong>Pavilion</strong> — tuktuk ~5 min · <strong>~$2–4</strong></span>
+                <span class="hotel-alt"><strong>Apsor Palace</strong> — tuktuk ~4 min · <strong>~$2–4</strong></span>
+              </div>
+            </div>
+          </div>
+          <div class="transport-leg">
+            <div class="transport-leg-top">
+              <h4 class="transport-leg-title">Départ / aéroport</h4>
+              <p class="leg-price">$9–25</p>
+            </div>
+            <p class="transport-leg-note">Aéroport PNH ~30–60 min selon trafic.</p>
+            <div class="leg-option">
+              <div class="leg-option-name">Grab / PassApp / taxi <span>~$9–15</span></div>
+              Depuis Cambodiana, Pavilion ou Apsor — tarif proche pour les trois (centre-ville).
+            </div>
+            <div class="leg-option">
+              <div class="leg-option-name">Transfert hôtel <span>~$15–25</span></div>
+              Réserver la veille à la réception — pratique tôt le matin.
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </main>
+
+  <section class="practical" id="pratique">
+    <div class="section-inner">
+      <p class="section-num" style="color: var(--gold);">À savoir</p>
+      <h2 class="section-title">Notes pratiques</h2>
+      <p class="section-desc">Décembre est la haute saison — quelques points à garder en tête.</p>
+
+      <div class="practical-grid">
+        <ul>
+          <li>Haute saison : réserver tôt, surtout Rainbow Lodge, Canvas & Orchids et les hôtels sur les îles.</li>
+          <li>Noël / Nouvel An : anticipation encore plus importante pour les hébergements.</li>
+          <li>Comparer les prix sur Booking, Agoda et les sites officiels avant de réserver.</li>
+          <li>Transferts bateau à prévoir : Sihanoukville ↔ Koh Rong Samloem ↔ Koh Ta Kiev, et pour Tatai / Koh Kong.</li>
+          <li>M'Pay Bay (Koh Rong Samloem) : bateau-taxi obligatoire, pas de sentier direct praticable.</li>
+          <li>Tarifs transport indicatifs (tuktuk, ferry, bus) — négocier ou comparer Grab / PassApp / 12Go avant de partir.</li>
+          <li>Ferries îles : <a href="https://www.gtvcspeedboatcambodia.com/" target="_blank" rel="noopener">GTVC</a>, <a href="https://buvasea.com/" target="_blank" rel="noopener">Buva Sea</a>, <a href="https://www.islandspeedferry.com/" target="_blank" rel="noopener">Island Speed Ferry</a> — horaires variables, reconfirmer.</li>
+          <li>Bus longue distance : <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a>, <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a>, <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a>.</li>
+        </ul>
+        <div class="budget-stack">
+          <div class="budget-box">
+            <h3>Budget hébergement</h3>
+            <p class="budget-amount">$700 – $1200</p>
+            <p>2 personnes · 8 étapes · milieu de gamme · décembre</p>
+          </div>
+          <div class="budget-box">
+            <h3>Budget activités</h3>
+            <p class="budget-amount">$350 – $800</p>
+            <p>Entrées, guides, excursions (Angkor, îles, Bokor, Phnom Penh…)</p>
+          </div>
+          <div class="budget-box">
+            <h3>Budget transport</h3>
+            <p class="budget-amount">$200 – $650</p>
+            <p>Bus / ferry / bateaux entre villes + tuktuks locaux (+ taxi privé = haut de fourchette)</p>
+          </div>
+          <div class="budget-box budget-total">
+            <h3>Total estimé</h3>
+            <p class="budget-amount">$1250 – $2650</p>
+            <p>Hébergement + activités + transport · 2 personnes · hors vols &amp; repas hors excursions</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p><span>Cambodge</span> — Voyage décembre · 8 étapes · temples, jungle & îles</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    const nav = document.getElementById("nav");
+    const toggle = document.getElementById("navToggle");
+    const links = document.getElementById("navLinks");
+
+    window.addEventListener("scroll", () => {
+      nav.classList.toggle("scrolled", window.scrollY > 60);
+    }, { passive: true });
+
+    toggle.addEventListener("click", () => {
+      links.classList.toggle("open");
+    });
+
+    links.querySelectorAll("a").forEach((a) => {
+      a.addEventListener("click", () => links.classList.remove("open"));
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            if (entry.target.classList.contains("reveal")) {
+              const activities = entry.target.querySelectorAll(".activity");
+              activities.forEach((el, i) => {
+                setTimeout(() => el.classList.add("visible"), i * 100);
+              });
+            }
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+
+    /* —— Carte itinéraire —— */
+    const stops = [
+      { n: 1, name: "Siem Reap", lat: 13.3633, lng: 103.8564, id: "siem-reap", note: "Angkor, Phnom Kulen, Old Market" },
+      { n: 2, name: "Battambang", lat: 13.0957, lng: 103.2022, id: "battambang", note: "Train de bambou, Phnom Sampov" },
+      { n: 3, name: "Koh Kong / Tatai", lat: 11.586, lng: 103.128, id: "koh-kong", note: "Cascade de Tatai, Peam Krasaop" },
+      { n: 4, name: "Sihanoukville", lat: 10.6271, lng: 103.5221, id: "sihanoukville", note: "Wat Leu, Independence Beach" },
+      { n: 5, name: "Koh Rong Samloem", lat: 10.5917, lng: 103.2975, id: "koh-rong", note: "Saracen, Lazy, Sunset Beach" },
+      { n: 6, name: "Koh Ta Kiev", lat: 10.485, lng: 103.595, id: "koh-ta-kiev", note: "Paddle, Elephant Rock, snorkeling" },
+      { n: 7, name: "Kampot", lat: 10.6104, lng: 104.1819, id: "kampot", note: "Bokor, Kep" },
+      { n: 8, name: "Phnom Penh", lat: 11.5564, lng: 104.9282, id: "phnom-penh", note: "Palais Royal, musée, croisière" },
+    ];
+
+    const map = L.map("itineraire-map", {
+      scrollWheelZoom: false,
+      attributionControl: true,
+    });
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    map.on("focus", () => map.scrollWheelZoom.enable());
+    map.on("blur", () => map.scrollWheelZoom.disable());
+    map.getContainer().addEventListener("mouseenter", () => map.scrollWheelZoom.enable());
+    map.getContainer().addEventListener("mouseleave", () => map.scrollWheelZoom.disable());
+
+    const latlngs = stops.map((s) => [s.lat, s.lng]);
+
+    L.polyline(latlngs, {
+      color: "#1c3a2e",
+      weight: 3,
+      opacity: 0.85,
+      dashArray: "8 10",
+    }).addTo(map);
+
+    const bounds = L.latLngBounds(latlngs);
+
+    stops.forEach((s) => {
+      const icon = L.divIcon({
+        className: "",
+        html: `<div class="map-marker">${s.n}</div>`,
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+        popupAnchor: [0, -14],
+      });
+
+      L.marker([s.lat, s.lng], { icon })
+        .addTo(map)
+        .bindPopup(
+          `<strong>${s.n}. ${s.name}</strong>${s.note}<br><a href="#${s.id}">Voir l'étape →</a>`
+        );
+    });
+
+    map.fitBounds(bounds.pad(0.18));
+
+    document.getElementById("map-legend").innerHTML = stops
+      .map((s) => `<span><i>${s.n}</i> ${s.name}</span>`)
+      .join("");
+
+    // Recalculate size after fonts/layout settle
+    setTimeout(() => map.invalidateSize(), 200);
+    window.addEventListener("resize", () => map.invalidateSize());
+  </script>
+</body>
+</html>
