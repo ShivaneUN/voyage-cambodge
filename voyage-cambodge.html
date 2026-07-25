@@ -888,18 +888,108 @@
     }
 
     .hotel[data-in-budget="0"],
-    .activity[data-in-budget="0"],
-    .transport-leg[data-in-budget="0"] {
+    .activity[data-in-budget="0"] {
       opacity: 0.55;
     }
 
-    .activity .budget-pick,
-    .transport-leg .budget-pick {
+    .activity .budget-pick {
       margin-top: 0.4rem;
     }
 
     .transport-leg {
       position: relative;
+    }
+
+    .leg-option {
+      position: relative;
+      padding-left: 0.15rem;
+      transition: opacity 0.2s var(--ease), background 0.2s var(--ease);
+    }
+
+    .leg-option[data-in-budget="0"] {
+      opacity: 0.55;
+    }
+
+    .leg-option[data-in-budget="1"] {
+      background: rgba(47, 93, 74, 0.06);
+      margin-left: -0.5rem;
+      margin-right: -0.5rem;
+      padding-left: 0.65rem;
+      padding-right: 0.65rem;
+      border-radius: 2px;
+    }
+
+    .leg-option .budget-pick {
+      margin: 0 0 0.45rem;
+      font-size: 0.75rem;
+    }
+
+    .transport-row {
+      position: relative;
+      transition: opacity 0.2s var(--ease), background 0.2s var(--ease);
+    }
+
+    .transport-row .budget-pick {
+      grid-column: 1 / -1;
+      margin: 0 0 0.35rem;
+      font-size: 0.75rem;
+    }
+
+    .transport-row[data-in-budget="0"] {
+      opacity: 0.55;
+    }
+
+    .transport-row[data-in-budget="1"] {
+      background: rgba(47, 93, 74, 0.06);
+      margin-left: -0.5rem;
+      margin-right: -0.5rem;
+      padding-left: 0.65rem;
+      padding-right: 0.65rem;
+      border-radius: 2px;
+    }
+
+    body.edit-mode .leg-option-name span {
+      outline: 1px dashed rgba(47, 93, 74, 0.35);
+      outline-offset: 2px;
+      padding: 0 0.15rem;
+      cursor: text;
+    }
+
+    body.edit-mode .leg-option-name span:focus {
+      outline-color: var(--moss);
+      background: rgba(47, 93, 74, 0.08);
+    }
+
+    .people-fab {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 18.5rem;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--white);
+      border: 1px solid var(--sand-deep);
+      padding: 0.55rem 0.7rem;
+      box-shadow: 0 8px 24px rgba(20, 32, 26, 0.15);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .people-fab > span {
+      font-weight: 500;
+      color: var(--moss-deep);
+      margin-right: 0.15rem;
+    }
+
+    .people-fab .hotel-nights-ctrl {
+      border-color: var(--sand-deep);
+    }
+
+    body.edit-mode .people-fab {
+      bottom: 5.75rem;
+      right: 11.5rem;
     }
 
     .note {
@@ -1052,6 +1142,194 @@
     }
 
     .edit-fab:hover { background: var(--moss); }
+
+    .budget-fab {
+      position: fixed;
+      bottom: 1.25rem;
+      right: 7.5rem;
+      z-index: 200;
+      border: none;
+      background: var(--gold);
+      color: var(--moss-deep);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 0.85rem 1.15rem;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(20, 32, 26, 0.2);
+    }
+
+    .budget-fab:hover { filter: brightness(1.05); }
+
+    body.edit-mode .budget-fab {
+      bottom: 5.75rem;
+      right: 1.25rem;
+    }
+
+    .budget-pop {
+      position: fixed;
+      top: 50%;
+      right: 1.25rem;
+      transform: translateY(-50%) translateX(120%);
+      z-index: 230;
+      width: min(340px, calc(100vw - 2rem));
+      max-height: min(80vh, 560px);
+      overflow: auto;
+      background: var(--white);
+      color: var(--ink);
+      border: 1px solid var(--sand-deep);
+      box-shadow: 0 16px 48px rgba(20, 32, 26, 0.22);
+      padding: 1.15rem 1.2rem 1.25rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.35s var(--ease), opacity 0.35s var(--ease);
+    }
+
+    .budget-pop.open {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .budget-pop-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--sand-deep);
+    }
+
+    .budget-pop-head h3 {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      color: var(--moss-deep);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .budget-pop-close {
+      border: none;
+      background: transparent;
+      color: var(--ink-soft);
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0.15rem 0.35rem;
+    }
+
+    .budget-pop-close:hover { color: var(--ink); }
+
+    .budget-pop-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.65rem 0;
+      border-bottom: 1px solid var(--sand-deep);
+      font-size: 0.88rem;
+    }
+
+    .budget-pop-row:last-of-type { border-bottom: none; }
+
+    .budget-pop-row span { color: var(--ink-soft); }
+    .budget-pop-row strong {
+      color: var(--moss);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .budget-pop-row.is-total {
+      margin-top: 0.35rem;
+      padding-top: 0.85rem;
+      border-top: 2px solid var(--gold);
+      border-bottom: none;
+    }
+
+    .budget-pop-row.is-total span {
+      color: var(--moss-deep);
+      font-weight: 500;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+    }
+
+    .budget-pop-row.is-total strong {
+      color: var(--gold);
+      font-size: 1.15rem;
+      font-family: var(--font-display);
+      font-weight: 600;
+    }
+
+    .budget-pop-note {
+      margin-top: 0.85rem;
+      font-size: 0.75rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+      font-style: italic;
+    }
+
+    .budget-pop-details {
+      margin-top: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--sand-deep);
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      max-height: 180px;
+      overflow: auto;
+    }
+
+    .budget-pop-details p {
+      margin: 0.25rem 0;
+      line-height: 1.4;
+    }
+
+    .budget-pop-details .cat {
+      margin-top: 0.55rem;
+      color: var(--moss-deep);
+      font-weight: 500;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 520px) {
+      .budget-fab {
+        right: 0.75rem;
+        bottom: 4.25rem;
+        font-size: 0.78rem;
+        padding: 0.7rem 0.9rem;
+      }
+
+      .people-fab {
+        right: 0.75rem;
+        bottom: 7.35rem;
+        padding: 0.45rem 0.55rem;
+        font-size: 0.75rem;
+      }
+
+      body.edit-mode .budget-fab {
+        bottom: 5.5rem;
+        right: 0.75rem;
+      }
+
+      body.edit-mode .people-fab {
+        bottom: 9rem;
+        right: 0.75rem;
+      }
+
+      .budget-pop {
+        right: 0.75rem;
+        top: auto;
+        bottom: 11rem;
+        transform: translateY(20px) translateX(0);
+        max-height: 50vh;
+      }
+
+      .budget-pop.open {
+        transform: translateY(0) translateX(0);
+      }
+    }
 
     .edit-panel {
       display: none;
@@ -2479,13 +2757,46 @@
     <p><span>Cambodge</span> — Voyage décembre · 8 étapes · temples, jungle & îles</p>
   </footer>
 
+  <div class="people-fab" id="peopleCtrl" title="Nombre de personnes">
+    <span>Pers.</span>
+    <div class="hotel-nights-ctrl">
+      <button type="button" data-people-act="minus" aria-label="Moins une personne">−</button>
+      <input type="number" id="peopleCount" min="1" max="20" value="2" aria-label="Nombre de personnes" />
+      <button type="button" data-people-act="plus" aria-label="Plus une personne">+</button>
+    </div>
+  </div>
+  <button type="button" class="budget-fab" id="budgetFab">Calculer le budget</button>
   <button type="button" class="edit-fab" id="editFab" title="Modifier le contenu">Modifier</button>
 
+  <aside class="budget-pop" id="budgetPop" aria-live="polite" hidden>
+    <div class="budget-pop-head">
+      <h3>Budget estimé</h3>
+      <button type="button" class="budget-pop-close" id="budgetPopClose" aria-label="Fermer">×</button>
+    </div>
+    <div class="budget-pop-row" data-pop="hotels">
+      <span>Hébergement</span>
+      <strong>—</strong>
+    </div>
+    <div class="budget-pop-row" data-pop="activities">
+      <span>Activités</span>
+      <strong>—</strong>
+    </div>
+    <div class="budget-pop-row" data-pop="transport">
+      <span>Transport</span>
+      <strong>—</strong>
+    </div>
+    <div class="budget-pop-row is-total" data-pop="total">
+      <span>Total</span>
+      <strong>—</strong>
+    </div>
+    <p class="budget-pop-note" id="budgetPopNote">Basé sur tes cases « Dans le budget » et les nuits d’hôtel.</p>
+    <div class="budget-pop-details" id="budgetPopDetails"></div>
+  </aside>
+
   <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
-    <p class="edit-hint">Coche « Dans le budget » · nuits par hôtel · total auto</p>
+    <p class="edit-hint">En édition : clique le prix transport (ex. $7–12) pour le modifier · pers. · « Calculer le budget »</p>
     <button type="button" class="primary" id="editSave">Enregistrer</button>
     <button type="button" id="editAddCity">+ Ville</button>
-    <button type="button" id="editBudget">Recalculer budget</button>
     <button type="button" id="editDownload">Télécharger HTML</button>
     <button type="button" id="editReset">Réinitialiser</button>
     <button type="button" id="editExit">Quitter</button>
@@ -2685,8 +2996,9 @@
     window.addEventListener("resize", () => map.invalidateSize());
 
     /* —— Mode édition (villes + budget auto) —— */
-    const EDIT_KEY = "voyageCambodgeContent_v5";
-    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4"];
+    const EDIT_KEY = "voyageCambodgeContent_v8";
+    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4", "voyageCambodgeContent_v5", "voyageCambodgeContent_v6", "voyageCambodgeContent_v7"];
+    const PEOPLE_KEY = "voyageCambodgePeople";
     OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
 
     const citiesWrap = document.querySelector(".cities-wrap");
@@ -2708,10 +3020,91 @@
     function parseMoney(text) {
       const t = (text || "").trim();
       if (!t || /gratuit|free/i.test(t)) return { min: 0, max: 0 };
+      const dollar = [...t.replace(/,/g, "").matchAll(/\$\s*(\d+(?:\.\d+)?)(?:\s*[–\-—~àto/]+\s*\$?\s*(\d+(?:\.\d+)?))?/gi)];
+      if (dollar.length) {
+        let min = Infinity;
+        let max = -Infinity;
+        dollar.forEach((m) => {
+          const a = parseFloat(m[1]);
+          const b = m[2] ? parseFloat(m[2]) : a;
+          min = Math.min(min, a, b);
+          max = Math.max(max, a, b);
+        });
+        return { min, max };
+      }
       const nums = [...t.replace(/,/g, "").matchAll(/(\d+(?:\.\d+)?)/g)].map((m) => parseFloat(m[1]));
       if (!nums.length) return { min: 0, max: 0 };
       if (nums.length === 1) return { min: nums[0], max: nums[0] };
       return { min: Math.min(...nums), max: Math.max(...nums) };
+    }
+
+    function parseLegOptionPrice(opt) {
+      if (opt.dataset.price) return parseMoney(opt.dataset.price);
+      const span = opt.querySelector(".leg-option-name span");
+      const name = opt.querySelector(".leg-option-name");
+      return parseMoney(span?.textContent || name?.textContent || opt.textContent || "");
+    }
+
+    function parseTransportRowPrice(row) {
+      if (row.dataset.price) return parseMoney(row.dataset.price);
+      const modes = row.querySelector(".transport-modes");
+      if (!modes) return { min: 0, max: 0 };
+      const primary = modes.cloneNode(true);
+      primary.querySelectorAll(".hotel-alt").forEach((el) => el.remove());
+      const strongText = [...primary.querySelectorAll("strong")].map((s) => s.textContent).join(" ");
+      let p = parseMoney(strongText || primary.textContent || "");
+      if (p.min === 0 && p.max === 0) {
+        p = parseMoney(
+          [...modes.querySelectorAll(".hotel-alt")].map((el) => el.textContent).join(" ")
+        );
+      }
+      return p;
+    }
+
+    function transportRowPeopleMult(row, people) {
+      const text = row.querySelector(".transport-modes")?.textContent || "";
+      if (/\/\s*pers/i.test(text)) return people;
+      return 1; // tuktuk / taxi / véhicule = prix trajet, pas × personnes
+    }
+
+    function formatPriceInput(p) {
+      if (!p || (p.min === 0 && p.max === 0)) return "";
+      if (Math.round(p.min) === Math.round(p.max)) return `$${Math.round(p.min)}`;
+      return `$${Math.round(p.min)}–$${Math.round(p.max)}`;
+    }
+
+    function getPeople() {
+      const n = parseInt(document.body.dataset.people || "2", 10);
+      return Math.max(1, Math.min(20, n || 2));
+    }
+
+    function setPeople(n) {
+      const p = Math.max(1, Math.min(20, parseInt(n, 10) || 2));
+      document.body.dataset.people = String(p);
+      const input = document.getElementById("peopleCount");
+      if (input && String(input.value) !== String(p)) input.value = String(p);
+      try {
+        localStorage.setItem(PEOPLE_KEY, String(p));
+      } catch (_) {}
+      scheduleBudget();
+    }
+
+    function loadPeople() {
+      let p = 2;
+      try {
+        const raw = localStorage.getItem(PEOPLE_KEY);
+        if (raw) p = parseInt(raw, 10) || 2;
+      } catch (_) {}
+      if (document.body.dataset.people) p = parseInt(document.body.dataset.people, 10) || p;
+      setPeople(p);
+    }
+
+    function optionLabel(opt) {
+      const name = opt.querySelector(".leg-option-name");
+      if (!name) return "Option";
+      const clone = name.cloneNode(true);
+      clone.querySelectorAll("span").forEach((s) => s.remove());
+      return clone.textContent.replace(/\s+/g, " ").trim() || "Option";
     }
 
     function formatRange(min, max) {
@@ -2723,49 +3116,117 @@
 
     function setBudget(key, min, max, note) {
       const box = budgetStack.querySelector(`[data-budget="${key}"]`);
-      if (!box) return;
-      const amount = box.querySelector(".budget-amount");
-      const noteEl = box.querySelector(".budget-note");
-      if (amount) amount.textContent = formatRange(min, max);
-      if (noteEl && note) noteEl.textContent = note;
-      box.dataset.auto = "true";
+      if (box) {
+        const amount = box.querySelector(".budget-amount");
+        const noteEl = box.querySelector(".budget-note");
+        if (amount) amount.textContent = formatRange(min, max);
+        if (noteEl && note) noteEl.textContent = note;
+        box.dataset.auto = "true";
+      }
+      const popRow = document.querySelector(`.budget-pop-row[data-pop="${key}"] strong`);
+      if (popRow) popRow.textContent = formatRange(min, max);
+    }
+
+    function openBudgetPop() {
+      const pop = document.getElementById("budgetPop");
+      pop.hidden = false;
+      requestAnimationFrame(() => pop.classList.add("open"));
+    }
+
+    function closeBudgetPop() {
+      const pop = document.getElementById("budgetPop");
+      pop.classList.remove("open");
+      setTimeout(() => {
+        if (!pop.classList.contains("open")) pop.hidden = true;
+      }, 350);
     }
 
     function recalculateBudget() {
       const nCities = document.querySelectorAll(".cities-wrap .city").length;
+      const people = getPeople();
+      const persLabel = `${people} pers.`;
 
       let actMin = 0;
       let actMax = 0;
       let actCount = 0;
+      const actLines = [];
       document.querySelectorAll(".cities-wrap .activity").forEach((act) => {
         const on = act.dataset.inBudget !== "0";
         const p = parseMoney(act.querySelector(".activity-price")?.textContent || "");
+        const name = act.querySelector(".activity-top h3")?.textContent?.trim() || "Activité";
         const tag = act.querySelector(".budget-pick strong");
-        if (tag) tag.textContent = on ? formatRange(p.min * 2, p.max * 2) + " · 2 pers." : "exclu";
+        if (tag) tag.textContent = on ? formatRange(p.min * people, p.max * people) + ` · ${persLabel}` : "exclu";
         if (!on) return;
-        actMin += p.min * 2;
-        actMax += p.max * 2;
+        actMin += p.min * people;
+        actMax += p.max * people;
         actCount += 1;
+        actLines.push(`${name} · ${formatRange(p.min * people, p.max * people)}`);
       });
 
       let trMin = 0;
       let trMax = 0;
       let trCount = 0;
-      document.querySelectorAll(".cities-wrap .transport-leg").forEach((leg) => {
-        const on = leg.dataset.inBudget !== "0";
-        const p = parseMoney(leg.querySelector(".leg-price")?.textContent || "");
-        const tag = leg.querySelector(".budget-pick strong");
-        if (tag) tag.textContent = on ? formatRange(p.min * 2, p.max * 2) + " · 2 pers." : "exclu";
+      const trLines = [];
+
+      document.querySelectorAll(".cities-wrap .transport-row").forEach((row) => {
+        const on = row.dataset.inBudget === "1";
+        const p = parseTransportRowPrice(row);
+        const mult = transportRowPeopleMult(row, people);
+        const name = row.querySelector(".transport-dest")?.textContent?.trim() || "Transport local";
+        const tag = row.querySelector(".budget-pick strong");
+        const shareNote = mult > 1 ? persLabel : "trajet";
+        if (tag) {
+          if (!on) tag.textContent = "exclu";
+          else if (p.min === 0 && p.max === 0) tag.textContent = "gratuit / à confirmer";
+          else tag.textContent = formatRange(p.min * mult, p.max * mult) + ` · ${shareNote}`;
+        }
         if (!on) return;
-        trMin += p.min * 2;
-        trMax += p.max * 2;
+        if (p.min === 0 && p.max === 0) return;
+        trMin += p.min * mult;
+        trMax += p.max * mult;
         trCount += 1;
+        trLines.push(`${name} · ${formatRange(p.min * mult, p.max * mult)}`);
+      });
+
+      document.querySelectorAll(".cities-wrap .transport-leg").forEach((leg) => {
+        const title = leg.querySelector(".transport-leg-title")?.textContent?.trim() || "Trajet";
+        let legMin = 0;
+        let legMax = 0;
+        let legPicked = 0;
+
+        leg.querySelectorAll(".leg-option").forEach((opt) => {
+          const on = opt.dataset.inBudget === "1";
+          const p = parseLegOptionPrice(opt);
+          opt.dataset.price = formatPriceInput(p) || opt.dataset.price || "";
+          const tag = opt.querySelector(".budget-pick strong");
+          if (tag) {
+            if (!on) tag.textContent = "exclu";
+            else if (p.min === 0 && p.max === 0) tag.textContent = `prix à confirmer · ${persLabel}`;
+            else tag.textContent = formatRange(p.min * people, p.max * people) + ` · ${persLabel}`;
+          }
+          if (!on) return;
+          legMin += p.min;
+          legMax += p.max;
+          legPicked += 1;
+          trCount += 1;
+          trLines.push(`${title} · ${optionLabel(opt)} · ${formatRange(p.min * people, p.max * people)}`);
+        });
+
+        trMin += legMin * people;
+        trMax += legMax * people;
+
+        const priceEl = leg.querySelector(".leg-price");
+        if (priceEl && !priceEl.matches(":focus") && document.activeElement !== priceEl) {
+          if (legPicked === 0) priceEl.textContent = "—";
+          else priceEl.textContent = formatRange(legMin, legMax).replace(/\s/g, "");
+        }
       });
 
       let hotMin = 0;
       let hotMax = 0;
       let bookedNights = 0;
       let bookedHotels = 0;
+      const hotLines = [];
 
       document.querySelectorAll(".cities-wrap .hotel").forEach((hotel) => {
         const on = hotel.dataset.inBudget !== "0";
@@ -2774,6 +3235,7 @@
         const priceEl = hotel.querySelector(".hotel-price");
         const subEl = hotel.querySelector(".hotel-nights-sub");
         const p = parseMoney(priceEl?.textContent || "");
+        const name = hotel.querySelector(".hotel-name a")?.textContent?.trim() || "Hôtel";
 
         if (subEl) {
           if (!on) {
@@ -2790,6 +3252,7 @@
         hotMax += p.max * nights;
         bookedNights += nights;
         bookedHotels += 1;
+        hotLines.push(`${name} · ${nights} n. · ${formatRange(p.min * nights, p.max * nights)}`);
       });
 
       setBudget(
@@ -2798,9 +3261,37 @@
         hotMax,
         `Choix · ${bookedHotels} hôtel${bookedHotels > 1 ? "s" : ""} · ${bookedNights} nuit${bookedNights > 1 ? "s" : ""} · ${nCities} étape${nCities > 1 ? "s" : ""}`
       );
-      setBudget("activities", actMin, actMax, `Choix · ${actCount} activité${actCount > 1 ? "s" : ""} × 2 personnes`);
-      setBudget("transport", trMin, trMax, `Choix · ${trCount} trajet${trCount > 1 ? "s" : ""} × 2 personnes`);
+      setBudget("activities", actMin, actMax, `Choix · ${actCount} activité${actCount > 1 ? "s" : ""} × ${people} personne${people > 1 ? "s" : ""}`);
+      setBudget("transport", trMin, trMax, `Choix · ${trCount} trajet${trCount > 1 ? "s" : ""} × ${people} personne${people > 1 ? "s" : ""}`);
       setBudget("total", hotMin + actMin + trMin, hotMax + actMax + trMax, "Uniquement les éléments cochés · hors vols & repas");
+
+      const note = document.getElementById("budgetPopNote");
+      if (note) {
+        note.textContent = `${people} personne${people > 1 ? "s" : ""} · ${bookedHotels} hôtel(s) · ${actCount} activité(s) · ${trCount} trajet(s) · hors vols & repas`;
+      }
+
+      const det = document.getElementById("budgetPopDetails");
+      if (det) {
+        let html = "";
+        if (hotLines.length) {
+          html += `<p class="cat">Hébergement (chambre)</p>` + hotLines.map((l) => `<p>${l}</p>`).join("");
+        }
+        if (actLines.length) {
+          html += `<p class="cat">Activités × ${people}</p>` + actLines.map((l) => `<p>${l}</p>`).join("");
+        }
+        if (trLines.length) {
+          html += `<p class="cat">Transport local & inter-villes × choix</p>` + trLines.map((l) => `<p>${l}</p>`).join("");
+        }
+        if (!html) html = "<p>Rien n’est coché dans le budget pour l’instant.</p>";
+        det.innerHTML = html;
+      }
+    }
+
+    function showBudgetPanel() {
+      ensureHotelNights();
+      recalculateBudget();
+      openBudgetPop();
+      showToast("Budget calculé");
     }
 
     function setHotelNights(hotel, nights) {
@@ -2816,7 +3307,7 @@
 
     function setInBudget(el, on) {
       el.dataset.inBudget = on ? "1" : "0";
-      const cb = el.querySelector('.budget-pick input[type="checkbox"]');
+      const cb = el.querySelector(".budget-pick input[type='checkbox']");
       if (cb) cb.checked = !!on;
       if (el.classList.contains("hotel") && on) {
         const nights = parseInt(el.dataset.nights || "0", 10) || 0;
@@ -2829,15 +3320,28 @@
       if (el.dataset.inBudget === undefined || el.dataset.inBudget === "") {
         el.dataset.inBudget = defaultOn ? "1" : "0";
       }
-      if (el.querySelector(".budget-pick")) {
-        const cb = el.querySelector('.budget-pick input[type="checkbox"]');
+      let row = el.querySelector(":scope > .budget-pick");
+      if (!row && el.classList.contains("leg-option")) {
+        row = el.querySelector(".budget-pick");
+      }
+      if (row) {
+        const cb = row.querySelector('input[type="checkbox"]');
         if (cb) cb.checked = el.dataset.inBudget !== "0";
         return;
       }
-      const row = document.createElement("label");
+      row = document.createElement("label");
       row.className = "budget-pick";
-      row.innerHTML = `<input type="checkbox" ${el.dataset.inBudget !== "0" ? "checked" : ""} /> Dans le budget · <strong>—</strong>`;
-      el.appendChild(row);
+      const label = el.classList.contains("leg-option") || el.classList.contains("transport-row") ? "Choisir" : "Dans le budget";
+      row.innerHTML = `<input type="checkbox" ${el.dataset.inBudget !== "0" ? "checked" : ""} /> ${label} · <strong>—</strong>`;
+      if (el.classList.contains("leg-option")) {
+        const nameEl = el.querySelector(".leg-option-name");
+        if (nameEl) el.insertBefore(row, nameEl);
+        else el.insertBefore(row, el.firstChild);
+      } else if (el.classList.contains("transport-row")) {
+        el.insertBefore(row, el.firstChild);
+      } else {
+        el.appendChild(row);
+      }
     }
 
     function ensureHotelNights(root = document) {
@@ -2871,9 +3375,31 @@
         ensureBudgetPick(act, true);
       });
 
+      root.querySelectorAll(".cities-wrap .transport-row").forEach((row) => {
+        ensureBudgetPick(row, false);
+      });
+
       root.querySelectorAll(".cities-wrap .transport-leg").forEach((leg) => {
-        // Par défaut inclus ; si plusieurs trajets dans la même ville, l'utilisateur décoche
-        ensureBudgetPick(leg, true);
+        // Ancienne case sur le trajet entier → on passe au choix par option
+        leg.querySelectorAll(":scope > .budget-pick").forEach((el) => el.remove());
+        delete leg.dataset.inBudget;
+        leg.querySelectorAll(".leg-option").forEach((opt) => {
+          opt.querySelectorAll(".leg-option-price").forEach((el) => el.remove());
+          ensureBudgetPick(opt, false);
+          const nameEl = opt.querySelector(".leg-option-name");
+          let span = nameEl?.querySelector("span");
+          if (nameEl && !span) {
+            span = document.createElement("span");
+            span.textContent = opt.dataset.price || "$0";
+            nameEl.appendChild(document.createTextNode(" "));
+            nameEl.appendChild(span);
+          }
+          if (span) {
+            const formatted = formatPriceInput(parseMoney(span.textContent));
+            if (formatted) opt.dataset.price = formatted;
+            else if (span.textContent.trim()) opt.dataset.price = span.textContent.trim();
+          }
+        });
       });
 
       scheduleBudget();
@@ -2892,7 +3418,7 @@
     citiesWrap.addEventListener("change", (e) => {
       const budgetCb = e.target.closest(".budget-pick input[type='checkbox']");
       if (budgetCb) {
-        const item = budgetCb.closest(".hotel, .activity, .transport-leg");
+        const item = budgetCb.closest(".hotel, .activity, .leg-option, .transport-row");
         if (item) setInBudget(item, budgetCb.checked);
         return;
       }
@@ -2958,6 +3484,7 @@
         JSON.stringify({
           cities: citiesClone.innerHTML,
           budget: budgetClone.innerHTML,
+          people: getPeople(),
           savedAt: new Date().toISOString(),
         })
       );
@@ -2971,6 +3498,7 @@
         const data = JSON.parse(raw);
         if (data.cities) citiesWrap.innerHTML = data.cities;
         if (data.budget) budgetStack.innerHTML = data.budget;
+        if (data.people) setPeople(data.people);
         repairHotelLinks(citiesWrap);
         seedCityCoords();
         document.querySelectorAll(".reveal").forEach((el) => {
@@ -3012,13 +3540,13 @@
     }
 
     function transportLegTemplate(nextName) {
-      return `<div class="transport-leg" data-in-budget="1">
+      return `<div class="transport-leg">
         <div class="transport-leg-top">
           <h4 class="transport-leg-title">Aller à ${nextName || "…"}</h4>
-          <p class="leg-price">$0–0</p>
+          <p class="leg-price">—</p>
         </div>
-        <p class="transport-leg-note">Horaires et prix à confirmer.</p>
-        <div class="leg-option">
+        <p class="transport-leg-note">Horaires et prix à confirmer. Coche l’option choisie.</p>
+        <div class="leg-option" data-in-budget="0">
           <div class="leg-option-name">Option principale <span>~$0–0</span></div>
           Détails du trajet…
         </div>
@@ -3210,6 +3738,8 @@
         ".activity-price",
         ".activity-info > p",
         ".leg-price",
+        ".leg-option-name",
+        ".leg-option-name span",
         ".transport-dest",
         ".transport-leg-title",
         ".block-title",
@@ -3225,6 +3755,16 @@
         });
         el.addEventListener("blur", () => {
           if (el.classList.contains("activity-price") || el.classList.contains("leg-price") || el.classList.contains("hotel-price")) {
+            scheduleBudget();
+          }
+          if (el.classList.contains("leg-option-name") || el.matches(".leg-option-name span")) {
+            const opt = el.closest(".leg-option");
+            const span = opt?.querySelector(".leg-option-name span") || (el.matches(".leg-option-name span") ? el : null);
+            if (opt && span) {
+              const formatted = formatPriceInput(parseMoney(span.textContent));
+              if (formatted) opt.dataset.price = formatted;
+              else opt.dataset.price = span.textContent.trim();
+            }
             scheduleBudget();
           }
           if (el.matches(".city-visual-label h2")) {
@@ -3262,7 +3802,7 @@
       wireItemControls(document);
       wireCityControls();
       enableEditable(document);
-      showToast("Mode édition · + Ville / budget auto");
+      showToast("Mode édition · clique le prix ($…) des transports pour le changer");
     }
 
     function exitEditMode() {
@@ -3284,7 +3824,7 @@
       rebuildItineraryUI();
       recalculateBudget();
       const clone = document.documentElement.cloneNode(true);
-      clone.querySelectorAll(".edit-fab, .edit-panel, .edit-toast").forEach((el) => el.remove());
+      clone.querySelectorAll(".edit-fab, .budget-fab, .people-fab, .edit-panel, .edit-toast, .budget-pop").forEach((el) => el.remove());
       const html = "<!DOCTYPE html>\n" + clone.outerHTML;
       const blob = new Blob([html], { type: "text/html;charset=utf-8" });
       const url = URL.createObjectURL(blob);
@@ -3302,24 +3842,32 @@
     document.getElementById("editSave").addEventListener("click", saveContent);
     document.getElementById("editDownload").addEventListener("click", downloadHtml);
     document.getElementById("editAddCity").addEventListener("click", addCity);
-    document.getElementById("editBudget").addEventListener("click", () => {
-      recalculateBudget();
-      showToast("Budget recalculé");
+    document.getElementById("budgetFab").addEventListener("click", showBudgetPanel);
+    document.getElementById("budgetPopClose").addEventListener("click", closeBudgetPop);
+    document.getElementById("peopleCtrl").addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-people-act]");
+      if (!btn) return;
+      const cur = getPeople();
+      setPeople(btn.dataset.peopleAct === "plus" ? cur + 1 : cur - 1);
     });
+    document.getElementById("peopleCount").addEventListener("change", (e) => setPeople(e.target.value));
+    document.getElementById("peopleCount").addEventListener("blur", (e) => setPeople(e.target.value));
     document.getElementById("editReset").addEventListener("click", () => {
       if (!confirm("Effacer tes modifications et revenir à la version d’origine ?")) return;
       localStorage.removeItem(EDIT_KEY);
+      localStorage.removeItem(PEOPLE_KEY);
       OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
       location.reload();
     });
 
     repairHotelLinks(document);
+    loadPeople();
     loadContent();
     repairHotelLinks(document);
     seedCityCoords();
     rebuildItineraryUI();
     ensureHotelNights();
-    recalculateBudget();
+    // Budget affiché seulement via le bouton « Calculer le budget »
   </script>
 </body>
 </html>
