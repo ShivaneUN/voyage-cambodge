@@ -792,6 +792,79 @@
       font-weight: 500;
     }
 
+    .hotel-nights {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem 0.65rem;
+      margin-top: 0.65rem;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+    }
+
+    .hotel-nights-label {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .hotel-nights-ctrl {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--sand-deep);
+      background: var(--white);
+    }
+
+    .hotel-nights-ctrl button {
+      border: none;
+      background: transparent;
+      color: var(--moss-deep);
+      width: 1.75rem;
+      height: 1.75rem;
+      cursor: pointer;
+      font-size: 1rem;
+      line-height: 1;
+      font-family: var(--font-body);
+    }
+
+    .hotel-nights-ctrl button:hover {
+      background: rgba(47, 93, 74, 0.08);
+    }
+
+    .hotel-nights-ctrl input {
+      width: 2.4rem;
+      border: none;
+      border-left: 1px solid var(--sand-deep);
+      border-right: 1px solid var(--sand-deep);
+      text-align: center;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--ink);
+      padding: 0.25rem 0;
+      background: transparent;
+      -moz-appearance: textfield;
+    }
+
+    .hotel-nights-ctrl input::-webkit-outer-spin-button,
+    .hotel-nights-ctrl input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .hotel-nights-sub {
+      font-weight: 500;
+      color: var(--moss);
+      font-size: 0.78rem;
+    }
+
+    .hotel[data-nights="0"] {
+      opacity: 0.72;
+    }
+
+    .hotel[data-nights="0"] .hotel-nights-sub {
+      color: var(--ink-soft);
+    }
+
     .note {
       margin-top: 1.25rem;
       font-size: 0.85rem;
@@ -2343,7 +2416,7 @@
           <div class="budget-box" data-budget="hotels">
             <h3>Budget hébergement</h3>
             <p class="budget-amount">$700 – $1200</p>
-            <p class="budget-note">Auto · ~2 nuits / ville (fourchette min–max des hôtels)</p>
+            <p class="budget-note">Auto · prix / nuit × nuits choisies par hôtel</p>
           </div>
           <div class="budget-box" data-budget="activities">
             <h3>Budget activités</h3>
@@ -2372,7 +2445,7 @@
   <button type="button" class="edit-fab" id="editFab" title="Modifier le contenu">Modifier</button>
 
   <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
-    <p class="edit-hint">Villes → carte &amp; trajet · Prix → budget auto · Hôtels / activités / transports modifiables</p>
+    <p class="edit-hint">Nuits par hôtel (− / +) · budget auto · + Ville · hôtels / activités / trajets</p>
     <button type="button" class="primary" id="editSave">Enregistrer</button>
     <button type="button" id="editAddCity">+ Ville</button>
     <button type="button" id="editBudget">Recalculer budget</button>
@@ -2575,8 +2648,8 @@
     window.addEventListener("resize", () => map.invalidateSize());
 
     /* —— Mode édition (villes + budget auto) —— */
-    const EDIT_KEY = "voyageCambodgeContent_v3";
-    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2"];
+    const EDIT_KEY = "voyageCambodgeContent_v4";
+    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3"];
     OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
 
     const citiesWrap = document.querySelector(".cities-wrap");
@@ -2642,19 +2715,100 @@
 
       let hotMin = 0;
       let hotMax = 0;
-      document.querySelectorAll(".cities-wrap .city").forEach((city) => {
-        const nights = parseInt(city.dataset.nights || "2", 10) || 2;
-        const prices = [...city.querySelectorAll(".hotel-price")].map((el) => parseMoney(el.textContent));
-        if (!prices.length) return;
-        hotMin += Math.min(...prices.map((p) => p.min)) * nights;
-        hotMax += Math.max(...prices.map((p) => p.max)) * nights;
+      let bookedNights = 0;
+      let bookedHotels = 0;
+
+      document.querySelectorAll(".cities-wrap .hotel").forEach((hotel) => {
+        const nights = Math.max(0, parseInt(hotel.dataset.nights || "0", 10) || 0);
+        hotel.dataset.nights = String(nights);
+        const priceEl = hotel.querySelector(".hotel-price");
+        const subEl = hotel.querySelector(".hotel-nights-sub");
+        const p = parseMoney(priceEl?.textContent || "");
+
+        if (subEl) {
+          if (nights <= 0) {
+            subEl.textContent = "non réservé (0 nuit)";
+          } else {
+            subEl.textContent = `= ${formatRange(p.min * nights, p.max * nights)} (${nights} nuit${nights > 1 ? "s" : ""})`;
+          }
+        }
+
+        if (nights <= 0) return;
+        hotMin += p.min * nights;
+        hotMax += p.max * nights;
+        bookedNights += nights;
+        bookedHotels += 1;
       });
 
-      setBudget("hotels", hotMin, hotMax, `Auto · ~2 nuits / ville · ${nCities} étape${nCities > 1 ? "s" : ""}`);
+      setBudget(
+        "hotels",
+        hotMin,
+        hotMax,
+        `Auto · ${bookedHotels} hôtel${bookedHotels > 1 ? "s" : ""} · ${bookedNights} nuit${bookedNights > 1 ? "s" : ""} · ${nCities} étape${nCities > 1 ? "s" : ""}`
+      );
       setBudget("activities", actMin, actMax, "Auto · somme des activités × 2 personnes");
       setBudget("transport", trMin, trMax, "Auto · trajets entre villes × 2 personnes");
       setBudget("total", hotMin + actMin + trMin, hotMax + actMax + trMax, "Hébergement + activités + transport · hors vols & repas");
     }
+
+    function setHotelNights(hotel, nights) {
+      const n = Math.max(0, Math.min(60, parseInt(nights, 10) || 0));
+      hotel.dataset.nights = String(n);
+      const input = hotel.querySelector(".hotel-nights-ctrl input");
+      if (input && String(input.value) !== String(n)) input.value = String(n);
+      scheduleBudget();
+    }
+
+    function ensureHotelNights(root = document) {
+      root.querySelectorAll(".cities-wrap .hotel").forEach((hotel) => {
+        if (hotel.dataset.nights === undefined || hotel.dataset.nights === "") {
+          hotel.dataset.nights = hotel.querySelector(".hotel-pick") ? "2" : "0";
+        }
+
+        if (!hotel.querySelector(".hotel-nights")) {
+          const row = document.createElement("div");
+          row.className = "hotel-nights";
+          row.innerHTML = `
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="${hotel.dataset.nights}" aria-label="Nombre de nuits" />
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
+            </div>
+            <span class="hotel-nights-sub"></span>
+          `;
+          hotel.appendChild(row);
+        }
+
+        const input = hotel.querySelector(".hotel-nights-ctrl input");
+        if (input) input.value = hotel.dataset.nights;
+      });
+      scheduleBudget();
+    }
+
+    // Délégation : marche même après reload localStorage
+    citiesWrap.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-night-act]");
+      if (!btn) return;
+      const hotel = btn.closest(".hotel");
+      if (!hotel) return;
+      const cur = parseInt(hotel.dataset.nights || "0", 10) || 0;
+      setHotelNights(hotel, btn.dataset.nightAct === "plus" ? cur + 1 : cur - 1);
+    });
+
+    citiesWrap.addEventListener("change", (e) => {
+      const input = e.target.closest(".hotel-nights-ctrl input");
+      if (!input) return;
+      const hotel = input.closest(".hotel");
+      if (hotel) setHotelNights(hotel, input.value);
+    });
+
+    citiesWrap.addEventListener("input", (e) => {
+      const input = e.target.closest(".hotel-nights-ctrl input");
+      if (!input) return;
+      const hotel = input.closest(".hotel");
+      if (hotel) setHotelNights(hotel, input.value);
+    });
 
     function cleanEditChrome(root) {
       root.querySelectorAll(".edit-del, .edit-add-row, .edit-link-btn, .edit-del-city, .edit-city-bar").forEach((el) => el.remove());
@@ -2726,6 +2880,7 @@
         });
         document.querySelectorAll(".activity").forEach((el) => el.classList.add("visible"));
         rebuildItineraryUI();
+        ensureHotelNights();
         recalculateBudget();
       } catch (_) {
         /* ignore */
@@ -2733,7 +2888,7 @@
     }
 
     function hotelTemplate() {
-      return `<div class="hotel">
+      return `<div class="hotel" data-nights="2">
         <div class="hotel-top">
           <p class="hotel-name"><a href="#" target="_blank" rel="noopener noreferrer">Nouvel hôtel</a></p>
           <p class="hotel-price">$0–0</p>
@@ -2805,6 +2960,7 @@
 
     function afterContentChange() {
       rebuildItineraryUI();
+      ensureHotelNights();
       scheduleBudget();
       if (document.body.classList.contains("edit-mode")) {
         wireAddButtons();
@@ -3063,6 +3219,7 @@
     repairHotelLinks(document);
     seedCityCoords();
     rebuildItineraryUI();
+    ensureHotelNights();
     recalculateBudget();
   </script>
 </body>
