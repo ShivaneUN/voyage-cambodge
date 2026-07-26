@@ -761,7 +761,8 @@
       text-decoration: underline;
     }
 
-    .edit-link-btn {
+    .edit-link-btn,
+    .edit-add-link-btn {
       display: none;
       margin-left: 0.35rem;
       border: 1px solid var(--moss);
@@ -774,7 +775,48 @@
       vertical-align: middle;
     }
 
-    body.edit-mode .edit-link-btn { display: inline-block; }
+    body.edit-mode .edit-link-btn,
+    body.edit-mode .edit-add-link-btn { display: inline-block; }
+
+    .item-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.65rem;
+      margin-top: 0.45rem;
+      font-size: 0.82rem;
+    }
+
+    .transport-row > .item-links,
+    .transport-row > .edit-add-link-btn {
+      grid-column: 1 / -1;
+    }
+
+    .leg-option > .item-links {
+      margin-top: 0.35rem;
+    }
+
+    .item-links a,
+    .activity-info > a {
+      color: var(--moss);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .item-links a:hover,
+    .activity-info > a:hover {
+      color: var(--moss-deep);
+    }
+
+    .item-link-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.2rem;
+    }
+
+    body.edit-mode .item-link-wrap .edit-link-btn {
+      margin-left: 0;
+    }
 
     .hotel-price {
       font-family: var(--serif);
@@ -3194,7 +3236,7 @@
   </aside>
 
   <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
-    <p class="edit-hint">Édition : transports hôtel↔ville, trajets, prix, dates · puis Enregistrer</p>
+    <p class="edit-hint">Édition : + Lien sur activités/transports, prix, dates · puis Enregistrer</p>
     <button type="button" class="primary" id="editSave">Enregistrer</button>
     <button type="button" id="editAddCity">+ Ville</button>
     <button type="button" id="editDownload">Télécharger HTML</button>
@@ -4405,7 +4447,13 @@
     });
 
     function cleanEditChrome(root) {
-      root.querySelectorAll(".edit-del, .edit-add-row, .edit-link-btn, .edit-del-city, .edit-city-bar").forEach((el) => el.remove());
+      root.querySelectorAll(".edit-del, .edit-add-row, .edit-link-btn, .edit-add-link-btn, .edit-del-city, .edit-city-bar").forEach((el) => el.remove());
+      // Déballer les wraps de liens ajoutés en édition
+      root.querySelectorAll(".item-link-wrap").forEach((wrap) => {
+        const a = wrap.querySelector("a");
+        if (a) wrap.replaceWith(a);
+        else wrap.remove();
+      });
       root.querySelectorAll("[contenteditable]").forEach((el) => {
         el.removeAttribute("contenteditable");
       });
@@ -4649,9 +4697,153 @@
           e.preventDefault();
           e.stopPropagation();
           const url = prompt("Lien de l’hôtel (URL) :", a.getAttribute("href") || "");
-          if (url !== null) a.setAttribute("href", url.trim() || "#");
+          if (url !== null) a.setAttribute("href", normalizeUrl(url) || "#");
         });
         nameEl.appendChild(btn);
+      });
+
+      wireExtraLinkControls(scope);
+    }
+
+    function normalizeUrl(url) {
+      let u = (url || "").trim();
+      if (!u || u === "#") return "";
+      if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+      return u;
+    }
+
+    function defaultLinkLabel(url) {
+      try {
+        return new URL(url).hostname.replace(/^www\./, "");
+      } catch (_) {
+        return "Lien →";
+      }
+    }
+
+    function ensureItemLinks(container, beforeSel) {
+      let row = container.querySelector(":scope > .item-links");
+      if (!row) {
+        row = document.createElement("div");
+        row.className = "item-links";
+        const sels = (beforeSel || "").split(",").map((s) => s.trim()).filter(Boolean);
+        let before = null;
+        for (const s of sels) {
+          before = container.querySelector(s);
+          if (before) break;
+        }
+        if (before) before.before(row);
+        else container.appendChild(row);
+      }
+      return row;
+    }
+
+    function wrapLinkForEdit(a) {
+      if (a.closest(".item-link-wrap") || a.closest(".hotel-name")) return;
+      if (a.querySelector(".edit-link-btn")) return;
+      const wrap = document.createElement("span");
+      wrap.className = "item-link-wrap";
+      a.replaceWith(wrap);
+      wrap.appendChild(a);
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "edit-link-btn";
+      btn.textContent = "✎";
+      btn.title = "Modifier ou supprimer le lien";
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const action = prompt(
+          "Modifier l’URL, ou tape SUPPRIMER pour enlever le lien :",
+          a.getAttribute("href") || ""
+        );
+        if (action === null) return;
+        if (/^suppr/i.test(action.trim())) {
+          const parent = wrap.parentElement;
+          wrap.remove();
+          if (parent?.classList.contains("item-links") && !parent.children.length) parent.remove();
+          return;
+        }
+        const href = normalizeUrl(action);
+        if (!href) return;
+        a.setAttribute("href", href);
+        const label = prompt("Texte du lien :", a.textContent.trim() || defaultLinkLabel(href));
+        if (label !== null && label.trim()) a.textContent = label.trim();
+      });
+      wrap.appendChild(btn);
+    }
+
+    function promptAndAddLink(container, beforeSel) {
+      const url = prompt("URL du lien :", "https://");
+      if (url === null || !url.trim()) return;
+      const href = normalizeUrl(url);
+      if (!href) return;
+      const label = prompt("Texte du lien (ex. Booking, 12Go…) :", defaultLinkLabel(href));
+      if (label === null) return;
+      const row = ensureItemLinks(container, beforeSel);
+      const a = document.createElement("a");
+      a.href = href;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.className = "item-link";
+      a.textContent = (label.trim() || defaultLinkLabel(href)) + (label.includes("→") ? "" : " →");
+      row.appendChild(a);
+      wrapLinkForEdit(a);
+      showToast("Lien ajouté");
+    }
+
+    function makeAddLinkButton(onClick) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "edit-add-link-btn";
+      btn.textContent = "+ Lien";
+      btn.title = "Ajouter un lien";
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClick();
+      });
+      return btn;
+    }
+
+    function wireExtraLinkControls(scope) {
+      // Activités : récupérer les <a> déjà présents + bouton + Lien
+      scope.querySelectorAll(".activity .activity-info").forEach((info) => {
+        const stray = [...info.children].filter(
+          (el) => el.matches("a[href]") && !el.closest(".item-link-wrap")
+        );
+        if (stray.length) {
+          const row = ensureItemLinks(info, ".budget-pick, .edit-add-link-btn");
+          stray.forEach((a) => {
+            if (!a.classList.contains("item-link")) a.classList.add("item-link");
+            row.appendChild(a);
+          });
+        }
+        info.querySelectorAll(".item-links a[href]").forEach(wrapLinkForEdit);
+        if (info.querySelector(":scope > .edit-add-link-btn")) return;
+        const btn = makeAddLinkButton(() => promptAndAddLink(info, ".budget-pick"));
+        const pick = info.querySelector(".budget-pick");
+        if (pick) pick.before(btn);
+        else info.appendChild(btn);
+      });
+
+      // Options de trajet inter-villes
+      scope.querySelectorAll(".leg-option").forEach((opt) => {
+        opt.querySelectorAll(":scope > a[href], .item-links a[href]").forEach(wrapLinkForEdit);
+        if (opt.querySelector(":scope > .edit-add-link-btn")) return;
+        const btn = makeAddLinkButton(() => promptAndAddLink(opt, ".edit-del"));
+        const del = opt.querySelector(".edit-del");
+        if (del) del.before(btn);
+        else opt.appendChild(btn);
+      });
+
+      // Transports locaux (tuktuk, etc.)
+      scope.querySelectorAll(".transport-row").forEach((row) => {
+        row.querySelectorAll("a[href]").forEach(wrapLinkForEdit);
+        if (row.querySelector(":scope > .edit-add-link-btn")) return;
+        const btn = makeAddLinkButton(() => promptAndAddLink(row, ".edit-del"));
+        const del = row.querySelector(".edit-del");
+        if (del) del.before(btn);
+        else row.appendChild(btn);
       });
     }
 
@@ -4880,7 +5072,7 @@
       wireItemControls(document);
       wireCityControls();
       enableEditable(document);
-      showToast("Mode édition · clique le prix ($…) des transports pour le changer");
+      showToast("Mode édition · + Lien sur activités & transports");
     }
 
     function exitEditMode() {
