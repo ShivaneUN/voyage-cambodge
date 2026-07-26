@@ -3104,7 +3104,7 @@
   </footer>
 
   <div class="fab-bar" id="fabBar">
-    <button type="button" class="trip-fab" id="tripFab">7–30 · nuits</button>
+    <button type="button" class="trip-fab" id="tripFab">Dates · nuits</button>
     <div class="people-fab" id="peopleCtrl" title="Nombre de personnes">
       <span>Pers.</span>
       <div class="hotel-nights-ctrl">
@@ -3153,7 +3153,7 @@
       <button type="button" class="primary" id="tripDistribute">Répartir équitablement</button>
       <button type="button" id="tripApplyHotels">Appliquer aux hôtels</button>
     </div>
-    <p class="trip-pop-note">Choisis tes dates d’arrivée et de départ ; la durée et les nuits se recalculent. Les dates par ville suivent les nuits allouées.</p>
+    <p class="trip-pop-note">Change l’arrivée ou le départ librement : la durée et les nuits par ville se recalculent. Tu peux ensuite ajuster ville par ville.</p>
   </aside>
 
   <aside class="budget-pop" id="budgetPop" aria-live="polite" hidden>
@@ -3382,12 +3382,28 @@
 
       const footer = document.querySelector("footer p");
       if (footer) {
-        footer.innerHTML = `<span>Cambodge</span> — Voyage décembre · 7→30 · 24 jours · 23 nuits · ${stops.length} étape${stops.length > 1 ? "s" : ""}`;
+        let days = 24;
+        let nights = 23;
+        let range = "7→30";
+        try {
+          days = getTripDays();
+          nights = getTripNights();
+          const s = parseISODate(getTripStart());
+          const e = parseISODate(getTripEnd());
+          if (s && e) range = `${s.getDate()}→${e.getDate()}`;
+        } catch (_) {}
+        footer.innerHTML = `<span>Cambodge</span> — Voyage · ${range} · ${days} jours · ${nights} nuits · ${stops.length} étape${stops.length > 1 ? "s" : ""}`;
       }
 
       const mapDesc = document.querySelector("#carte .section-desc");
       if (mapDesc) {
-        mapDesc.textContent = `7 → 30 déc. · 24 jours · 23 nuits · ${stops.length} étapes — cliquez un point pour ouvrir la fiche.`;
+        let days = 24;
+        let nights = 23;
+        try {
+          days = getTripDays();
+          nights = getTripNights();
+        } catch (_) {}
+        mapDesc.textContent = `${days} jours · ${nights} nuits · ${stops.length} étapes — cliquez un point pour ouvrir la fiche.`;
       }
 
       setTimeout(() => map.invalidateSize(), 100);
@@ -3596,8 +3612,10 @@
       syncTripDateInputs();
       persistTripDates();
       if (recompute) {
+        scaleCityNightsToTrip();
         recomputeCityDates();
         refreshTripPanel();
+        scheduleBudget();
       }
     }
 
@@ -3613,8 +3631,10 @@
       syncTripDateInputs();
       persistTripDates();
       if (recompute) {
+        scaleCityNightsToTrip();
         recomputeCityDates();
         refreshTripPanel();
+        scheduleBudget();
       }
     }
 
@@ -4011,6 +4031,43 @@
 
       const fab = document.getElementById("tripFab");
       if (fab) fab.textContent = left === 0 ? `${range} · OK` : `${range} · ${left > 0 ? left + " rest." : "trop"}`;
+    }
+
+    function scaleCityNightsToTrip() {
+      const cities = [...document.querySelectorAll(".cities-wrap .city")];
+      if (!cities.length) return;
+      const target = getTripNights();
+      const current = cities.reduce((a, c) => a + getCityNights(c), 0);
+      if (current === target) return;
+
+      if (current <= 0 || target === 0) {
+        const base = Math.floor(target / cities.length);
+        let rest = target - base * cities.length;
+        cities.forEach((city) => {
+          const n = base + (rest > 0 ? 1 : 0);
+          if (rest > 0) rest -= 1;
+          city.dataset.nights = String(n);
+          syncHotelsFromCity(city, { force: true });
+        });
+        return;
+      }
+
+      // Garde les proportions, puis ajuste le reste pour coller exactement à la durée
+      const raw = cities.map((city) => (getCityNights(city) / current) * target);
+      const floors = raw.map((x) => Math.floor(x));
+      let left = target - floors.reduce((a, b) => a + b, 0);
+      const order = raw
+        .map((x, i) => ({ i, frac: x - floors[i] }))
+        .sort((a, b) => b.frac - a.frac);
+      const nights = floors.slice();
+      for (let k = 0; k < order.length && left > 0; k++) {
+        nights[order[k].i] += 1;
+        left -= 1;
+      }
+      cities.forEach((city, i) => {
+        city.dataset.nights = String(nights[i]);
+        syncHotelsFromCity(city, { force: true });
+      });
     }
 
     function distributeCityNights() {
@@ -4775,6 +4832,12 @@
     document.getElementById("tripApplyHotels").addEventListener("click", applyAllCityNightsToHotels);
     document.getElementById("tripStartDate").addEventListener("change", (e) => setTripStart(e.target.value));
     document.getElementById("tripEndDate").addEventListener("change", (e) => setTripEnd(e.target.value));
+    document.getElementById("tripStartDate").addEventListener("input", (e) => {
+      if (e.target.value) setTripStart(e.target.value);
+    });
+    document.getElementById("tripEndDate").addEventListener("input", (e) => {
+      if (e.target.value) setTripEnd(e.target.value);
+    });
     document.getElementById("tripPop").addEventListener("click", (e) => {
       const row = e.target.closest("[data-trip-city]");
       if (!row) return;
