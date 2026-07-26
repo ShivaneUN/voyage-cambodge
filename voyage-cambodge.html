@@ -3153,7 +3153,7 @@
       <button type="button" class="primary" id="tripDistribute">Répartir équitablement</button>
       <button type="button" id="tripApplyHotels">Appliquer aux hôtels</button>
     </div>
-    <p class="trip-pop-note">Arrivée le 7 déc. au soir → départ le 30 déc. au soir = 24 jours · 23 nuits. Les dates par ville suivent les nuits allouées.</p>
+    <p class="trip-pop-note">Choisis tes dates d’arrivée et de départ ; la durée et les nuits se recalculent. Les dates par ville suivent les nuits allouées.</p>
   </aside>
 
   <aside class="budget-pop" id="budgetPop" aria-live="polite" hidden>
@@ -3403,8 +3403,6 @@
     const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4", "voyageCambodgeContent_v5", "voyageCambodgeContent_v6", "voyageCambodgeContent_v7", "voyageCambodgeContent_v8", "voyageCambodgeContent_v9", "voyageCambodgeContent_v10"];
     const PEOPLE_KEY = "voyageCambodgePeople";
     const TRIP_START_KEY = "voyageCambodgeTripStart_v3";
-    const TRIP_DAYS = 24;
-    const TRIP_NIGHTS = 23;
     const DEFAULT_TRIP_START = "2026-12-07";
     const DEFAULT_TRIP_END = "2026-12-30";
     const DEFAULT_CITY_NIGHTS = {
@@ -3549,7 +3547,26 @@
       const start = parseISODate(getTripStart()) || parseISODate(DEFAULT_TRIP_START);
       const stored = document.body.dataset.tripEnd;
       if (stored && parseISODate(stored)) return stored;
-      return formatISODate(addDays(start, TRIP_DAYS - 1));
+      return DEFAULT_TRIP_END || formatISODate(addDays(start, 23));
+    }
+
+    function getTripNights() {
+      const s = parseISODate(getTripStart());
+      const e = parseISODate(getTripEnd());
+      if (!s || !e) return 23;
+      const n = Math.round((e - s) / 86400000);
+      return Math.max(0, n);
+    }
+
+    function getTripDays() {
+      return getTripNights() + 1;
+    }
+
+    function shortTripRange() {
+      const s = parseISODate(getTripStart());
+      const e = parseISODate(getTripEnd());
+      if (!s || !e) return "dates";
+      return `${s.getDate()}→${e.getDate()}`;
     }
 
     function syncTripDateInputs() {
@@ -3561,18 +3578,23 @@
       if (endInput && endInput.value !== end) endInput.value = end;
     }
 
-    function setTripStart(iso, { recompute = true, fromEnd = false } = {}) {
+    function persistTripDates() {
+      try {
+        localStorage.setItem(TRIP_START_KEY, getTripStart());
+        localStorage.setItem(TRIP_START_KEY + "_end", getTripEnd());
+      } catch (_) {}
+    }
+
+    function setTripStart(iso, { recompute = true } = {}) {
       const d = parseISODate(iso) || parseISODate(DEFAULT_TRIP_START);
       const val = formatISODate(d);
       document.body.dataset.tripStart = val;
-      if (!fromEnd) {
-        document.body.dataset.tripEnd = formatISODate(addDays(d, TRIP_DAYS - 1));
+      const end = parseISODate(getTripEnd());
+      if (end && end < d) {
+        document.body.dataset.tripEnd = val;
       }
       syncTripDateInputs();
-      try {
-        localStorage.setItem(TRIP_START_KEY, val);
-        localStorage.setItem(TRIP_START_KEY + "_end", document.body.dataset.tripEnd || "");
-      } catch (_) {}
+      persistTripDates();
       if (recompute) {
         recomputeCityDates();
         refreshTripPanel();
@@ -3582,14 +3604,18 @@
     function setTripEnd(iso, { recompute = true } = {}) {
       const end = parseISODate(iso);
       if (!end) return;
-      const start = addDays(end, -(TRIP_DAYS - 1));
-      document.body.dataset.tripEnd = formatISODate(end);
-      setTripStart(formatISODate(start), { recompute, fromEnd: true });
-      document.body.dataset.tripEnd = formatISODate(end);
+      const endVal = formatISODate(end);
+      document.body.dataset.tripEnd = endVal;
+      const start = parseISODate(getTripStart());
+      if (start && end < start) {
+        document.body.dataset.tripStart = endVal;
+      }
       syncTripDateInputs();
-      try {
-        localStorage.setItem(TRIP_START_KEY + "_end", formatISODate(end));
-      } catch (_) {}
+      persistTripDates();
+      if (recompute) {
+        recomputeCityDates();
+        refreshTripPanel();
+      }
     }
 
     function loadTripStart() {
@@ -3607,23 +3633,13 @@
       if (document.body.dataset.tripEnd && parseISODate(document.body.dataset.tripEnd)) {
         end = document.body.dataset.tripEnd;
       }
-      document.body.dataset.tripStart = start;
-      document.body.dataset.tripEnd = end;
-      // Recaler sur 7→30 si l’écart n’est plus 23 nuits
       const s = parseISODate(start);
       const e = parseISODate(end);
-      if (s && e) {
-        const diff = Math.round((e - s) / 86400000);
-        if (diff !== TRIP_DAYS - 1) {
-          start = DEFAULT_TRIP_START;
-          end = DEFAULT_TRIP_END;
-          document.body.dataset.tripStart = start;
-          document.body.dataset.tripEnd = end;
-        }
-      }
-      setTripStart(start, { recompute: false });
+      if (s && e && e < s) end = start;
+      document.body.dataset.tripStart = start;
       document.body.dataset.tripEnd = end;
       syncTripDateInputs();
+      persistTripDates();
     }
 
     function recomputeCityDates() {
@@ -3896,7 +3912,8 @@
     }
 
     function setCityNights(city, nights, { applyHotels = true } = {}) {
-      const n = Math.max(0, Math.min(TRIP_NIGHTS, parseInt(nights, 10) || 0));
+      const maxN = Math.max(60, getTripNights());
+      const n = Math.max(0, Math.min(maxN, parseInt(nights, 10) || 0));
       city.dataset.nights = String(n);
       updateCityStayUI(city);
       if (applyHotels) syncHotelsFromCity(city);
@@ -3922,28 +3939,53 @@
     }
 
     function refreshTripPanel() {
+      const nights = getTripNights();
+      const days = getTripDays();
       const used = sumCityNights();
-      const left = TRIP_NIGHTS - used;
+      const left = nights - used;
       const daysEl = document.getElementById("tripDaysLabel");
       const nightsEl = document.getElementById("tripNightsLabel");
       const usedEl = document.getElementById("tripUsedLabel");
       const leftEl = document.getElementById("tripLeftLabel");
       const usedBox = document.getElementById("tripUsedBox");
       const leftBox = document.getElementById("tripLeftBox");
+      const range = shortTripRange();
       syncTripDateInputs();
-      if (daysEl) daysEl.textContent = `${TRIP_DAYS} jours`;
-      if (nightsEl) nightsEl.textContent = `${TRIP_NIGHTS} nuits`;
-      if (usedEl) usedEl.textContent = `${used} / ${TRIP_NIGHTS}`;
+      if (daysEl) daysEl.textContent = `${days} jours`;
+      if (nightsEl) nightsEl.textContent = `${nights} nuits`;
+      if (usedEl) usedEl.textContent = `${used} / ${nights}`;
       if (leftEl) leftEl.textContent = String(left);
-      if (usedBox) usedBox.classList.toggle("is-warn", used > TRIP_NIGHTS);
+      if (usedBox) usedBox.classList.toggle("is-warn", used > nights);
       if (leftBox) {
         leftBox.classList.toggle("is-ok", left === 0);
         leftBox.classList.toggle("is-warn", left < 0);
       }
 
+      const s = parseISODate(getTripStart());
+      const e = parseISODate(getTripEnd());
+      const heroLead = document.querySelector(".hero-lead");
+      if (heroLead && s && e) {
+        heroLead.textContent = `${formatFRDate(s)} → ${formatFRDate(e)} · ${days} jours · ${nights} nuits — huit étapes, des temples millénaires aux plages.`;
+      }
+      const footer = document.querySelector("footer p");
+      if (footer && s && e) {
+        const stops = document.querySelectorAll(".cities-wrap .city").length;
+        footer.innerHTML = `<span>Cambodge</span> — Voyage · ${s.getDate()}→${e.getDate()} · ${days} jours · ${nights} nuits · ${stops} étape${stops > 1 ? "s" : ""}`;
+      }
+      const mapDesc = document.querySelector("#carte .section-desc");
+      if (mapDesc && s && e) {
+        const stops = document.querySelectorAll(".cities-wrap .city").length;
+        mapDesc.textContent = `${formatFRDate(s)} → ${formatFRDate(e)} · ${days} jours · ${nights} nuits · ${stops} étapes — cliquez un point pour ouvrir la fiche.`;
+      }
+      const note = document.querySelector(".trip-pop-note");
+      if (note && s && e) {
+        note.textContent = `Arrivée ${formatFRDate(s)} → départ ${formatFRDate(e)} = ${days} jours · ${nights} nuits. Modifie les dates librement ; les villes suivent les nuits allouées.`;
+      }
+
       const list = document.getElementById("tripCityList");
       if (!list) return;
       const cities = [...document.querySelectorAll(".cities-wrap .city")];
+      const maxInput = Math.max(60, nights);
       list.innerHTML = cities
         .map((city) => {
           const n = getCityNights(city);
@@ -3960,7 +4002,7 @@
             <a href="#${city.id}">${name}<span class="trip-city-meta">${nightsToDaysHint(n)}</span><span class="trip-city-dates">${dateTxt}</span></a>
             <div class="hotel-nights-ctrl">
               <button type="button" data-trip-night-act="minus" aria-label="Moins">−</button>
-              <input type="number" min="0" max="${TRIP_NIGHTS}" value="${n}" data-trip-night-input aria-label="Nuits" />
+              <input type="number" min="0" max="${maxInput}" value="${n}" data-trip-night-input aria-label="Nuits" />
               <button type="button" data-trip-night-act="plus" aria-label="Plus">+</button>
             </div>
           </div>`;
@@ -3968,13 +4010,18 @@
         .join("");
 
       const fab = document.getElementById("tripFab");
-      if (fab) fab.textContent = left === 0 ? `7–30 · OK` : `7–30 · ${left > 0 ? left + " rest." : "trop"}`;
+      if (fab) fab.textContent = left === 0 ? `${range} · OK` : `${range} · ${left > 0 ? left + " rest." : "trop"}`;
     }
 
     function distributeCityNights() {
       const cities = [...document.querySelectorAll(".cities-wrap .city")];
       if (!cities.length) return;
-      const useDefaults = cities.length === 8 && cities.every((c) => DEFAULT_CITY_NIGHTS[c.id] != null);
+      const target = getTripNights();
+      const defaultSum = Object.values(DEFAULT_CITY_NIGHTS).reduce((a, b) => a + b, 0);
+      const useDefaults =
+        cities.length === 8 &&
+        target === defaultSum &&
+        cities.every((c) => DEFAULT_CITY_NIGHTS[c.id] != null);
       if (useDefaults) {
         cities.forEach((city) => {
           city.dataset.nights = String(DEFAULT_CITY_NIGHTS[city.id]);
@@ -3982,8 +4029,8 @@
           syncHotelsFromCity(city, { force: true });
         });
       } else {
-        const base = Math.floor(TRIP_NIGHTS / cities.length);
-        let rest = TRIP_NIGHTS - base * cities.length;
+        const base = Math.floor(target / cities.length);
+        let rest = target - base * cities.length;
         cities.forEach((city) => {
           const n = base + (rest > 0 ? 1 : 0);
           if (rest > 0) rest -= 1;
@@ -3995,7 +4042,7 @@
       refreshTripPanel();
       recomputeCityDates();
       scheduleBudget();
-      showToast("Nuits réparties · 23 nuits au total");
+      showToast(`Nuits réparties · ${target} nuits au total`);
     }
 
     function applyAllCityNightsToHotels() {
@@ -4774,6 +4821,7 @@
     rebuildItineraryUI();
     ensureHotelNights();
     recomputeCityDates();
+    refreshTripPanel();
     if (!localStorage.getItem(EDIT_KEY)) {
       document.querySelectorAll(".cities-wrap .city").forEach((city) => syncHotelsFromCity(city));
       refreshTripPanel();
