@@ -747,18 +747,49 @@
       text-decoration: none;
     }
 
-    .hotel-name a:hover { color: var(--moss); text-decoration: underline; }
+    .hotel-name a:hover,
+    .activity-top h3 a:hover,
+    .transport-dest a:hover,
+    .leg-option-name > a:hover {
+      color: var(--moss);
+      text-decoration: underline;
+    }
 
-    body:not(.edit-mode) .hotel-name a {
+    body:not(.edit-mode) .hotel-name a,
+    body:not(.edit-mode) .activity-top h3 a[href]:not([href="#"]):not([href=""]),
+    body:not(.edit-mode) .transport-dest a[href]:not([href="#"]):not([href=""]),
+    body:not(.edit-mode) .leg-option-name > a[href]:not([href="#"]):not([href=""]) {
       pointer-events: auto;
       cursor: pointer;
       position: relative;
       z-index: 1;
     }
 
-    body.edit-mode .hotel-name a {
+    body:not(.edit-mode) .activity-top h3 a[href="#"],
+    body:not(.edit-mode) .activity-top h3 a:not([href]),
+    body:not(.edit-mode) .transport-dest a[href="#"],
+    body:not(.edit-mode) .transport-dest a:not([href]),
+    body:not(.edit-mode) .leg-option-name > a[href="#"],
+    body:not(.edit-mode) .leg-option-name > a:not([href]) {
+      pointer-events: none;
+      cursor: inherit;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    body.edit-mode .hotel-name a,
+    body.edit-mode .activity-top h3 a,
+    body.edit-mode .transport-dest a,
+    body.edit-mode .leg-option-name > a {
       cursor: pointer;
       text-decoration: underline;
+    }
+
+    .activity-top h3 a,
+    .transport-dest a,
+    .leg-option-name > a {
+      color: inherit;
+      text-decoration: none;
     }
 
     .edit-link-btn,
@@ -3236,7 +3267,7 @@
   </aside>
 
   <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
-    <p class="edit-hint">Édition : + Lien sur activités/transports, prix, dates · puis Enregistrer</p>
+    <p class="edit-hint">Édition : bouton Lien (activités, transports, hôtels), prix, dates · Enregistrer</p>
     <button type="button" class="primary" id="editSave">Enregistrer</button>
     <button type="button" id="editAddCity">+ Ville</button>
     <button type="button" id="editDownload">Télécharger HTML</button>
@@ -4686,23 +4717,82 @@
       });
 
       scope.querySelectorAll(".hotel-name").forEach((nameEl) => {
-        if (nameEl.querySelector(".edit-link-btn")) return;
-        const a = nameEl.querySelector("a");
-        if (!a) return;
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "edit-link-btn";
-        btn.textContent = "Lien";
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const url = prompt("Lien de l’hôtel (URL) :", a.getAttribute("href") || "");
-          if (url !== null) a.setAttribute("href", normalizeUrl(url) || "#");
-        });
-        nameEl.appendChild(btn);
+        wireTitleLinkButton(nameEl, "Lien de l’hôtel (URL) :");
+      });
+
+      ensureTitleAnchors(scope);
+      scope.querySelectorAll(".activity-top h3").forEach((el) => {
+        wireTitleLinkButton(el, "Lien de l’activité (URL) :");
+      });
+      scope.querySelectorAll(".transport-dest").forEach((el) => {
+        wireTitleLinkButton(el, "Lien du transport (URL) :");
+      });
+      scope.querySelectorAll(".leg-option-name").forEach((el) => {
+        wireTitleLinkButton(el, "Lien de l’option (URL) :");
       });
 
       wireExtraLinkControls(scope);
+    }
+
+    function ensureTitleAnchors(scope) {
+      scope.querySelectorAll(".activity-top h3").forEach((h3) => {
+        if (h3.querySelector(":scope > a")) return;
+        const a = document.createElement("a");
+        a.href = "#";
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        while (h3.firstChild) a.appendChild(h3.firstChild);
+        h3.appendChild(a);
+      });
+
+      scope.querySelectorAll(".transport-dest").forEach((dest) => {
+        if (dest.querySelector(":scope > a")) return;
+        const a = document.createElement("a");
+        a.href = "#";
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        while (dest.firstChild) a.appendChild(dest.firstChild);
+        dest.appendChild(a);
+      });
+
+      scope.querySelectorAll(".leg-option-name").forEach((nameEl) => {
+        if (nameEl.querySelector(":scope > a")) return;
+        const a = document.createElement("a");
+        a.href = "#";
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        const nodes = [...nameEl.childNodes];
+        nodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE && (node.matches("span") || node.matches("button"))) return;
+          a.appendChild(node);
+        });
+        const span = nameEl.querySelector("span");
+        if (span) nameEl.insertBefore(a, span);
+        else nameEl.insertBefore(a, nameEl.firstChild);
+        if (!a.textContent.trim()) a.textContent = "Option";
+      });
+    }
+
+    function wireTitleLinkButton(hostEl, promptLabel) {
+      if (hostEl.querySelector(":scope > .edit-link-btn")) return;
+      const a = hostEl.querySelector(":scope > a");
+      if (!a) return;
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "edit-link-btn";
+      btn.textContent = "Lien";
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const current = a.getAttribute("href") || "";
+        const url = prompt(promptLabel, current === "#" ? "" : current);
+        if (url === null) return;
+        const href = normalizeUrl(url);
+        a.setAttribute("href", href || "#");
+        if (href) showToast("Lien enregistré");
+        else showToast("Lien retiré");
+      });
+      hostEl.appendChild(btn);
     }
 
     function normalizeUrl(url) {
@@ -4738,7 +4828,7 @@
     }
 
     function wrapLinkForEdit(a) {
-      if (a.closest(".item-link-wrap") || a.closest(".hotel-name")) return;
+      if (a.closest(".item-link-wrap") || a.closest(".hotel-name, .activity-top h3, .transport-dest, .leg-option-name")) return;
       if (a.querySelector(".edit-link-btn")) return;
       const wrap = document.createElement("span");
       wrap.className = "item-link-wrap";
@@ -4836,9 +4926,9 @@
         else opt.appendChild(btn);
       });
 
-      // Transports locaux (tuktuk, etc.)
+      // Transports locaux (tuktuk, etc.) — ne pas wrapper le lien du titre (.transport-dest)
       scope.querySelectorAll(".transport-row").forEach((row) => {
-        row.querySelectorAll("a[href]").forEach(wrapLinkForEdit);
+        row.querySelectorAll(".transport-modes a[href], .item-links a[href]").forEach(wrapLinkForEdit);
         if (row.querySelector(":scope > .edit-add-link-btn")) return;
         const btn = makeAddLinkButton(() => promptAndAddLink(row, ".edit-del"));
         const del = row.querySelector(".edit-del");
@@ -4980,13 +5070,13 @@
         ".hotel-pick",
         ".hotel-atypical",
         ".hotel-name a",
-        ".activity-top h3",
+        ".activity-top h3 a",
         ".activity-price",
         ".activity-info > p",
         ".leg-price",
-        ".leg-option-name",
+        ".leg-option-name > a",
         ".leg-option-name span",
-        ".transport-dest",
+        ".transport-dest a",
         ".transport-modes",
         ".transport-leg-note",
         ".transport-leg-title",
@@ -4995,7 +5085,7 @@
         ".city-visual-label h2",
       ];
       root.querySelectorAll(selectors.join(",")).forEach((el) => {
-        if (el.closest("a") && !el.matches(".hotel-name a")) return;
+        if (el.closest("a") && !el.matches(".hotel-name a, .activity-top h3 a, .transport-dest a, .leg-option-name > a")) return;
         el.setAttribute("contenteditable", "true");
         el.addEventListener("keydown", (e) => {
           if (e.key === "Enter" && !e.shiftKey && el.tagName !== "P" && !el.classList.contains("transport-modes")) {
@@ -5004,16 +5094,21 @@
           }
         });
         el.addEventListener("blur", () => {
-          if (
+            if (
             el.classList.contains("activity-price") ||
             el.classList.contains("leg-price") ||
             el.classList.contains("hotel-price") ||
             el.classList.contains("transport-modes") ||
             el.classList.contains("hotel-alt") ||
             el.classList.contains("leg-option-name") ||
-            el.matches(".leg-option-name span")
+            el.matches(".leg-option-name span") ||
+            el.matches(".leg-option-name > a")
           ) {
-            if (el.classList.contains("leg-option-name") || el.matches(".leg-option-name span")) {
+            if (
+              el.classList.contains("leg-option-name") ||
+              el.matches(".leg-option-name span") ||
+              el.matches(".leg-option-name > a")
+            ) {
               const opt = el.closest(".leg-option");
               const span = opt?.querySelector(".leg-option-name span") || (el.matches(".leg-option-name span") ? el : null);
               if (opt && span) {
@@ -5072,7 +5167,7 @@
       wireItemControls(document);
       wireCityControls();
       enableEditable(document);
-      showToast("Mode édition · + Lien sur activités & transports");
+      showToast("Mode édition · bouton Lien comme pour les hôtels");
     }
 
     function exitEditMode() {
