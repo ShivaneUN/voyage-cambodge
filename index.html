@@ -679,11 +679,14 @@
 
     .activity-price {
       flex-shrink: 0;
-      font-size: 0.88rem;
+      font-size: 0.8rem;
       font-weight: 500;
       color: var(--moss);
       letter-spacing: 0.01em;
-      white-space: nowrap;
+      white-space: normal;
+      line-height: 1.35;
+      text-align: right;
+      max-width: 11rem;
     }
 
     .transport-leg-top {
@@ -704,10 +707,13 @@
 
     .leg-price {
       flex-shrink: 0;
-      font-size: 0.95rem;
+      font-size: 0.85rem;
       font-weight: 500;
       color: var(--moss);
-      white-space: nowrap;
+      white-space: normal;
+      line-height: 1.3;
+      text-align: right;
+      max-width: 12rem;
     }
 
     .hotels {
@@ -771,10 +777,19 @@
     body.edit-mode .edit-link-btn { display: inline-block; }
 
     .hotel-price {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--moss);
       font-weight: 500;
-      white-space: nowrap;
+      white-space: normal;
+      line-height: 1.35;
+      text-align: right;
+      max-width: 11rem;
+    }
+
+    .fx-note {
+      font-size: 0.72rem;
+      color: var(--ink-soft);
+      margin: 0.35rem 0 0;
     }
 
     .hotel-meta {
@@ -3178,6 +3193,7 @@
       <strong>—</strong>
     </div>
     <p class="budget-pop-note" id="budgetPopNote">Basé sur tes cases « Dans le budget » et les nuits d’hôtel.</p>
+    <p class="fx-note">Taux indicatifs : 1 $ ≈ 0,88 € ≈ 4 035 ៛ (riel cambodgien)</p>
     <div class="budget-pop-details" id="budgetPopDetails"></div>
   </aside>
 
@@ -3449,10 +3465,60 @@
       budgetTimer = setTimeout(recalculateBudget, 120);
     }
 
+    // Taux indicatifs (prix sources en USD, monnaie courante au Cambodge)
+    const USD_TO_EUR = 0.88;
+    const USD_TO_KHR = 4035;
+
+    function usdToEur(usd) {
+      return usd * USD_TO_EUR;
+    }
+
+    function usdToKhr(usd) {
+      return Math.round(usd * USD_TO_KHR);
+    }
+
+    function formatEurAmount(usd) {
+      const eur = usdToEur(usd);
+      if (eur === 0) return "0";
+      if (Math.abs(eur) < 10) {
+        return (Math.round(eur * 10) / 10).toLocaleString("fr-FR", {
+          minimumFractionDigits: Number.isInteger(Math.round(eur * 10) / 10) ? 0 : 1,
+          maximumFractionDigits: 1,
+        });
+      }
+      return Math.round(eur).toLocaleString("fr-FR");
+    }
+
+    function formatKhrAmount(usd) {
+      const khr = Math.round(usdToKhr(usd) / 100) * 100;
+      return khr.toLocaleString("fr-FR");
+    }
+
+    function formatRange(min, max) {
+      const a = Number(min) || 0;
+      const b = Number(max) || 0;
+      if (a === 0 && b === 0) return "0 € · 0 ៛";
+      if (Math.round(usdToEur(a)) === Math.round(usdToEur(b)) && Math.abs(a - b) < 0.05) {
+        return `${formatEurAmount(a)} € · ${formatKhrAmount(a)} ៛`;
+      }
+      return `${formatEurAmount(a)}–${formatEurAmount(b)} € · ${formatKhrAmount(a)}–${formatKhrAmount(b)} ៛`;
+    }
+
+    function formatRangeCompact(min, max) {
+      return formatRange(min, max);
+    }
+
     function parseMoney(text) {
       const t = (text || "").trim();
       if (!t || /gratuit|free/i.test(t)) return { min: 0, max: 0 };
-      const dollar = [...t.replace(/,/g, "").matchAll(/\$\s*(\d+(?:\.\d+)?)(?:\s*[–\-—~àto/]+\s*\$?\s*(\d+(?:\.\d+)?))?/gi)];
+
+      const clean = t
+        .replace(/\u00a0/g, " ")
+        .replace(/(\d)\s+(?=\d)/g, "$1")
+        .replace(/,/g, "");
+
+      // Montants USD source
+      const dollar = [...clean.matchAll(/\$\s*(\d+(?:\.\d+)?)(?:\s*[–\-—~àto/]+\s*\$?\s*(\d+(?:\.\d+)?))?/gi)];
       if (dollar.length) {
         let min = Infinity;
         let max = -Infinity;
@@ -3464,10 +3530,117 @@
         });
         return { min, max };
       }
-      const nums = [...t.replace(/,/g, "").matchAll(/(\d+(?:\.\d+)?)/g)].map((m) => parseFloat(m[1]));
+
+      // Montants déjà affichés en € → reconversion USD
+      const euroPairs = [
+        ...clean.matchAll(/(\d+(?:\.\d+)?)\s*[–\-—]\s*(\d+(?:\.\d+)?)\s*€/gi),
+      ];
+      if (euroPairs.length) {
+        let min = Infinity;
+        let max = -Infinity;
+        euroPairs.forEach((m) => {
+          const a = parseFloat(m[1]) / USD_TO_EUR;
+          const b = parseFloat(m[2]) / USD_TO_EUR;
+          min = Math.min(min, a, b);
+          max = Math.max(max, a, b);
+        });
+        return { min, max };
+      }
+      const euroSingle = [...clean.matchAll(/(\d+(?:\.\d+)?)\s*€/gi)];
+      if (euroSingle.length) {
+        let min = Infinity;
+        let max = -Infinity;
+        euroSingle.forEach((m) => {
+          const a = parseFloat(m[1]) / USD_TO_EUR;
+          min = Math.min(min, a);
+          max = Math.max(max, a);
+        });
+        return { min, max };
+      }
+
+      const nums = [...clean.matchAll(/(\d+(?:\.\d+)?)/g)].map((m) => parseFloat(m[1]));
       if (!nums.length) return { min: 0, max: 0 };
       if (nums.length === 1) return { min: nums[0], max: nums[0] };
       return { min: Math.min(...nums), max: Math.max(...nums) };
+    }
+
+    function storeUsdOnEl(el, p) {
+      if (!el || !p) return p;
+      el.dataset.usdMin = String(p.min);
+      el.dataset.usdMax = String(p.max);
+      return p;
+    }
+
+    function readUsdFromEl(el) {
+      if (!el) return { min: 0, max: 0 };
+      if (el.dataset.usdMin != null && el.dataset.usdMin !== "") {
+        const min = parseFloat(el.dataset.usdMin);
+        const max = parseFloat(el.dataset.usdMax != null ? el.dataset.usdMax : el.dataset.usdMin);
+        return {
+          min: Number.isFinite(min) ? min : 0,
+          max: Number.isFinite(max) ? max : 0,
+        };
+      }
+      const p = parseMoney(el.textContent || "");
+      return storeUsdOnEl(el, p);
+    }
+
+    function setPriceDisplay(el, p) {
+      if (!el) return;
+      storeUsdOnEl(el, p);
+      const label = (el.textContent || "").trim();
+      if (/^gratuit|^free$/i.test(label) && p.min === 0 && p.max === 0) {
+        el.textContent = "Gratuit";
+        return;
+      }
+      if (p.min === 0 && p.max === 0 && /gratuit|free/i.test(label)) {
+        el.textContent = "Gratuit";
+        return;
+      }
+      el.textContent = formatRange(p.min, p.max);
+    }
+
+    function convertDollarSnippets(text) {
+      return String(text || "").replace(
+        /~?\$\s*(\d+(?:\.\d+)?)(?:\s*[–\-—]\s*\$?\s*(\d+(?:\.\d+)?))?/g,
+        (full, a, b) => {
+          const min = parseFloat(a);
+          const max = b ? parseFloat(b) : min;
+          const approx = full.trim().startsWith("~") ? "~" : "";
+          return approx + formatRange(min, max);
+        }
+      );
+    }
+
+    function localizeCurrencyDisplays(root = document) {
+      // Stocker les USD avant de réécrire les libellés
+      root.querySelectorAll(".transport-row").forEach((row) => {
+        parseTransportRowPrice(row);
+      });
+      root.querySelectorAll(".leg-option").forEach((opt) => {
+        const p = parseLegOptionPrice(opt);
+        if (p.min || p.max) opt.dataset.price = formatPriceInput(p);
+      });
+
+      root.querySelectorAll(".hotel-price, .activity-price").forEach((el) => {
+        const raw = (el.textContent || "").trim();
+        if (!raw || /^—$|^-$/i.test(raw)) return;
+        if (/gratuit|free/i.test(raw) && !/\$|€/.test(raw)) {
+          el.textContent = "Gratuit";
+          storeUsdOnEl(el, { min: 0, max: 0 });
+          return;
+        }
+        const p = readUsdFromEl(el);
+        setPriceDisplay(el, p);
+      });
+
+      root.querySelectorAll(".transport-modes, .leg-option-name span, .transport-leg-note, .activity-info > p, .note").forEach((el) => {
+        if (el.dataset.fxDone === "1") return;
+        const before = el.innerHTML;
+        if (!/\$/.test(before)) return;
+        el.innerHTML = convertDollarSnippets(before);
+        el.dataset.fxDone = "1";
+      });
     }
 
     function parseLegOptionPrice(opt) {
@@ -3481,6 +3654,13 @@
       if (row.dataset.price) return parseMoney(row.dataset.price);
       const modes = row.querySelector(".transport-modes");
       if (!modes) return { min: 0, max: 0 };
+      // Prefer USD stash before FX rewrite
+      if (modes.dataset.usdMin != null) {
+        return {
+          min: parseFloat(modes.dataset.usdMin) || 0,
+          max: parseFloat(modes.dataset.usdMax || modes.dataset.usdMin) || 0,
+        };
+      }
       const primary = modes.cloneNode(true);
       primary.querySelectorAll(".hotel-alt").forEach((el) => el.remove());
       const strongText = [...primary.querySelectorAll("strong")].map((s) => s.textContent).join(" ");
@@ -3490,6 +3670,8 @@
           [...modes.querySelectorAll(".hotel-alt")].map((el) => el.textContent).join(" ")
         );
       }
+      storeUsdOnEl(modes, p);
+      row.dataset.price = formatPriceInput(p);
       return p;
     }
 
@@ -3693,13 +3875,6 @@
       return clone.textContent.replace(/\s+/g, " ").trim() || "Option";
     }
 
-    function formatRange(min, max) {
-      const a = Math.round(min);
-      const b = Math.round(max);
-      if (a === b) return `$${a}`;
-      return `$${a} – $${b}`;
-    }
-
     function setBudget(key, min, max, note) {
       const box = budgetStack.querySelector(`[data-budget="${key}"]`);
       if (box) {
@@ -3739,7 +3914,11 @@
       const actLines = [];
       document.querySelectorAll(".cities-wrap .activity").forEach((act) => {
         const on = act.dataset.inBudget !== "0";
-        const p = parseMoney(act.querySelector(".activity-price")?.textContent || "");
+        const priceEl = act.querySelector(".activity-price");
+        const p = readUsdFromEl(priceEl);
+        if (priceEl && !/gratuit|free/i.test((priceEl.textContent || "").trim())) {
+          setPriceDisplay(priceEl, p);
+        }
         const name = act.querySelector(".activity-top h3")?.textContent?.trim() || "Activité";
         const tag = act.querySelector(".budget-pick strong");
         if (tag) tag.textContent = on ? formatRange(p.min * people, p.max * people) + ` · ${persLabel}` : "exclu";
@@ -3805,7 +3984,7 @@
         const priceEl = leg.querySelector(".leg-price");
         if (priceEl && !priceEl.matches(":focus") && document.activeElement !== priceEl) {
           if (legPicked === 0) priceEl.textContent = "—";
-          else priceEl.textContent = formatRange(legMin, legMax).replace(/\s/g, "");
+          else priceEl.textContent = formatRangeCompact(legMin, legMax);
         }
       });
 
@@ -3821,7 +4000,8 @@
         hotel.dataset.nights = String(nights);
         const priceEl = hotel.querySelector(".hotel-price");
         const subEl = hotel.querySelector(".hotel-nights-sub");
-        const p = parseMoney(priceEl?.textContent || "");
+        const p = readUsdFromEl(priceEl);
+        if (priceEl) setPriceDisplay(priceEl, p);
         const name = hotel.querySelector(".hotel-name a")?.textContent?.trim() || "Hôtel";
 
         if (subEl) {
@@ -4232,14 +4412,17 @@
           let span = nameEl?.querySelector("span");
           if (nameEl && !span) {
             span = document.createElement("span");
-            span.textContent = opt.dataset.price || "$0";
+            const p0 = parseMoney(opt.dataset.price || "$0");
+            span.textContent = formatRange(p0.min, p0.max);
             nameEl.appendChild(document.createTextNode(" "));
             nameEl.appendChild(span);
           }
           if (span) {
-            const formatted = formatPriceInput(parseMoney(span.textContent));
+            const p = parseMoney(opt.dataset.price || span.textContent);
+            const formatted = formatPriceInput(p);
             if (formatted) opt.dataset.price = formatted;
             else if (span.textContent.trim()) opt.dataset.price = span.textContent.trim();
+            span.textContent = formatRange(p.min, p.max);
           }
         });
       });
@@ -4378,6 +4561,7 @@
         document.querySelectorAll(".activity").forEach((el) => el.classList.add("visible"));
         rebuildItineraryUI();
         ensureHotelNights();
+        localizeCurrencyDisplays(citiesWrap);
         recomputeCityDates();
         recalculateBudget();
       } catch (_) {
@@ -4389,7 +4573,7 @@
       return `<div class="hotel" data-nights="2" data-in-budget="1">
         <div class="hotel-top">
           <p class="hotel-name"><a href="#" target="_blank" rel="noopener noreferrer">Nouvel hôtel</a></p>
-          <p class="hotel-price">$0–0</p>
+          <p class="hotel-price" data-usd-min="0" data-usd-max="0">0 € · 0 ៛</p>
         </div>
         <p class="hotel-meta">Emplacement / note</p>
       </div>`;
@@ -4403,7 +4587,7 @@
         <div class="activity-info">
           <div class="activity-top">
             <h3>Nouvelle activité</h3>
-            <p class="activity-price">$0</p>
+            <p class="activity-price" data-usd-min="0" data-usd-max="0">0 € · 0 ៛</p>
           </div>
           <p>Description de l’activité…</p>
         </div>
@@ -4718,10 +4902,16 @@
               const opt = el.closest(".leg-option");
               const span = opt?.querySelector(".leg-option-name span") || (el.matches(".leg-option-name span") ? el : null);
               if (opt && span) {
-                const formatted = formatPriceInput(parseMoney(span.textContent));
+                const p = parseMoney(span.textContent);
+                const formatted = formatPriceInput(p);
                 if (formatted) opt.dataset.price = formatted;
                 else opt.dataset.price = span.textContent.trim();
+                span.textContent = formatRange(p.min, p.max);
               }
+            }
+            if (el.classList.contains("hotel-price") || el.classList.contains("activity-price")) {
+              const p = parseMoney(el.textContent);
+              setPriceDisplay(el, p);
             }
             scheduleBudget();
           }
@@ -4883,12 +5073,15 @@
     seedCityCoords();
     rebuildItineraryUI();
     ensureHotelNights();
+    localizeCurrencyDisplays(document);
     recomputeCityDates();
     refreshTripPanel();
+    recalculateBudget();
     if (!localStorage.getItem(EDIT_KEY)) {
       document.querySelectorAll(".cities-wrap .city").forEach((city) => syncHotelsFromCity(city));
       refreshTripPanel();
       recomputeCityDates();
+      recalculateBudget();
     }
     // Budget via bouton Calculer le budget
   </script>
