@@ -1811,7 +1811,7 @@
     }
   </style>
 <style type="text/css"></style></head>
-<body data-people="2" class="">
+<body data-people="2" data-trip-start="2026-12-07" data-trip-end="2026-12-30">
 
   <nav class="nav scrolled" id="nav">
     <a href="#top" class="nav-brand">Cambodge</a>
@@ -1829,7 +1829,7 @@
     <div class="hero-content">
       <p class="hero-brand">Cambodge</p>
       <h1 class="hero-title">Voyage · Décembre</h1>
-      <p class="hero-lead">23 jours · 22 nuits — huit étapes, des temples millénaires aux plages de l’archipel.</p>
+      <p class="hero-lead">7 → 30 décembre · 24 jours · 23 nuits — huit étapes, des temples millénaires aux plages.</p>
       <a href="#carte" class="hero-cta">Voir le trajet →</a>
     </div>
     <p class="hero-scroll">Défiler</p>
@@ -1845,7 +1845,7 @@
       <div class="section-head">
         <p class="section-num">Carte</p>
         <h2 class="section-title">Itinéraire sur le terrain</h2>
-        <p class="section-desc">23 jours · 22 nuits · 8 étapes — cliquez un point pour ouvrir la fiche.</p>
+        <p class="section-desc">7 → 30 déc. · 24 jours · 23 nuits · 8 étapes — cliquez un point pour ouvrir la fiche.</p>
       </div>
       <div id="itineraire-map" role="img" aria-label="Carte de l'itineraire au Cambodge"></div>
       <div class="map-legend" id="map-legend"><span><i>1</i> Siem Reap</span><span><i>2</i> Battambang</span><span><i>3</i> Koh Kong / Tatai</span><span><i>4</i> Sihanoukville</span><span><i>5</i> Koh Rong Samloem</span><span><i>6</i> Koh Ta Kiev</span><span><i>7</i> Kampot</span><span><i>8</i> Phnom Penh</span></div>
@@ -3100,11 +3100,11 @@
   </section>
 
   <footer>
-    <p><span>Cambodge</span> — Voyage décembre · 23 jours · 22 nuits · 8 étapes</p>
+    <p><span>Cambodge</span> — Voyage décembre · 7→30 · 24 jours · 23 nuits · 8 étapes</p>
   </footer>
 
   <div class="fab-bar" id="fabBar">
-    <button type="button" class="trip-fab" id="tripFab">23 j · nuits</button>
+    <button type="button" class="trip-fab" id="tripFab">7–30 · nuits</button>
     <div class="people-fab" id="peopleCtrl" title="Nombre de personnes">
       <span>Pers.</span>
       <div class="hotel-nights-ctrl">
@@ -3133,19 +3133,19 @@
     <div class="trip-summary">
       <div>
         Durée voyage
-        <strong id="tripDaysLabel">23 jours</strong>
+        <strong id="tripDaysLabel">24 jours</strong>
       </div>
       <div>
         Nuits d’hôtel
-        <strong id="tripNightsLabel">22 nuits</strong>
+        <strong id="tripNightsLabel">23 nuits</strong>
       </div>
       <div id="tripUsedBox">
         Nuits allouées
-        <strong id="tripUsedLabel">0 / 22</strong>
+        <strong id="tripUsedLabel">0 / 23</strong>
       </div>
       <div id="tripLeftBox">
         Nuits restantes
-        <strong id="tripLeftLabel">22</strong>
+        <strong id="tripLeftLabel">23</strong>
       </div>
     </div>
     <div id="tripCityList"></div>
@@ -3153,7 +3153,7 @@
       <button type="button" class="primary" id="tripDistribute">Répartir équitablement</button>
       <button type="button" id="tripApplyHotels">Appliquer aux hôtels</button>
     </div>
-    <p class="trip-pop-note">23 jours ≈ 22 nuits. Arrivée + départ cadrent le voyage ; les dates par ville suivent les nuits allouées.</p>
+    <p class="trip-pop-note">Arrivée le 7 déc. au soir → départ le 30 déc. au soir = 24 jours · 23 nuits. Les dates par ville suivent les nuits allouées.</p>
   </aside>
 
   <aside class="budget-pop" id="budgetPop" aria-live="polite" hidden>
@@ -3382,12 +3382,12 @@
 
       const footer = document.querySelector("footer p");
       if (footer) {
-        footer.innerHTML = `<span>Cambodge</span> — Voyage décembre · 23 jours · 22 nuits · ${stops.length} étape${stops.length > 1 ? "s" : ""}`;
+        footer.innerHTML = `<span>Cambodge</span> — Voyage décembre · 7→30 · 24 jours · 23 nuits · ${stops.length} étape${stops.length > 1 ? "s" : ""}`;
       }
 
       const mapDesc = document.querySelector("#carte .section-desc");
       if (mapDesc) {
-        mapDesc.textContent = `23 jours · 22 nuits · ${stops.length} étapes — cliquez un point pour ouvrir la fiche.`;
+        mapDesc.textContent = `7 → 30 déc. · 24 jours · 23 nuits · ${stops.length} étapes — cliquez un point pour ouvrir la fiche.`;
       }
 
       setTimeout(() => map.invalidateSize(), 100);
@@ -3402,12 +3402,13 @@
     const EDIT_KEY = "voyageCambodgeContent_v10";
     const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4", "voyageCambodgeContent_v5", "voyageCambodgeContent_v6", "voyageCambodgeContent_v7", "voyageCambodgeContent_v8", "voyageCambodgeContent_v9"];
     const PEOPLE_KEY = "voyageCambodgePeople";
-    const TRIP_START_KEY = "voyageCambodgeTripStart";
-    const TRIP_DAYS = 23;
-    const TRIP_NIGHTS = 22;
-    const DEFAULT_TRIP_START = "2026-12-01";
+    const TRIP_START_KEY = "voyageCambodgeTripStart_v3";
+    const TRIP_DAYS = 24;
+    const TRIP_NIGHTS = 23;
+    const DEFAULT_TRIP_START = "2026-12-07";
+    const DEFAULT_TRIP_END = "2026-12-30";
     const DEFAULT_CITY_NIGHTS = {
-      "siem-reap": 4,
+      "siem-reap": 5,
       battambang: 2,
       "koh-kong": 2,
       sihanoukville: 1,
@@ -3593,7 +3594,7 @@
 
     function loadTripStart() {
       let start = DEFAULT_TRIP_START;
-      let end = null;
+      let end = DEFAULT_TRIP_END;
       try {
         const raw = localStorage.getItem(TRIP_START_KEY);
         if (raw && parseISODate(raw)) start = raw;
@@ -3606,11 +3607,23 @@
       if (document.body.dataset.tripEnd && parseISODate(document.body.dataset.tripEnd)) {
         end = document.body.dataset.tripEnd;
       }
-      setTripStart(start, { recompute: false });
-      if (end) {
-        document.body.dataset.tripEnd = end;
-        syncTripDateInputs();
+      document.body.dataset.tripStart = start;
+      document.body.dataset.tripEnd = end;
+      // Recaler sur 7→30 si l’écart n’est plus 23 nuits
+      const s = parseISODate(start);
+      const e = parseISODate(end);
+      if (s && e) {
+        const diff = Math.round((e - s) / 86400000);
+        if (diff !== TRIP_DAYS - 1) {
+          start = DEFAULT_TRIP_START;
+          end = DEFAULT_TRIP_END;
+          document.body.dataset.tripStart = start;
+          document.body.dataset.tripEnd = end;
+        }
       }
+      setTripStart(start, { recompute: false });
+      document.body.dataset.tripEnd = end;
+      syncTripDateInputs();
     }
 
     function recomputeCityDates() {
@@ -3893,7 +3906,7 @@
     }
 
     function updateCityStayUI(city) {
-      // Contrôles uniquement dans le popup « 23 j · nuits »
+      // Contrôles uniquement dans le popup nuits / dates
       city.querySelectorAll(".city-stay").forEach((el) => el.remove());
     }
 
@@ -3955,7 +3968,7 @@
         .join("");
 
       const fab = document.getElementById("tripFab");
-      if (fab) fab.textContent = left === 0 ? `23 j · OK` : `23 j · ${left > 0 ? left + " rest." : "trop"}`;
+      if (fab) fab.textContent = left === 0 ? `7–30 · OK` : `7–30 · ${left > 0 ? left + " rest." : "trop"}`;
     }
 
     function distributeCityNights() {
@@ -3982,7 +3995,7 @@
       refreshTripPanel();
       recomputeCityDates();
       scheduleBudget();
-      showToast("Nuits réparties · 22 nuits au total");
+      showToast("Nuits réparties · 23 nuits au total");
     }
 
     function applyAllCityNightsToHotels() {
