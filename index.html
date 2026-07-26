@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<html lang="fr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cambodge — Voyage Décembre</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Outfit:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <style>
     :root {
       --ink: #14201a;
@@ -1167,6 +1166,63 @@
       line-height: 1.45;
     }
 
+    .trip-start-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--sand-deep);
+      font-size: 0.85rem;
+      color: var(--ink-soft);
+    }
+
+    .trip-start-row input[type="date"] {
+      border: 1px solid var(--sand-deep);
+      padding: 0.4rem 0.5rem;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      color: var(--moss-deep);
+      background: var(--white);
+    }
+
+    .trip-city-dates {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--moss);
+      font-weight: 500;
+      margin-top: 0.15rem;
+    }
+
+    .city-dates {
+      margin: 0;
+      font-size: 0.78rem;
+      color: var(--sand);
+      opacity: 0.9;
+      letter-spacing: 0.02em;
+    }
+
+    body.edit-mode .transport-modes,
+    body.edit-mode .transport-leg-note,
+    body.edit-mode .hotel-alt,
+    body.edit-mode .leg-option {
+      outline: 1px dashed transparent;
+    }
+
+    body.edit-mode .transport-modes[contenteditable="true"],
+    body.edit-mode .transport-leg-note[contenteditable="true"],
+    body.edit-mode .hotel-alt[contenteditable="true"] {
+      outline: 1px dashed rgba(47, 93, 74, 0.35);
+      outline-offset: 2px;
+      cursor: text;
+    }
+
+    body.edit-mode .transport-row,
+    body.edit-mode .leg-option {
+      position: relative;
+    }
+
     .city-stay,
     .city-stay-label,
     .city-stay-sub {
@@ -1738,35 +1794,20 @@
       .hero { padding-left: 1.25rem; padding-right: 1.25rem; }
     }
   </style>
-</head>
-<body>
+<style type="text/css"></style></head>
+<body data-people="2" class="">
 
-  <nav class="nav" id="nav">
+  <nav class="nav scrolled" id="nav">
     <a href="#top" class="nav-brand">Cambodge</a>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">
       <span></span>
     </button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#carte">Carte</a></li>
-      <li><a href="#siem-reap">Siem Reap</a></li>
-      <li><a href="#battambang">Battambang</a></li>
-      <li><a href="#koh-kong">Koh Kong</a></li>
-      <li><a href="#sihanoukville">Sihanoukville</a></li>
-      <li><a href="#koh-rong">Koh Rong</a></li>
-      <li><a href="#koh-ta-kiev">Koh Ta Kiev</a></li>
-      <li><a href="#kampot">Kampot</a></li>
-      <li><a href="#phnom-penh">Phnom Penh</a></li>
-    </ul>
+    <ul class="nav-links" id="navLinks"><li><a href="#carte">Carte</a></li><li><a href="#siem-reap">Siem Reap</a></li><li><a href="#battambang">Battambang</a></li><li><a href="#koh-kong">Koh Kong</a></li><li><a href="#sihanoukville">Sihanoukville</a></li><li><a href="#koh-rong">Koh Rong Samloem</a></li><li><a href="#koh-ta-kiev">Koh Ta Kiev</a></li><li><a href="#kampot">Kampot</a></li><li><a href="#phnom-penh">Phnom Penh</a></li></ul>
   </nav>
 
   <header class="hero" id="top">
     <div class="hero-bg">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Angkor_Wat_with_its_reflection_%28cropped%29.jpg/1920px-Angkor_Wat_with_its_reflection_%28cropped%29.jpg"
-        alt="Angkor Wat et son reflet, Siem Reap"
-        width="1920"
-        height="1080"
-      />
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Angkor_Wat_with_its_reflection_%28cropped%29.jpg/1920px-Angkor_Wat_with_its_reflection_%28cropped%29.jpg" alt="Angkor Wat et son reflet, Siem Reap" width="1920" height="1080">
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
@@ -1780,23 +1821,7 @@
 
   <div class="route">
     <p class="route-label">Itinéraire</p>
-    <div class="route-track">
-      <div class="route-stop"><span class="route-dot"></span><a href="#siem-reap">Siem Reap</a></div>
-      <span class="route-line"></span>
-      <div class="route-stop"><span class="route-dot"></span><a href="#battambang">Battambang</a></div>
-      <span class="route-line"></span>
-      <div class="route-stop"><span class="route-dot"></span><a href="#koh-kong">Koh Kong</a></div>
-      <span class="route-line"></span>
-      <div class="route-stop"><span class="route-dot"></span><a href="#sihanoukville">Sihanoukville</a></div>
-      <span class="route-line"></span>
-      <div class="route-stop"><span class="route-dot"></span><a href="#koh-rong">Koh Rong</a></div>
-      <span class="route-line"></span>
-      <div class="route-stop"><span class="route-dot"></span><a href="#koh-ta-kiev">Koh Ta Kiev</a></div>
-      <span class="route-line"></span>
-      <div class="route-stop"><span class="route-dot"></span><a href="#kampot">Kampot</a></div>
-      <span class="route-line"></span>
-      <div class="route-stop"><span class="route-dot"></span><a href="#phnom-penh">Phnom Penh</a></div>
-    </div>
+    <div class="route-track"><div class="route-stop"><span class="route-dot"></span><a href="#siem-reap">Siem Reap</a></div><span class="route-line"></span><div class="route-stop"><span class="route-dot"></span><a href="#battambang">Battambang</a></div><span class="route-line"></span><div class="route-stop"><span class="route-dot"></span><a href="#koh-kong">Koh Kong</a></div><span class="route-line"></span><div class="route-stop"><span class="route-dot"></span><a href="#sihanoukville">Sihanoukville</a></div><span class="route-line"></span><div class="route-stop"><span class="route-dot"></span><a href="#koh-rong">Koh Rong Samloem</a></div><span class="route-line"></span><div class="route-stop"><span class="route-dot"></span><a href="#koh-ta-kiev">Koh Ta Kiev</a></div><span class="route-line"></span><div class="route-stop"><span class="route-dot"></span><a href="#kampot">Kampot</a></div><span class="route-line"></span><div class="route-stop"><span class="route-dot"></span><a href="#phnom-penh">Phnom Penh</a></div></div>
   </div>
 
   <section class="map-section" id="carte">
@@ -1804,58 +1829,58 @@
       <div class="section-head">
         <p class="section-num">Carte</p>
         <h2 class="section-title">Itinéraire sur le terrain</h2>
-        <p class="section-desc">Les 8 étapes du voyage, du nord au sud — cliquez un point pour ouvrir la fiche.</p>
+        <p class="section-desc">23 jours · 22 nuits · 8 étapes — cliquez un point pour ouvrir la fiche.</p>
       </div>
-      <div id="itineraire-map" role="img" aria-label="Carte de l'itinéraire au Cambodge"></div>
-      <div class="map-legend" id="map-legend"></div>
+      <div id="itineraire-map" role="img" aria-label="Carte de l'itinéraire au Cambodge" class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(68px, 222px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 16; transform: translate3d(237px, 86px, 0px) scale(0.25);"></div><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 18; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/7/101/60.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(398px, 127px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/7/101/59.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(398px, -129px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/7/100/60.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(142px, 127px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/rastertiles/voyager/7/102/60.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(654px, 127px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/rastertiles/voyager/7/101/61.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(398px, 383px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/rastertiles/voyager/7/100/59.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(142px, -129px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/7/102/59.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(654px, -129px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/7/100/61.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(142px, 383px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/7/102/61.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(654px, 383px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/rastertiles/voyager/7/99/60.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-114px, 127px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/7/103/60.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(910px, 127px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/7/99/59.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-114px, -129px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/rastertiles/voyager/7/103/59.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(910px, -129px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/7/99/61.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-114px, 383px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/7/103/61.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(910px, 383px, 0px); opacity: 1;"><img alt="" src="https://c.basemaps.cartocdn.com/rastertiles/voyager/7/100/58.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(142px, -385px, 0px); opacity: 1;"><img alt="" src="https://a.basemaps.cartocdn.com/rastertiles/voyager/7/101/58.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(398px, -385px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/7/99/58.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-114px, -385px, 0px); opacity: 1;"><img alt="" src="https://b.basemaps.cartocdn.com/rastertiles/voyager/7/102/58.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(654px, -385px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"><svg pointer-events="none" class="leaflet-zoom-animated" width="1111" height="670" viewBox="-161 -278 1111 670" style="transform: translate3d(-161px, -278px, 0px);"><g><path class="leaflet-interactive" stroke="#1c3a2e" stroke-opacity="0.85" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 10" fill="none" d="M379 -77L320 -52L313 89L349 178L328 181L355 191L409 180L477 92"></path></g></svg></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -14px; margin-top: -14px; width: 28px; height: 28px; transform: translate3d(379px, -77px, 0px); z-index: -77;"><div class="map-marker">1</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -14px; margin-top: -14px; width: 28px; height: 28px; transform: translate3d(320px, -52px, 0px); z-index: -52;"><div class="map-marker">2</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -14px; margin-top: -14px; width: 28px; height: 28px; transform: translate3d(313px, 89px, 0px); z-index: 89;"><div class="map-marker">3</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -14px; margin-top: -14px; width: 28px; height: 28px; transform: translate3d(349px, 178px, 0px); z-index: 178;"><div class="map-marker">4</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -14px; margin-top: -14px; width: 28px; height: 28px; transform: translate3d(328px, 181px, 0px); z-index: 181;"><div class="map-marker">5</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -14px; margin-top: -14px; width: 28px; height: 28px; transform: translate3d(355px, 191px, 0px); z-index: 191;"><div class="map-marker">6</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -14px; margin-top: -14px; width: 28px; height: 28px; transform: translate3d(409px, 180px, 0px); z-index: 180;"><div class="map-marker">7</div></div><div class="leaflet-marker-icon leaflet-zoom-animated leaflet-interactive" tabindex="0" role="button" style="margin-left: -14px; margin-top: -14px; width: 28px; height: 28px; transform: translate3d(477px, 92px, 0px); z-index: 92;"><div class="map-marker">8</div></div></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(25853px, 15290px, 0px) scale(64);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://carto.com/">CARTO</a></div></div></div></div>
+      <div class="map-legend" id="map-legend"><span><i>1</i> Siem Reap</span><span><i>2</i> Battambang</span><span><i>3</i> Koh Kong / Tatai</span><span><i>4</i> Sihanoukville</span><span><i>5</i> Koh Rong Samloem</span><span><i>6</i> Koh Ta Kiev</span><span><i>7</i> Kampot</span><span><i>8</i> Phnom Penh</span></div>
     </div>
   </section>
 
   <main class="cities-wrap">
 
     <!-- 1. Siem Reap -->
-    <article class="city" id="siem-reap" data-nights="4">
+    <article class="city" id="siem-reap" data-nights="8" data-lat="13.3633" data-lng="103.8564" data-stop-name="Siem Reap" data-note="Angkor, Phnom Kulen, Old Market">
       <div class="city-visual">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/20171126_Angkor_Wat_4712_DxO.jpg/1280px-20171126_Angkor_Wat_4712_DxO.jpg" alt="Angkor Wat, Siem Reap" loading="lazy" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/20171126_Angkor_Wat_4712_DxO.jpg/1280px-20171126_Angkor_Wat_4712_DxO.jpg" alt="Angkor Wat, Siem Reap" loading="lazy">
         <div class="city-visual-label">
           <p class="num">Étape 01</p>
           <h2>Siem Reap</h2>
         </div>
       </div>
       <div class="city-body">
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Activités</h3>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/8232/8473971301_c48a63e213_b.jpg" alt="Angkor Wat au lever du soleil" loading="lazy" />
+              <img src="https://live.staticflickr.com/8232/8473971301_c48a63e213_b.jpg" alt="Angkor Wat au lever du soleil" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
                 <h3>Angkor Wat (avec guide)</h3>
-                <p class="activity-price">$37–72</p>
+                <p class="activity-price">$53.7</p>
               </div>
-              <p>Pass 1 / 3 / 7 jours. Guide en plus ~$25–50 / jour. Lever de soleil et circuit des temples.</p>
+              <p>Lever de soleil et circuit des temples.</p>
               <a href="https://ticket.angkorenterprise.gov.kh/" target="_blank" rel="noopener">Billets officiels Angkor →</a>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$107 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/2873/33924229681_3190f53b3a_b.jpg" alt="Cascade de Phnom Kulen, Siem Reap" loading="lazy" />
+              <img src="https://live.staticflickr.com/2873/33924229681_3190f53b3a_b.jpg" alt="Cascade de Phnom Kulen, Siem Reap" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
                 <h3>Cascade Phnom Kulen (avec guide)</h3>
-                <p class="activity-price">$20–95</p>
+                <p class="activity-price">$42.19</p>
               </div>
-              <p>Entrée parc $20 (hors pass Angkor) + taxi A/R ~$65–75. Montagne sacrée et cascade.</p>
-            </div>
+              <p>Montagne sacrée et cascade.</p>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$84 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/4425/36441720835_1359c42f2c_b.jpg" alt="Psar Chas (Old Market), Siem Reap" loading="lazy" />
+              <img src="https://live.staticflickr.com/4425/36441720835_1359c42f2c_b.jpg" alt="Psar Chas (Old Market), Siem Reap" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -1863,48 +1888,63 @@
                 <p class="activity-price">Gratuit</p>
               </div>
               <p>Souvenirs, soie, épices et street food (~$1–5) au cœur de la vieille ville.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$0 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/7084/7288275208_756108ae2c_b.jpg" alt="Spectacle de danse Apsara, Siem Reap" loading="lazy" />
+              <img src="https://live.staticflickr.com/7084/7288275208_756108ae2c_b.jpg" alt="Spectacle de danse Apsara, Siem Reap" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
                 <h3>Dîner spectacle Apsara</h3>
-                <p class="activity-price">$20–35</p>
+                <p class="activity-price">$19</p>
               </div>
               <p>Danse classique khmère et dîner traditionnel en soirée.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$38 · 2 pers.</strong></label></div>
           </div>
         </div>
 
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Hébergements</h3>
           <div class="hotels">
-            <div class="hotel">
-              <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.thecommunitytravel.com/" target="_blank" rel="noopener noreferrer">The Community – Siem Reap</a> ★4.9</p>
-                <p class="hotel-price">$30–50</p>
-              </div>
-              <p class="hotel-meta">4,5 km d’Angkor (~12 min tuktuk)</p>
-              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            
+            
+          <div class="hotel" data-nights="4" data-in-budget="0">
+        <div class="hotel-top">
+          <p class="hotel-name"><a href="https://www.airbnb.fr/rooms/817586447962000329?adults=2&amp;search_mode=regular_search&amp;amenities%5B0%5D=4&amp;amenities%5B1%5D=5&amp;amenities%5B2%5D=51&amp;category_tag=Tag%3A8678&amp;photo_id=1579422951&amp;source_impression_id=p3_1785068465_P35QM2OhwQw150z1&amp;previous_page_section_name=1000&amp;federated_search_id=461d8b5a-ca9e-4807-a909-19925fb2a5a2&amp;guests=2&amp;check_in=2026-12-07&amp;check_out=2026-12-08" target="_blank" rel="noopener noreferrer"><span style="color: rgb(34, 34, 34); font-family: &quot;Airbnb Cereal VF&quot;, Circular, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; font-size: 16px; white-space: pre-wrap; background-color: rgb(255, 255, 255);">Tanei Angkor Resort and Spa</span></a></p>
+          <p class="hotel-price">$23</p>
+        </div>
+        <p class="hotel-meta"><span style="color: rgb(34, 34, 34); font-family: &quot;Airbnb Cereal VF&quot;, Circular, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; font-size: 26px; background-color: rgb(255, 255, 255);">Chambre double supérieure avec vue sur la piscine et petit déjeuner</span></p>
+      <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
-              <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/koulen-central.html" target="_blank" rel="noopener">Koulen Central Mall and Hotel</a> ★4.7</p>
-                <p class="hotel-price">$65–130</p>
-              </div>
-              <p class="hotel-meta">0,4 km de l’Old Market (~5 min à pied)</p>
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div><div class="hotel" data-nights="4" data-in-budget="1">
+        <div class="hotel-top">
+          <p class="hotel-name"><a href="https://www.airbnb.fr/rooms/15759960?adults=1&amp;search_mode=regular_search&amp;amenities%5B0%5D=4&amp;amenities%5B1%5D=5&amp;amenities%5B2%5D=51&amp;source_impression_id=p3_1785068347_P3DLb4vtVVRZuajo&amp;previous_page_section_name=1000&amp;federated_search_id=9316cdd2-9a84-4377-8dd0-3a63e167f382&amp;guests=1&amp;check_in=2026-12-07&amp;check_out=2026-12-11" target="_blank" rel="noopener noreferrer"><span style="color: rgb(34, 34, 34); font-family: &quot;Airbnb Cereal VF&quot;, Circular, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; font-size: 16px; white-space: pre-wrap; background-color: rgb(255, 255, 255);">The Orientation Lodge</span></a></p>
+          <p class="hotel-price">$19.75</p>
+        </div>
+        <p class="hotel-meta"><span style="color: rgb(34, 34, 34); font-family: &quot;Airbnb Cereal VF&quot;, Circular, -apple-system, BlinkMacSystemFont, Roboto, &quot;Helvetica Neue&quot;, sans-serif; font-size: 16px; background-color: rgb(255, 255, 255);">Sok San Road&nbsp; &nbsp; &nbsp;7/11</span></p>
+      <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-          </div>
+            <span class="hotel-nights-sub">= $79 (4 nuits)</span>
+          </div></div></div>
         </div>
 
-        <div class="reveal city-transport">
+        <div class="reveal city-transport visible">
           <h3 class="block-title">Transport depuis les hôtels</h3>
           <div class="transport-list">
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Angkor Wat</div>
               <div class="transport-modes">
                 Tuktuk journée · <strong>~$15–25</strong> (+~$5 lever du soleil)
@@ -1912,45 +1952,45 @@
                 <span class="hotel-alt"><strong>Koulen Central</strong> — ~17 min · plus proche du centre</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Phnom Kulen</div>
               <div class="transport-modes">
                 Voiture / taxi A/R (~1 h) — tuktuk déconseillé<br><strong>~$65–75</strong> véhicule (hors entrée $20)
                 <span class="hotel-alt">Temps similaire depuis les deux hôtels (~34–36 km)</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Old Market</div>
               <div class="transport-modes">
                 <span class="hotel-alt"><strong>Koulen Central</strong> — à pied ~5 min (Gratuit)</span>
                 <span class="hotel-alt"><strong>The Community</strong> — tuktuk ~7 min · <strong>~$1–3</strong></span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Spectacle Apsara</div>
               <div class="transport-modes">Tuktuk · <strong>~$2–5</strong> · souvent transfert inclus avec le dîner-spectacle</div>
             </div>
           </div>
-          <div class="transport-leg">
+          <div class="transport-leg" style="position: relative;">
             <div class="transport-leg-top">
               <h4 class="transport-leg-title">Aller à Battambang</h4>
-              <p class="leg-price">$7–70</p>
+              <p class="leg-price">—</p>
             </div>
             <p class="transport-leg-note">Horaires et prix variables — vérifier le jour J sur les sites.</p>
-            <div class="leg-option">
-              <div class="leg-option-name">Bus / minivan VIP <span>~$7–12 · ~3–4 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$7–$12">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Bus / minivan VIP <span>~$7–12 · ~3–4 h</span></div>
               Plusieurs départs / jour. Comparer :
               <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a> ·
               <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a> ·
               <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a> ·
               <a href="https://12go.asia/" target="_blank" rel="noopener">12Go</a>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Taxi / voiture privée <span>~$45–70 · ~2,5–3,5 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$45–$70">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Taxi / voiture privée <span>~$45–70 · ~2,5–3,5 h</span></div>
               Plus flexible (départ de l’hôtel). Demander à la réception The Community ou Koulen.
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Grab / PassApp (si dispo) <span>tarif variable</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="tarif variable">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Grab / PassApp (si dispo) <span>tarif variable</span></div>
               Parfois possible pour ce trajet ; sinon réserver un chauffeur via l’hôtel.
             </div>
           </div>
@@ -1959,34 +1999,34 @@
     </article>
 
     <!-- 2. Battambang -->
-    <article class="city" id="battambang" data-nights="2">
+    <article class="city" id="battambang" data-nights="2" data-lat="13.0957" data-lng="103.2022" data-stop-name="Battambang" data-note="Train de bambou, Phnom Sampov">
       <div class="city-visual">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Aerial_view_of_Battambang_city.jpg/1280px-Aerial_view_of_Battambang_city.jpg" alt="Vue aérienne de Battambang" loading="lazy" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/Aerial_view_of_Battambang_city.jpg/1280px-Aerial_view_of_Battambang_city.jpg" alt="Vue aérienne de Battambang" loading="lazy">
         <div class="city-visual-label">
           <p class="num">Étape 02</p>
           <h2>Battambang</h2>
         </div>
       </div>
       <div class="city-body">
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Activités</h3>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/65535/49449516907_214a812894_b.jpg" alt="Tuk-tuk khmer au Cambodge" loading="lazy" />
+              <img src="https://live.staticflickr.com/65535/49449516907_214a812894_b.jpg" alt="Tuk-tuk khmer au Cambodge" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
                 <h3>Journée en tuktuk</h3>
-                <p class="activity-price">$15–25</p>
+                <p class="activity-price">$17.58</p>
               </div>
-              <p>Exploration des villages, rizières et architecture coloniale (souvent / pers. ou véhicule).</p>
-            </div>
+              <p>Exploration des villages, rizières et architecture coloniale&nbsp;<h3 style="color: rgb(20, 32, 26); outline: rgb(184, 148, 90) dashed 1px;">Grotte de la mort &amp; chauves-souris</h3></p>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$35 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/3862/14265275608_cbd2a68fea_b.jpg" alt="Train de bambou (Norry), Battambang" loading="lazy" />
+              <img src="https://live.staticflickr.com/3862/14265275608_cbd2a68fea_b.jpg" alt="Train de bambou (Norry), Battambang" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -1994,49 +2034,54 @@
                 <p class="activity-price">$5</p>
               </div>
               <p>Traversée unique sur rails en plateforme de bambou motorisée. + tuktuk A/R ~$2–4.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$10 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
-            <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/65535/49854991557_6098d0b691_b.jpg" alt="Grotte aux chauves-souris, Phnom Sampov" loading="lazy" />
-            </div>
-            <div class="activity-info">
-              <div class="activity-top">
-                <h3>Grotte de la mort & chauves-souris</h3>
-                <p class="activity-price">$2–15</p>
-              </div>
-              <p>Entrée Phnom Sampov ~$2–3. Inclus dans une journée tuktuk ~$15 (bambou + grottes + sunset).</p>
-            </div>
-          </div>
+          
         </div>
 
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Hébergements</h3>
           <div class="hotels">
-            <div class="hotel">
+            <div class="hotel" data-nights="2" data-in-budget="0">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/seng-hout.html" target="_blank" rel="noopener">Seng Hout Hotel</a> ★3.5</p>
-                <p class="hotel-price">$18–28</p>
+                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/seng-hout.html" target="_blank" rel="noopener noreferrer">Seng Hout Hotel</a> ★3.5</p>
+                <p class="hotel-price">$16.5</p>
               </div>
               <p class="hotel-meta">~12 min du train de bambou</p>
               <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
-              <div class="hotel-top">
-                <p class="hotel-name"><a href="http://www.cambanalariviere.com/" target="_blank" rel="noopener noreferrer">Cambana La Rivière Hotel</a> ★4.6</p>
-                <p class="hotel-price">$55–85</p>
-              </div>
-              <p class="hotel-meta">Au bord de la rivière Sangker</p>
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
+            
+          <div class="hotel" data-nights="2" data-in-budget="1">
+        <div class="hotel-top">
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/blue-diamond.fr.html?aid=318615&amp;label=New_French_FR_FR_21427169785-Jt2Do6A*80cSmr5wOnHnTgS217289923597%253Apl%253Ata%253Ap1%253Ap2%253Aac%253Aap%253Aneg&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-11&amp;checkout=2026-12-13&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=2&amp;hapos=2&amp;sr_order=price&amp;srpvid=b02d5e77ae320dac&amp;srepoch=1785072386&amp;all_sr_blocks=247546711_274220102_0_42_0&amp;highlighted_blocks=247546711_274220102_0_42_0&amp;matching_block_id=247546711_274220102_0_42_0&amp;sr_pri_blocks=247546711_274220102_0_42_0__1260&amp;from=searchresults" target="_blank" rel="noopener noreferrer"><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;">Blue Diamond Hostel</h2></a></p>
+          <p class="hotel-price">$5.5</p>
+        </div>
+        <p class="hotel-meta">113 Street 507, Phum Wat Vatleab, Chamcasomron 3&nbsp; &nbsp; &nbsp; &nbsp; 11/13</p>
+      <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-          </div>
+            <span class="hotel-nights-sub">= $11 (2 nuits)</span>
+          </div></div></div>
           <p class="note">Grotte de la mort et grotte aux chauves-souris = même site (Phnom Sampov).</p>
         </div>
 
-        <div class="reveal city-transport">
+        <div class="reveal city-transport visible">
           <h3 class="block-title">Transport depuis les hôtels</h3>
           <div class="transport-list">
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="1"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>$2 – $4 · trajet</strong></label>
               <div class="transport-dest">Train de bambou</div>
               <div class="transport-modes">
                 Tuktuk A/R · <strong>~$2–4</strong> (ou inclus journée tuktuk)
@@ -2044,39 +2089,39 @@
                 <span class="hotel-alt"><strong>Cambana La Rivière</strong> — ~10 min · 3,8 km</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Phnom Sampov (grottes)</div>
               <div class="transport-modes">
                 Tuktuk ~28–30 min · journée type bambou + grottes + sunset <strong>~$15</strong> (hors ticket train $5)
                 <span class="hotel-alt">Temps quasi identique depuis Seng Hout et Cambana</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Journée en tuktuk</div>
               <div class="transport-modes">Chauffeur à la journée depuis l’hôtel · <strong>~$15</strong> / pers. (formule type) ou véhicule privé</div>
             </div>
           </div>
-          <div class="transport-leg">
+          <div class="transport-leg" style="position: relative;">
             <div class="transport-leg-top">
               <h4 class="transport-leg-title">Aller à Koh Kong / Tatai</h4>
-              <p class="leg-price">$15–180</p>
+              <p class="leg-price">$127</p>
             </div>
             <p class="transport-leg-note">Peu de bus directs — souvent 2 segments ou chauffeur privé. Les lodges organisent souvent le transfert.</p>
-            <div class="leg-option">
-              <div class="leg-option-name">Bus via Phnom Penh <span>~$15–25 total · ~8–12 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$15–$25">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Bus via Phnom Penh <span>~$15–25 total · ~8–12 h</span></div>
               Battambang → PP puis PP → Koh Kong (demander descente à <strong>Tatai</strong>, ~20 km avant Koh Kong).
               <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a> ·
               <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a> ·
               <a href="https://bookmebus.com/" target="_blank" rel="noopener">BookMeBus</a>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Taxi / van privé <span>~$100–180 · ~6–8 h</span></div>
+            <div class="leg-option" data-in-budget="1" data-price="$127">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>$254 · 2 pers.</strong></label><div class="leg-option-name">Taxi / van privé <span>~$127/P. · ~6–8 h</span></div>
               Porte-à-porte jusqu’au lodge. Demander à Seng Hout, Cambana, ou directement
               <a href="https://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">Rainbow Lodge – Getting here</a> /
               <a href="https://canvasandorchids.com/" target="_blank" rel="noopener">Canvas &amp; Orchids</a>.
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Bus + descente Tatai <span>depuis la côte · ~$12–15</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$12–$15">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Bus + descente Tatai <span>depuis la côte · ~$12–15</span></div>
               Si vous passez par Sihanoukville : Virak Buntham / VET (~5–5,5 h), descente à Tatai. Infos :
               <a href="https://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">rainbowlodgecambodia.com/getting-here</a>
             </div>
@@ -2086,21 +2131,21 @@
     </article>
 
     <!-- 3. Koh Kong / Tatai -->
-    <article class="city" id="koh-kong" data-nights="2">
+    <article class="city" id="koh-kong" data-nights="2" data-lat="11.586" data-lng="103.128" data-stop-name="Koh Kong / Tatai" data-note="Cascade de Tatai, Peam Krasaop">
       <div class="city-visual">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Koh_Kong_mangrove_forest.jpg/1280px-Koh_Kong_mangrove_forest.jpg" alt="Mangrove de Koh Kong" loading="lazy" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Koh_Kong_mangrove_forest.jpg/1280px-Koh_Kong_mangrove_forest.jpg" alt="Mangrove de Koh Kong" loading="lazy">
         <div class="city-visual-label">
           <p class="num">Étape 03</p>
           <h2>Koh Kong / Tatai</h2>
         </div>
       </div>
       <div class="city-body">
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Activités</h3>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/1891/29420055277_1a47b445ce_b.jpg" alt="Cascade de Tatai, montagnes des Cardamomes" loading="lazy" />
+              <img src="https://live.staticflickr.com/1891/29420055277_1a47b445ce_b.jpg" alt="Cascade de Tatai, montagnes des Cardamomes" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2108,12 +2153,12 @@
                 <p class="activity-price">$10–40</p>
               </div>
               <p>Souvent via le lodge (bateau / kayak). Cascade, baignade — tarif selon formule.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$20 – $80 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/1854/42531759550_5f3bf54888_b.jpg" alt="Mangrove de Peam Krasaop, Koh Kong" loading="lazy" />
+              <img src="https://live.staticflickr.com/1854/42531759550_5f3bf54888_b.jpg" alt="Mangrove de Peam Krasaop, Koh Kong" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2121,36 +2166,23 @@
                 <p class="activity-price">$6–12</p>
               </div>
               <p>Entrée ~$1,25 + bateau court ~$5 / long ~$10. Crabes et oiseaux.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$12 – $24 · 2 pers.</strong></label></div>
           </div>
         </div>
 
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Hébergements</h3>
           <div class="hotels">
-            <div class="hotel">
-              <div class="hotel-top">
-                <p class="hotel-name"><a href="https://rainbowlodgecambodia.com/" target="_blank" rel="noopener noreferrer">Rainbow Lodge</a> ★4.9</p>
-                <p class="hotel-price">$120–160</p>
-              </div>
-              <p class="hotel-meta">Pension complète · ~15–20 min de la cascade</p>
-              <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
-            </div>
-            <div class="hotel">
-              <div class="hotel-top">
-                <p class="hotel-name"><a href="https://canvasandorchids.com/" target="_blank" rel="noopener">Canvas & Orchids Retreat</a> ★4.8</p>
-                <p class="hotel-price">$180–250+</p>
-              </div>
-              <p class="hotel-meta">Lodge de luxe en pleine nature</p>
-            </div>
+            
+            
           </div>
           <p class="note">Excursions souvent organisées par les lodges. Réserver tôt en décembre.</p>
         </div>
 
-        <div class="reveal city-transport">
+        <div class="reveal city-transport visible">
           <h3 class="block-title">Transport depuis les hôtels</h3>
           <div class="transport-list">
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Cascade de Tatai</div>
               <div class="transport-modes">
                 Souvent <strong>organisé par le lodge</strong> (bateau / kayak) — tarif sur place
@@ -2158,7 +2190,7 @@
                 <span class="hotel-alt"><strong>Canvas &amp; Orchids</strong> — ~30 min · 8 km</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Peam Krasaop</div>
               <div class="transport-modes">
                 Bateau + entrée 5 000 ៛ · court <strong>~$5</strong> · long <strong>~$10</strong>
@@ -2167,26 +2199,26 @@
               </div>
             </div>
           </div>
-          <div class="transport-leg">
+          <div class="transport-leg" style="position: relative;">
             <div class="transport-leg-top">
               <h4 class="transport-leg-title">Aller à Sihanoukville</h4>
-              <p class="leg-price">$12–133</p>
+              <p class="leg-price">—</p>
             </div>
             <p class="transport-leg-note">Remonter d’abord vers la route (Tatai / Koh Kong) puis bus vers la côte.</p>
-            <div class="leg-option">
-              <div class="leg-option-name">Bus Virak Buntham / VET <span>~$12–15 · ~5–5,5 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$12–$15">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Bus Virak Buntham / VET <span>~$12–15 · ~5–5,5 h</span></div>
               Départs typiques Koh Kong → Sihanoukville vers <strong>8h15</strong> et <strong>13h–14h</strong> (à confirmer).
               <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">vireakbuntham.com</a> ·
               <a href="https://bookmebus.com/en/bus/koh-kong-to-sihanoukville" target="_blank" rel="noopener">BookMeBus</a>
               <span class="hotel-alt">Rainbow / Canvas : transfert lodge → arrêt bus souvent arrangeable (~$15–40 selon véhicule)</span>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Taxi privé lodge → Sihanoukville <span>~$78–133 · &lt;3,5 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$78–$133">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Taxi privé lodge → Sihanoukville <span>~$78–133 · &lt;3,5 h</span></div>
               Tarif indicatif Rainbow Lodge (SUV 4 pers. / minivan 7 pers., péage inclus) :
               <a href="https://rainbowlodgecambodia.com/getting-here/" target="_blank" rel="noopener">Getting here</a>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Taxi partagé <span>~$15 / place · ~4–5 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$15">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Taxi partagé <span>~$15 / place · ~4–5 h</span></div>
               Moins confortable, horaires moins fixes — le lodge peut réserver.
             </div>
           </div>
@@ -2195,21 +2227,21 @@
     </article>
 
     <!-- 4. Sihanoukville -->
-    <article class="city" id="sihanoukville" data-nights="1">
+    <article class="city" id="sihanoukville" data-nights="2" data-lat="10.6271" data-lng="103.5221" data-stop-name="Sihanoukville" data-note="Wat Leu, Independence Beach">
       <div class="city-visual">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Sihanoukville_-_Independence_beach_in_the_morning.jpg/1280px-Sihanoukville_-_Independence_beach_in_the_morning.jpg" alt="Independence Beach, Sihanoukville" loading="lazy" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Sihanoukville_-_Independence_beach_in_the_morning.jpg/1280px-Sihanoukville_-_Independence_beach_in_the_morning.jpg" alt="Independence Beach, Sihanoukville" loading="lazy">
         <div class="city-visual-label">
           <p class="num">Étape 04</p>
           <h2>Sihanoukville</h2>
         </div>
       </div>
       <div class="city-body">
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Activités</h3>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/8634/16624020766_0580cfbffd_b.jpg" alt="Escaliers du temple Wat Leu, Sihanoukville" loading="lazy" />
+              <img src="https://live.staticflickr.com/8634/16624020766_0580cfbffd_b.jpg" alt="Escaliers du temple Wat Leu, Sihanoukville" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2217,12 +2249,12 @@
                 <p class="activity-price">Gratuit</p>
               </div>
               <p>Temple sur la colline — vue panoramique. Tuktuk A/R ~$2–5.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$0 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/65535/33964046778_11168c5ae3_b.jpg" alt="Marché Phsar Leu, Sihanoukville" loading="lazy" />
+              <img src="https://live.staticflickr.com/65535/33964046778_11168c5ae3_b.jpg" alt="Marché Phsar Leu, Sihanoukville" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2230,12 +2262,12 @@
                 <p class="activity-price">Gratuit</p>
               </div>
               <p>Marché local — fruits, poissons. Street food ~$1–4. Tuktuk ~$2–5.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$0 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/Independence_Beach_%28Sihanoukville%29.jpg" alt="Independence Beach, Sihanoukville" loading="lazy" />
+              <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/Independence_Beach_%28Sihanoukville%29.jpg" alt="Independence Beach, Sihanoukville" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2243,35 +2275,93 @@
                 <p class="activity-price">Gratuit</p>
               </div>
               <p>Plage longue et calme, idéale avant de partir vers les îles.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$0 · 2 pers.</strong></label></div>
           </div>
         </div>
 
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Hébergements</h3>
           <div class="hotels">
-            <div class="hotel">
+            <div class="hotel" data-nights="1" data-in-budget="0">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.darahotels.com/independencehotelbydara" target="_blank" rel="noopener">Independence Hotel by Dara</a> ★4.3</p>
+                <p class="hotel-name"><a href="https://www.darahotels.com/independencehotelbydara" target="_blank" rel="noopener noreferrer">Independence Hotel by Dara</a> ★4.3</p>
                 <p class="hotel-price">$60–85</p>
               </div>
               <p class="hotel-meta">Sur la plage · ~3 min d’Independence Beach</p>
               <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
+            <div class="hotel" data-nights="2" data-in-budget="0">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/328488/onederz-sihanoukville/" target="_blank" rel="noopener">Onederz Sihanoukville</a> ★4.6</p>
+                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/328488/onederz-sihanoukville/" target="_blank" rel="noopener noreferrer">Onederz Sihanoukville</a> ★4.6</p>
                 <p class="hotel-price">$10–35</p>
               </div>
               <p class="hotel-meta">Proche Wat Leu (~5 min tuktuk)</p>
+            <label class="budget-pick"><input type="checkbox"> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="0" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-          </div>
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
+          <div class="hotel" data-nights="2" data-in-budget="0">
+        <div class="hotel-top">
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/platinum-coast-and-condominium.fr.html?label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;ucfs=1&amp;arphpl=1&amp;dest_id=-1023795&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=5&amp;hapos=30&amp;sr_order=popularity&amp;nflt=price%3DEUR-min-45-1&amp;srpvid=a4879df7f1fc0036&amp;srepoch=1785018535&amp;all_sr_blocks=1077527403_401481107_0_1_0&amp;highlighted_blocks=1077527403_401481107_0_1_0&amp;matching_block_id=1077527403_401481107_0_1_0&amp;sr_pri_blocks=1077527403_401481107_0_1_0__9000&amp;from=searchresults&amp;checkin=2026-12-18&amp;checkout=2026-12-19#tab-main" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/platinum-coast-and-condominium.fr.html?label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;ucfs=1&amp;arphpl=1&amp;dest_id=-1023795&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=5&amp;hapos=30&amp;sr_order=popularity&amp;nflt=price%3DEUR-min-45-1&amp;srpvid=a4879df7f1fc0036&amp;srepoch=1785018535&amp;all_sr_blocks=1077527403_401481107_0_1_0&amp;highlighted_blocks=1077527403_401481107_0_1_0&amp;matching_block_id=1077527403_401481107_0_1_0&amp;sr_pri_blocks=1077527403_401481107_0_1_0__9000&amp;from=searchresults&amp;checkin=2026-12-18&amp;checkout=2026-12-19#tab-main" target="_blank" rel="noopener noreferrer">HC Hotel</a></h2><p></p>
+          <p class="hotel-price">$40</p>
+        </div>
+        <p class="hotel-meta"><span class="a297f43545" style="display: inline-block; vertical-align: middle; color: rgb(26, 26, 26); font-family: BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-size: 14px; white-space: break-spaces;"><button type="button" class="de576f5064" style="color-scheme: unset; forced-color-adjust: unset; math-depth: unset; position-anchor: unset; text-size-adjust: unset; appearance: unset; font-feature-settings: unset; font-kerning: unset; font-language-override: unset; font-optical-sizing: unset; font-palette: unset; font-size-adjust: unset; font-stretch: unset; font-style: unset; font-synthesis: unset; font-variant: unset; font-variation-settings: unset; position-area: unset; text-orientation: unset; text-rendering: unset; text-spacing-trim: unset; -webkit-font-smoothing: unset; -webkit-locale: unset; -webkit-text-orientation: unset; -webkit-writing-mode: unset; writing-mode: unset; zoom: unset; accent-color: unset; place-content: unset; place-items: unset; place-self: unset; alignment-baseline: unset; anchor-name: unset; anchor-scope: unset; animation-composition: unset; animation: unset; animation-trigger: unset; app-region: unset; aspect-ratio: unset; backdrop-filter: unset; backface-visibility: unset; background-image: unset; background-position: unset; background-size: unset; background-repeat: unset; background-attachment: unset; background-origin: unset; background-clip: unset; background-blend-mode: unset; baseline-shift: unset; baseline-source: unset; block-size: unset; border-block: unset; border: unset; border-radius: unset; border-collapse: unset; border-end-end-radius: unset; border-end-start-radius: unset; border-inline: unset; border-shape: unset; border-start-end-radius: unset; border-start-start-radius: unset; inset: unset; box-decoration-break: unset; box-shadow: unset; break-after: unset; break-before: unset; break-inside: unset; buffered-rendering: unset; caption-side: unset; caret-animation: unset; caret-color: unset; caret-shape: unset; clear: unset; clip: unset; clip-path: unset; clip-rule: unset; color-interpolation: unset; color-interpolation-filters: unset; color-rendering: unset; columns: unset; column-fill: unset; gap: unset; rule-break: unset; rule: unset; rule-inset: unset; rule-visibility-items: unset; column-span: unset; contain: unset; contain-intrinsic-block-size: unset; contain-intrinsic-size: unset; contain-intrinsic-inline-size: unset; container: unset; content: unset; content-visibility: unset; corner-shape: unset; corner-block-end-shape: unset; corner-block-start-shape: unset; counter-increment: unset; counter-reset: unset; counter-set: unset; cx: unset; cy: unset; d: unset; dominant-baseline: unset; dynamic-range-limit: unset; empty-cells: unset; field-sizing: unset; fill: unset; fill-opacity: unset; fill-rule: unset; filter: unset; flex: unset; flex-flow: unset; float: unset; flood-color: unset; flood-opacity: unset; grid: unset; grid-area: unset; height: unset; hyphenate-character: unset; hyphenate-limit-chars: unset; hyphens: unset; image-orientation: unset; image-rendering: unset; initial-letter: unset; inline-size: unset; inset-block: unset; inset-inline: unset; interactivity: unset; interest-delay: unset; interpolate-size: unset; isolation: unset; letter-spacing: unset; lighting-color: unset; line-break: unset; list-style: unset; margin-block: unset; margin-inline: unset; marker: unset; mask: unset; mask-type: unset; math-shift: unset; math-style: unset; max-block-size: unset; max-height: unset; max-inline-size: unset; max-width: unset; min-block-size: unset; min-height: unset; min-inline-size: unset; min-width: unset; mix-blend-mode: unset; object-fit: unset; object-position: unset; object-view-box: unset; offset: unset; opacity: unset; order: unset; orphans: unset; outline: unset; outline-offset: unset; overflow-anchor: unset; overflow-block: unset; overflow-clip-margin: unset; overflow-inline: unset; overflow-wrap: unset; overflow: unset; overlay: unset; overscroll-behavior-block: unset; overscroll-behavior-inline: unset; overscroll-behavior: unset; padding-block: unset; padding: unset; padding-inline: unset; page: unset; page-orientation: unset; paint-order: unset; perspective: unset; perspective-origin: unset; pointer-events: unset; position-try: unset; position-visibility: unset; print-color-adjust: unset; quotes: unset; r: unset; reading-flow: unset; reading-order: unset; resize: unset; rotate: unset; ruby-align: unset; ruby-position: unset; rule-overlap: unset; rx: unset; ry: unset; scale: unset; scroll-behavior: unset; scroll-initial-target: unset; scroll-margin-block: unset; scroll-margin: unset; scroll-margin-inline: unset; scroll-marker-group: unset; scroll-padding-block: unset; scroll-padding: unset; scroll-padding-inline: unset; scroll-snap-align: unset; scroll-snap-stop: unset; scroll-snap-type: unset; scroll-target-group: unset; scroll-timeline: unset; scrollbar-color: unset; scrollbar-gutter: unset; scrollbar-width: unset; shape-image-threshold: unset; shape-margin: unset; shape-outside: unset; shape-rendering: unset; size: unset; speak: unset; stop-color: unset; stop-opacity: unset; stroke: unset; stroke-dasharray: unset; stroke-dashoffset: unset; stroke-linecap: unset; stroke-linejoin: unset; stroke-miterlimit: unset; stroke-opacity: unset; stroke-width: unset; tab-size: unset; table-layout: unset; text-align: unset; text-align-last: unset; text-anchor: unset; text-autospace: unset; text-box: unset; text-combine-upright: unset; text-decoration-skip-ink: unset; text-emphasis: unset; text-emphasis-position: unset; text-indent: unset; text-justify: unset; text-overflow: unset; text-shadow: unset; text-transform: unset; text-underline-offset: unset; text-underline-position: unset; text-wrap: unset; timeline-scope: unset; timeline-trigger: unset; touch-action: unset; transform: unset; transform-box: unset; transform-origin: unset; transform-style: unset; transition: unset; translate: unset; trigger-scope: unset; user-select: unset; vector-effect: unset; view-timeline: unset; view-transition-class: unset; view-transition-group: unset; view-transition-name: unset; view-transition-scope: unset; visibility: unset; border-spacing: unset; -webkit-box-align: unset; -webkit-box-decoration-break: unset; -webkit-box-direction: unset; -webkit-box-flex: unset; -webkit-box-ordinal-group: unset; -webkit-box-orient: unset; -webkit-box-pack: unset; -webkit-box-reflect: unset; -webkit-line-break: unset; -webkit-line-clamp: unset; -webkit-mask-box-image: unset; -webkit-rtl-ordering: unset; -webkit-ruby-position: unset; -webkit-text-combine: unset; -webkit-text-decorations-in-effect: unset; -webkit-text-fill-color: unset; -webkit-text-security: unset; -webkit-text-stroke: unset; -webkit-user-drag: unset; white-space-collapse: unset; widows: unset; width: unset; will-change: unset; word-break: unset; word-spacing: unset; x: unset; y: unset; z-index: unset; font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; color: rgb(26, 26, 26); display: inline-flex; vertical-align: top; position: relative; -webkit-tap-highlight-color: transparent; cursor: pointer;"><div class="b99b6ef58f cb4b7a25d9 b06461926f" style="line-height: 20px; display: inline; cursor: help;">beach ream 15, Sihanoukville, Cambodge<div aria-hidden="true" class="dcf8588897" style="position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); border: 0px;">Une fois votre réservation effectuée, toutes les informations sur l'établissement, y compris le numéro de téléphone et l'adresse, seront disponibles sur votre confirmation de réservation ainsi que dans votre compte.</div><div><br></div></div></button></span><span class="b70006e9dc" style="margin: 0px 4px; color: rgb(26, 26, 26); font-family: BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-size: 14px; white-space: break-spaces;"></span></p>
+      <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
+            </div>
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div><div class="hotel" data-nights="2" data-in-budget="1">
+        <div class="hotel-top">
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/air-apartment-residence-no1-sky-pool.html?ssne=Sihanoukville&amp;ssne_untouched=Sihanoukville&amp;highlighted_hotels=11742693&amp;ss=Sihanoukville&amp;dest_id=-1023795&amp;dest_type=city&amp;hp_avform=1&amp;origin=hp&amp;do_availability_check=1&amp;label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;lang=fr&amp;sb=1&amp;src_elem=sb&amp;src=hotel&amp;checkin=2026-12-18&amp;checkout=2026-12-19&amp;group_adults=2&amp;no_rooms=1&amp;group_children=0#availability_target" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/air-apartment-residence-no1-sky-pool.html?ssne=Sihanoukville&amp;ssne_untouched=Sihanoukville&amp;highlighted_hotels=11742693&amp;ss=Sihanoukville&amp;dest_id=-1023795&amp;dest_type=city&amp;hp_avform=1&amp;origin=hp&amp;do_availability_check=1&amp;label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;lang=fr&amp;sb=1&amp;src_elem=sb&amp;src=hotel&amp;checkin=2026-12-18&amp;checkout=2026-12-19&amp;group_adults=2&amp;no_rooms=1&amp;group_children=0#availability_target" target="_blank" rel="noopener noreferrer">INFINITE POOL Condominium &amp; Residence - Sihanoukville - 5mn to boat pier</a></h2><p></p>
+          <p class="hotel-price"><span style="font-size: 13.6px;">$</span>39</p>
+        </div>
+        <p class="hotel-meta"><span class="a297f43545" style="display: inline-block; vertical-align: middle; color: rgb(26, 26, 26); font-family: BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-size: 14px; white-space: break-spaces;"><button type="button" class="de576f5064" style="color-scheme: unset; forced-color-adjust: unset; math-depth: unset; position-anchor: unset; text-size-adjust: unset; appearance: unset; font-feature-settings: unset; font-kerning: unset; font-language-override: unset; font-optical-sizing: unset; font-palette: unset; font-size-adjust: unset; font-stretch: unset; font-style: unset; font-synthesis: unset; font-variant: unset; font-variation-settings: unset; position-area: unset; text-orientation: unset; text-rendering: unset; text-spacing-trim: unset; -webkit-font-smoothing: unset; -webkit-locale: unset; -webkit-text-orientation: unset; -webkit-writing-mode: unset; writing-mode: unset; zoom: unset; accent-color: unset; place-content: unset; place-items: unset; place-self: unset; alignment-baseline: unset; anchor-name: unset; anchor-scope: unset; animation-composition: unset; animation: unset; animation-trigger: unset; app-region: unset; aspect-ratio: unset; backdrop-filter: unset; backface-visibility: unset; background-image: unset; background-position: unset; background-size: unset; background-repeat: unset; background-attachment: unset; background-origin: unset; background-clip: unset; background-blend-mode: unset; baseline-shift: unset; baseline-source: unset; block-size: unset; border-block: unset; border: unset; border-radius: unset; border-collapse: unset; border-end-end-radius: unset; border-end-start-radius: unset; border-inline: unset; border-shape: unset; border-start-end-radius: unset; border-start-start-radius: unset; inset: unset; box-decoration-break: unset; box-shadow: unset; break-after: unset; break-before: unset; break-inside: unset; buffered-rendering: unset; caption-side: unset; caret-animation: unset; caret-color: unset; caret-shape: unset; clear: unset; clip: unset; clip-path: unset; clip-rule: unset; color-interpolation: unset; color-interpolation-filters: unset; color-rendering: unset; columns: unset; column-fill: unset; gap: unset; rule-break: unset; rule: unset; rule-inset: unset; rule-visibility-items: unset; column-span: unset; contain: unset; contain-intrinsic-block-size: unset; contain-intrinsic-size: unset; contain-intrinsic-inline-size: unset; container: unset; content: unset; content-visibility: unset; corner-shape: unset; corner-block-end-shape: unset; corner-block-start-shape: unset; counter-increment: unset; counter-reset: unset; counter-set: unset; cx: unset; cy: unset; d: unset; dominant-baseline: unset; dynamic-range-limit: unset; empty-cells: unset; field-sizing: unset; fill: unset; fill-opacity: unset; fill-rule: unset; filter: unset; flex: unset; flex-flow: unset; float: unset; flood-color: unset; flood-opacity: unset; grid: unset; grid-area: unset; height: unset; hyphenate-character: unset; hyphenate-limit-chars: unset; hyphens: unset; image-orientation: unset; image-rendering: unset; initial-letter: unset; inline-size: unset; inset-block: unset; inset-inline: unset; interactivity: unset; interest-delay: unset; interpolate-size: unset; isolation: unset; letter-spacing: unset; lighting-color: unset; line-break: unset; list-style: unset; margin-block: unset; margin-inline: unset; marker: unset; mask: unset; mask-type: unset; math-shift: unset; math-style: unset; max-block-size: unset; max-height: unset; max-inline-size: unset; max-width: unset; min-block-size: unset; min-height: unset; min-inline-size: unset; min-width: unset; mix-blend-mode: unset; object-fit: unset; object-position: unset; object-view-box: unset; offset: unset; opacity: unset; order: unset; orphans: unset; outline: unset; outline-offset: unset; overflow-anchor: unset; overflow-block: unset; overflow-clip-margin: unset; overflow-inline: unset; overflow-wrap: unset; overflow: unset; overlay: unset; overscroll-behavior-block: unset; overscroll-behavior-inline: unset; overscroll-behavior: unset; padding-block: unset; padding: unset; padding-inline: unset; page: unset; page-orientation: unset; paint-order: unset; perspective: unset; perspective-origin: unset; pointer-events: unset; position-try: unset; position-visibility: unset; print-color-adjust: unset; quotes: unset; r: unset; reading-flow: unset; reading-order: unset; resize: unset; rotate: unset; ruby-align: unset; ruby-position: unset; rule-overlap: unset; rx: unset; ry: unset; scale: unset; scroll-behavior: unset; scroll-initial-target: unset; scroll-margin-block: unset; scroll-margin: unset; scroll-margin-inline: unset; scroll-marker-group: unset; scroll-padding-block: unset; scroll-padding: unset; scroll-padding-inline: unset; scroll-snap-align: unset; scroll-snap-stop: unset; scroll-snap-type: unset; scroll-target-group: unset; scroll-timeline: unset; scrollbar-color: unset; scrollbar-gutter: unset; scrollbar-width: unset; shape-image-threshold: unset; shape-margin: unset; shape-outside: unset; shape-rendering: unset; size: unset; speak: unset; stop-color: unset; stop-opacity: unset; stroke: unset; stroke-dasharray: unset; stroke-dashoffset: unset; stroke-linecap: unset; stroke-linejoin: unset; stroke-miterlimit: unset; stroke-opacity: unset; stroke-width: unset; tab-size: unset; table-layout: unset; text-align: unset; text-align-last: unset; text-anchor: unset; text-autospace: unset; text-box: unset; text-combine-upright: unset; text-decoration-skip-ink: unset; text-emphasis: unset; text-emphasis-position: unset; text-indent: unset; text-justify: unset; text-overflow: unset; text-shadow: unset; text-transform: unset; text-underline-offset: unset; text-underline-position: unset; text-wrap: unset; timeline-scope: unset; timeline-trigger: unset; touch-action: unset; transform: unset; transform-box: unset; transform-origin: unset; transform-style: unset; transition: unset; translate: unset; trigger-scope: unset; user-select: unset; vector-effect: unset; view-timeline: unset; view-transition-class: unset; view-transition-group: unset; view-transition-name: unset; view-transition-scope: unset; visibility: unset; border-spacing: unset; -webkit-box-align: unset; -webkit-box-decoration-break: unset; -webkit-box-direction: unset; -webkit-box-flex: unset; -webkit-box-ordinal-group: unset; -webkit-box-orient: unset; -webkit-box-pack: unset; -webkit-box-reflect: unset; -webkit-line-break: unset; -webkit-line-clamp: unset; -webkit-mask-box-image: unset; -webkit-rtl-ordering: unset; -webkit-ruby-position: unset; -webkit-text-combine: unset; -webkit-text-decorations-in-effect: unset; -webkit-text-fill-color: unset; -webkit-text-security: unset; -webkit-text-stroke: unset; -webkit-user-drag: unset; white-space-collapse: unset; widows: unset; width: unset; will-change: unset; word-break: unset; word-spacing: unset; x: unset; y: unset; z-index: unset; font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; color: rgb(26, 26, 26); display: inline-flex; vertical-align: top; position: relative; -webkit-tap-highlight-color: transparent; cursor: pointer;"><div class="b99b6ef58f cb4b7a25d9 b06461926f" style="line-height: 20px; display: inline; cursor: help;">Sihanoukville Autonomous Port, Sihanoukville, Cambodge<div aria-hidden="true" class="dcf8588897" style="position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); border: 0px;">Une fois votre réservation effectuée, toutes les informations sur l'établissement, y compris le numéro de téléphone et l'adresse, seront disponibles sur votre confirmation de réservation ainsi que dans votre compte.</div><div><br></div></div></button></span><span class="b70006e9dc" style="margin: 0px 4px; color: rgb(26, 26, 26); font-family: BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-size: 14px; white-space: break-spaces;"></span></p>
+      <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
+            </div>
+            <span class="hotel-nights-sub">= $78 (2 nuits)</span>
+          </div></div><div class="hotel" data-nights="2" data-in-budget="0">
+        <div class="hotel-top">
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/onederz-sihanoukville.html?ssne=Sihanoukville&amp;ssne_untouched=Sihanoukville&amp;highlighted_hotels=12821505&amp;ss=Sihanoukville&amp;dest_id=-1023795&amp;dest_type=city&amp;hp_avform=1&amp;origin=hp&amp;do_availability_check=1&amp;label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;lang=fr&amp;sb=1&amp;src_elem=sb&amp;src=hotel&amp;checkin=2026-12-18&amp;checkout=2026-12-19&amp;group_adults=2&amp;no_rooms=1&amp;group_children=0#availability_target" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/onederz-sihanoukville.html?ssne=Sihanoukville&amp;ssne_untouched=Sihanoukville&amp;highlighted_hotels=12821505&amp;ss=Sihanoukville&amp;dest_id=-1023795&amp;dest_type=city&amp;hp_avform=1&amp;origin=hp&amp;do_availability_check=1&amp;label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;lang=fr&amp;sb=1&amp;src_elem=sb&amp;src=hotel&amp;checkin=2026-12-18&amp;checkout=2026-12-19&amp;group_adults=2&amp;no_rooms=1&amp;group_children=0#availability_target" target="_blank" rel="noopener noreferrer">Onederz Sihanoukville - 10 mins walk from the Tourism Pier</a></h2><p></p>
+          <p class="hotel-price">$24</p>
+        </div>
+        <p class="hotel-meta"><span class="a297f43545" style="display: inline-block; vertical-align: middle; color: rgb(26, 26, 26); font-family: BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-size: 14px; white-space: break-spaces;"><button type="button" class="de576f5064" style="color-scheme: unset; forced-color-adjust: unset; math-depth: unset; position-anchor: unset; text-size-adjust: unset; appearance: unset; font-feature-settings: unset; font-kerning: unset; font-language-override: unset; font-optical-sizing: unset; font-palette: unset; font-size-adjust: unset; font-stretch: unset; font-style: unset; font-synthesis: unset; font-variant: unset; font-variation-settings: unset; position-area: unset; text-orientation: unset; text-rendering: unset; text-spacing-trim: unset; -webkit-font-smoothing: unset; -webkit-locale: unset; -webkit-text-orientation: unset; -webkit-writing-mode: unset; writing-mode: unset; zoom: unset; accent-color: unset; place-content: unset; place-items: unset; place-self: unset; alignment-baseline: unset; anchor-name: unset; anchor-scope: unset; animation-composition: unset; animation: unset; animation-trigger: unset; app-region: unset; aspect-ratio: unset; backdrop-filter: unset; backface-visibility: unset; background-image: unset; background-position: unset; background-size: unset; background-repeat: unset; background-attachment: unset; background-origin: unset; background-clip: unset; background-blend-mode: unset; baseline-shift: unset; baseline-source: unset; block-size: unset; border-block: unset; border: unset; border-radius: unset; border-collapse: unset; border-end-end-radius: unset; border-end-start-radius: unset; border-inline: unset; border-shape: unset; border-start-end-radius: unset; border-start-start-radius: unset; inset: unset; box-decoration-break: unset; box-shadow: unset; break-after: unset; break-before: unset; break-inside: unset; buffered-rendering: unset; caption-side: unset; caret-animation: unset; caret-color: unset; caret-shape: unset; clear: unset; clip: unset; clip-path: unset; clip-rule: unset; color-interpolation: unset; color-interpolation-filters: unset; color-rendering: unset; columns: unset; column-fill: unset; gap: unset; rule-break: unset; rule: unset; rule-inset: unset; rule-visibility-items: unset; column-span: unset; contain: unset; contain-intrinsic-block-size: unset; contain-intrinsic-size: unset; contain-intrinsic-inline-size: unset; container: unset; content: unset; content-visibility: unset; corner-shape: unset; corner-block-end-shape: unset; corner-block-start-shape: unset; counter-increment: unset; counter-reset: unset; counter-set: unset; cx: unset; cy: unset; d: unset; dominant-baseline: unset; dynamic-range-limit: unset; empty-cells: unset; field-sizing: unset; fill: unset; fill-opacity: unset; fill-rule: unset; filter: unset; flex: unset; flex-flow: unset; float: unset; flood-color: unset; flood-opacity: unset; grid: unset; grid-area: unset; height: unset; hyphenate-character: unset; hyphenate-limit-chars: unset; hyphens: unset; image-orientation: unset; image-rendering: unset; initial-letter: unset; inline-size: unset; inset-block: unset; inset-inline: unset; interactivity: unset; interest-delay: unset; interpolate-size: unset; isolation: unset; letter-spacing: unset; lighting-color: unset; line-break: unset; list-style: unset; margin-block: unset; margin-inline: unset; marker: unset; mask: unset; mask-type: unset; math-shift: unset; math-style: unset; max-block-size: unset; max-height: unset; max-inline-size: unset; max-width: unset; min-block-size: unset; min-height: unset; min-inline-size: unset; min-width: unset; mix-blend-mode: unset; object-fit: unset; object-position: unset; object-view-box: unset; offset: unset; opacity: unset; order: unset; orphans: unset; outline: unset; outline-offset: unset; overflow-anchor: unset; overflow-block: unset; overflow-clip-margin: unset; overflow-inline: unset; overflow-wrap: unset; overflow: unset; overlay: unset; overscroll-behavior-block: unset; overscroll-behavior-inline: unset; overscroll-behavior: unset; padding-block: unset; padding: unset; padding-inline: unset; page: unset; page-orientation: unset; paint-order: unset; perspective: unset; perspective-origin: unset; pointer-events: unset; position-try: unset; position-visibility: unset; print-color-adjust: unset; quotes: unset; r: unset; reading-flow: unset; reading-order: unset; resize: unset; rotate: unset; ruby-align: unset; ruby-position: unset; rule-overlap: unset; rx: unset; ry: unset; scale: unset; scroll-behavior: unset; scroll-initial-target: unset; scroll-margin-block: unset; scroll-margin: unset; scroll-margin-inline: unset; scroll-marker-group: unset; scroll-padding-block: unset; scroll-padding: unset; scroll-padding-inline: unset; scroll-snap-align: unset; scroll-snap-stop: unset; scroll-snap-type: unset; scroll-target-group: unset; scroll-timeline: unset; scrollbar-color: unset; scrollbar-gutter: unset; scrollbar-width: unset; shape-image-threshold: unset; shape-margin: unset; shape-outside: unset; shape-rendering: unset; size: unset; speak: unset; stop-color: unset; stop-opacity: unset; stroke: unset; stroke-dasharray: unset; stroke-dashoffset: unset; stroke-linecap: unset; stroke-linejoin: unset; stroke-miterlimit: unset; stroke-opacity: unset; stroke-width: unset; tab-size: unset; table-layout: unset; text-align: unset; text-align-last: unset; text-anchor: unset; text-autospace: unset; text-box: unset; text-combine-upright: unset; text-decoration-skip-ink: unset; text-emphasis: unset; text-emphasis-position: unset; text-indent: unset; text-justify: unset; text-overflow: unset; text-shadow: unset; text-transform: unset; text-underline-offset: unset; text-underline-position: unset; text-wrap: unset; timeline-scope: unset; timeline-trigger: unset; touch-action: unset; transform: unset; transform-box: unset; transform-origin: unset; transform-style: unset; transition: unset; translate: unset; trigger-scope: unset; user-select: unset; vector-effect: unset; view-timeline: unset; view-transition-class: unset; view-transition-group: unset; view-transition-name: unset; view-transition-scope: unset; visibility: unset; border-spacing: unset; -webkit-box-align: unset; -webkit-box-decoration-break: unset; -webkit-box-direction: unset; -webkit-box-flex: unset; -webkit-box-ordinal-group: unset; -webkit-box-orient: unset; -webkit-box-pack: unset; -webkit-box-reflect: unset; -webkit-line-break: unset; -webkit-line-clamp: unset; -webkit-mask-box-image: unset; -webkit-rtl-ordering: unset; -webkit-ruby-position: unset; -webkit-text-combine: unset; -webkit-text-decorations-in-effect: unset; -webkit-text-fill-color: unset; -webkit-text-security: unset; -webkit-text-stroke: unset; -webkit-user-drag: unset; white-space-collapse: unset; widows: unset; width: unset; will-change: unset; word-break: unset; word-spacing: unset; x: unset; y: unset; z-index: unset; font-family: inherit; font-size: inherit; font-weight: inherit; line-height: inherit; color: rgb(26, 26, 26); display: inline-flex; vertical-align: top; position: relative; -webkit-tap-highlight-color: transparent; cursor: pointer;"><div class="b99b6ef58f cb4b7a25d9 b06461926f" style="line-height: 20px; display: inline; cursor: help;">Sihanoukville Autonomous Port, Sihanoukville, Cambodge<div aria-hidden="true" class="dcf8588897" style="position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); border: 0px;">Une fois votre réservation effectuée, toutes les informations sur l'établissement, y compris le numéro de téléphone et l'adresse, seront disponibles sur votre confirmation de réservation ainsi que dans votre compte.</div><div><br></div></div></button></span><span class="b70006e9dc" style="margin: 0px 4px; color: rgb(26, 26, 26); font-family: BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-size: 14px; white-space: break-spaces;"></span></p>
+      <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
+            </div>
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div></div>
         </div>
 
-        <div class="reveal city-transport">
+        <div class="reveal city-transport visible">
           <h3 class="block-title">Transport depuis les hôtels</h3>
           <div class="transport-list">
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Wat Leu</div>
               <div class="transport-modes">
                 Tuktuk A/R · <strong>~$2–5</strong>
@@ -2279,59 +2369,59 @@
                 <span class="hotel-alt"><strong>Onederz</strong> — ~5 min · 1,9 km (plus proche)</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Phsar Leu</div>
               <div class="transport-modes">
                 ~9–10 min tuktuk · <strong>~$2–5</strong>
                 <span class="hotel-alt">Independence ~3,8 km · Onederz ~3,2 km</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Independence Beach</div>
               <div class="transport-modes">
                 <span class="hotel-alt"><strong>Independence Hotel</strong> — à pied / ~3 min (Gratuit)</span>
                 <span class="hotel-alt"><strong>Onederz</strong> — ~8 min tuktuk · <strong>~$2–4</strong></span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Port ferry (Autonomous Port)</div>
               <div class="transport-modes">
                 Tuktuk / Grab · <strong>~$3–8</strong> selon l’hôtel · arriver <strong>30–45 min</strong> avant le ferry
               </div>
             </div>
           </div>
-          <div class="transport-leg">
+          <div class="transport-leg" style="position: relative;">
             <div class="transport-leg-top">
               <h4 class="transport-leg-title">Aller à Koh Rong Samloem (ferry)</h4>
-              <p class="leg-price">$12–25</p>
+              <p class="leg-price">—</p>
             </div>
             <p class="transport-leg-note">Départ : Sihanoukville Autonomous Port. ~45–60 min. A/R ouvert typique ~$25 · aller ~$12–15. Horaires indicatifs — reconfirmer en ligne.</p>
-            <div class="leg-option">
-              <div class="leg-option-name">GTVC Speedboat <span>~$15 / ~$25 A/R</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$15–$25">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">GTVC Speedboat <span>~$15 / ~$25 A/R</span></div>
               <a href="https://www.gtvcspeedboatcambodia.com/" target="_blank" rel="noopener">gtvcspeedboatcambodia.com</a>
               <ul class="ferry-schedule">
                 <li>→ Samloem (Saracen) : <strong>9h · 12h · 15h</strong> (souvent aussi 8h, 11h, 14h, 16h)</li>
                 <li>← retour : ~<strong>9h45 · 12h45 · 15h45</strong></li>
               </ul>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Buva Sea <span>~$25 A/R ouvert</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$25">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Buva Sea <span>~$25 A/R ouvert</span></div>
               <a href="https://buvasea.com/" target="_blank" rel="noopener">buvasea.com</a>
               <ul class="ferry-schedule">
                 <li>→ Samloem : <strong>8h30 · 11h30 · 14h30 · 17h</strong></li>
                 <li>← retour : <strong>6h30 · 9h30 · 12h30 · 15h30</strong></li>
               </ul>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Island Speed Ferry <span>~$15 / ~$25 A/R</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$15–$25">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Island Speed Ferry <span>~$15 / ~$25 A/R</span></div>
               <a href="https://islandspeedferry.com/" target="_blank" rel="noopener">islandspeedferry.com</a>
               <ul class="ferry-schedule">
                 <li>→ Samloem : <strong>9h · 12h · 15h</strong> (parfois 8h)</li>
                 <li>← retour : <strong>10h30 · 13h30 · 16h30</strong></li>
               </ul>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Selon l’hôtel sur l’île</div>
+            <div class="leg-option" data-in-budget="0" data-price="$0">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Selon l’hôtel sur l’île <span>$0</span></div>
               <span class="hotel-alt"><strong>Eden Beach / Island Center Point</strong> — débarquement Saracen Bay, puis ~25–30 min à pied (ou bateau-taxi si bagages)</span>
             </div>
           </div>
@@ -2340,21 +2430,21 @@
     </article>
 
     <!-- 5. Koh Rong Samloem -->
-    <article class="city" id="koh-rong" data-nights="4">
+    <article class="city" id="koh-rong" data-nights="4" data-lat="10.5917" data-lng="103.2975" data-stop-name="Koh Rong Samloem" data-note="Saracen, Lazy, Sunset Beach">
       <div class="city-visual">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Saracen_Bay_panoramic_view%2C_Koh_Rong_Sanloem%2C_Cambodia%2C_June_2014.jpg/1280px-Saracen_Bay_panoramic_view%2C_Koh_Rong_Sanloem%2C_Cambodia%2C_June_2014.jpg" alt="Saracen Bay, Koh Rong Samloem" loading="lazy" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Saracen_Bay_panoramic_view%2C_Koh_Rong_Sanloem%2C_Cambodia%2C_June_2014.jpg/1280px-Saracen_Bay_panoramic_view%2C_Koh_Rong_Sanloem%2C_Cambodia%2C_June_2014.jpg" alt="Saracen Bay, Koh Rong Samloem" loading="lazy">
         <div class="city-visual-label">
           <p class="num">Étape 05</p>
           <h2>Koh Rong Samloem</h2>
         </div>
       </div>
       <div class="city-body">
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Activités</h3>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/4653/39815177501_d36c20dd53_b.jpg" alt="Saracen Bay, Koh Rong Samloem" loading="lazy" />
+              <img src="https://live.staticflickr.com/4653/39815177501_d36c20dd53_b.jpg" alt="Saracen Bay, Koh Rong Samloem" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2362,12 +2452,12 @@
                 <p class="activity-price">Gratuit</p>
               </div>
               <p>Baie principale — snorkeling location ~$5–10. Bars de plage.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$0 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/4063/4295137567_3e7a11e86b_b.jpg" alt="Lazy Beach, Koh Rong Samloem" loading="lazy" />
+              <img src="https://live.staticflickr.com/4063/4295137567_3e7a11e86b_b.jpg" alt="Lazy Beach, Koh Rong Samloem" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2375,12 +2465,12 @@
                 <p class="activity-price">Gratuit</p>
               </div>
               <p>Plage isolée à l’ouest — ~30 min de marche dans la jungle.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$0 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/469/32850791766_8c2a4c8dba_b.jpg" alt="Coucher de soleil, côte ouest Koh Rong Samloem" loading="lazy" />
+              <img src="https://live.staticflickr.com/469/32850791766_8c2a4c8dba_b.jpg" alt="Coucher de soleil, côte ouest Koh Rong Samloem" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2388,12 +2478,12 @@
                 <p class="activity-price">Gratuit</p>
               </div>
               <p>Coucher de soleil mythique — boissons ~$2–6 sur place.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$0 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/1603/24605962591_84b30289a9_b.jpg" alt="Quai Koh Rong Samloem (secteur M'Pay Bay)" loading="lazy" />
+              <img src="https://live.staticflickr.com/1603/24605962591_84b30289a9_b.jpg" alt="Quai Koh Rong Samloem (secteur M'Pay Bay)" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2401,44 +2491,53 @@
                 <p class="activity-price">$10–20</p>
               </div>
               <p>Village côté est — bateau-taxi obligatoire (~20–30 min).</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$20 – $40 · 2 pers.</strong></label></div>
           </div>
         </div>
 
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Hébergements</h3>
           <div class="hotels">
-            <div class="hotel">
+            <div class="hotel" data-nights="4" data-in-budget="0">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://edenbyehm.beachresort.net/" target="_blank" rel="noopener">Eden Beach Resort by EHM</a> ★4.5</p>
+                <p class="hotel-name"><a href="https://edenbyehm.beachresort.net/" target="_blank" rel="noopener noreferrer">Eden Beach Resort by EHM</a> ★4.5</p>
                 <p class="hotel-price">$65–120</p>
               </div>
               <p class="hotel-meta">~25–30 min à pied des plages</p>
               <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
-              <div class="hotel-top">
-                <p class="hotel-name"><a href="https://islandcenterpoint.asia/" target="_blank" rel="noopener noreferrer">Island Center Point</a> ★4.7</p>
-                <p class="hotel-price">$110–170</p>
-              </div>
-              <p class="hotel-meta">Position centrale sur l’île</p>
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
+            
+            
+          <div class="hotel" data-nights="4" data-in-budget="1">
+        <div class="hotel-top">
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/coco-bungalows.fr.html?label=koh-rong-samlon-biKnKGHNcKYFEY6rlpHbZgS166829843012%3Apl%3Ata%3Ap135%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-31526186669%3Alp9056035%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YSNxgVPQVI7AMnn1KDvPMRs&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;gclid=CjwKCAjwvZHTBhAlEiwA1ug5P7GWiRBJk3AcTkStBxaiAFBT99d9OrOkvFtXLtvHeSbXZ_hZnY7goBoCSzUQAvD_BwE&amp;aid=301664#map_closed" target="_blank" rel="noopener noreferrer"><h2 class="ddb12f4f86 pp-header__title" style="background-color: rgb(247, 244, 238); font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/coco-bungalows.fr.html?label=koh-rong-samlon-biKnKGHNcKYFEY6rlpHbZgS166829843012%3Apl%3Ata%3Ap135%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-31526186669%3Alp9056035%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YSNxgVPQVI7AMnn1KDvPMRs&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;gclid=CjwKCAjwvZHTBhAlEiwA1ug5P7GWiRBJk3AcTkStBxaiAFBT99d9OrOkvFtXLtvHeSbXZ_hZnY7goBoCSzUQAvD_BwE&amp;aid=301664" target="_blank" rel="noopener noreferrer" style="color: rgb(28, 58, 46); text-decoration-thickness: 1px;">Coco Bungalows</a></h2></a></p>
+          <p class="hotel-price">$65&nbsp;</p>
+        </div>
+        <p class="hotel-meta">Koh Rong Sanloem, Koh Rong Sanloem, Cambodge<div aria-hidden="true" class="dcf8588897" style="margin: -1px; position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); border: 0px;">Une fois votre réservation effectuée, toutes les informations sur l'établissement, y compris le numéro de téléphone et l'adresse, seront disponibles sur votre confirmation de réservation ainsi que dans votre compte.</div><div><br style="color: rgb(26, 26, 26); font-family: BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-size: 14px; white-space: break-spaces; background-color: rgb(240, 240, 240);"></div></p>
+      <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
-              <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.sunboobeachbungalows.com/" target="_blank" rel="noopener">SunBoo Beach Bungalows</a></p>
-                <p class="hotel-price">$40–90</p>
-              </div>
-              <p class="hotel-meta">Sunset Beach · bungalows bambou & tipis · solaire / off-grid</p>
-              <span class="hotel-atypical">Atypique · eco & yoga</span>
-            </div>
-          </div>
+            <span class="hotel-nights-sub">= $260 (4 nuits)</span>
+          </div></div></div>
           <p class="note">M'Pay Bay n’est pas accessible à pied — prévoir un bateau-taxi (~20–30 min). SunBoo : ~30 min de marche depuis Saracen (ou bateau-taxi).</p>
         </div>
 
-        <div class="reveal city-transport">
+        <div class="reveal city-transport visible">
           <h3 class="block-title">Transport depuis les hôtels</h3>
           <div class="transport-list">
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Saracen Bay</div>
               <div class="transport-modes">
                 <strong>À pied</strong> (pas de tuktuk entre plages)
@@ -2447,20 +2546,20 @@
                 <span class="hotel-alt"><strong>SunBoo</strong> — ~30 min de marche (ou bateau-taxi)</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Lazy Beach</div>
               <div class="transport-modes">
                 <strong>À pied</strong> ~30–35 min depuis Eden / Island Center Point · ~15–20 min depuis SunBoo (Gratuit)
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Sunset Beach</div>
               <div class="transport-modes">
                 <strong>À pied</strong> ~28–30 min depuis Eden / Island Center Point (Gratuit)
                 <span class="hotel-alt"><strong>SunBoo</strong> — sur place (Gratuit)</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">M'Pay Bay</div>
               <div class="transport-modes">
                 Bateau-taxi obligatoire ~20–30 min · <strong>~$10–20</strong>
@@ -2468,14 +2567,14 @@
               </div>
             </div>
           </div>
-          <div class="transport-leg">
+          <div class="transport-leg" style="position: relative;">
             <div class="transport-leg-top">
               <h4 class="transport-leg-title">Aller à Koh Ta Kiev</h4>
-              <p class="leg-price">$25–45</p>
+              <p class="leg-price">—</p>
             </div>
             <p class="transport-leg-note">Pas de liaison directe fiable — via Sihanoukville puis bateau Otres / Ream. Total ferry + bateau île.</p>
-            <div class="leg-option">
-              <div class="leg-option-name">1) Ferry Samloem → Sihanoukville <span>~$12–15 · ~45–60 min</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$12–$15">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">1) Ferry Samloem → Sihanoukville <span>~$12–15 · ~45–60 min</span></div>
               Même opérateurs :
               <a href="https://www.gtvcspeedboatcambodia.com/" target="_blank" rel="noopener">GTVC</a> ·
               <a href="https://buvasea.com/" target="_blank" rel="noopener">Buva Sea</a> ·
@@ -2485,12 +2584,12 @@
               </ul>
               <span class="hotel-alt"><strong>SunBoo</strong> — compter ~30 min de marche jusqu’à Saracen avant le ferry (ou bateau-taxi)</span>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">2) Port → Otres Beach <span>tuktuk ~$3–6 · ~15–25 min</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$3–$6">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">2) Port → Otres Beach <span>tuktuk ~$3–6 · ~15–25 min</span></div>
               Puis bateau longtail vers Koh Ta Kiev (~1 h).
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">3) Bateau vers l’île <span>~$10–15 A/R · départ ~11h–12h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$10–$15">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">3) Bateau vers l’île <span>~$10–15 A/R · départ ~11h–12h</span></div>
               <span class="hotel-alt"><strong>The Last Point</strong> — Banana Beach (Otres 2) à <strong>12h</strong> · <strong>$15</strong> A/R · <a href="https://www.lastpointisland.com/" target="_blank" rel="noopener">lastpointisland.com</a></span>
               <span class="hotel-alt"><strong>Kactus</strong> — transfert bateau souvent inclus / arrangé · <a href="https://www.kactuscambodia.com/" target="_blank" rel="noopener">kactuscambodia.com</a></span>
               <span class="hotel-alt"><strong>Koh Ta Kiev Island Resort</strong> — confirmer le quai Otres / Ream à la réservation</span>
@@ -2501,21 +2600,21 @@
     </article>
 
     <!-- 6. Koh Ta Kiev -->
-    <article class="city" id="koh-ta-kiev" data-nights="2">
+    <article class="city" id="koh-ta-kiev" data-nights="2" data-lat="10.485" data-lng="103.595" data-stop-name="Koh Ta Kiev" data-note="Paddle, Elephant Rock, snorkeling">
       <div class="city-visual">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Koh_Ta_Kiev_island_%28Cambodia%29.jpg/1280px-Koh_Ta_Kiev_island_%28Cambodia%29.jpg" alt="Île de Koh Ta Kiev" loading="lazy" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Koh_Ta_Kiev_island_%28Cambodia%29.jpg/1280px-Koh_Ta_Kiev_island_%28Cambodia%29.jpg" alt="Île de Koh Ta Kiev" loading="lazy">
         <div class="city-visual-label">
           <p class="num">Étape 06</p>
           <h2>Koh Ta Kiev</h2>
         </div>
       </div>
       <div class="city-body">
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Activités</h3>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/3900/14463693804_b98d8e1396_b.jpg" alt="Ponton à Koh Ta Kiev (The Last Point)" loading="lazy" />
+              <img src="https://live.staticflickr.com/3900/14463693804_b98d8e1396_b.jpg" alt="Ponton à Koh Ta Kiev (The Last Point)" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2524,12 +2623,12 @@
               </div>
               <p>Stand-up paddle — location sur place. Eaux calmes et mangroves.</p>
               <a href="https://www.lastpointisland.com/" target="_blank" rel="noopener">The Last Point →</a>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$10 – $30 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/8621/16084795888_f31dc0f519_b.jpg" alt="Côte de Koh Ta Kiev" loading="lazy" />
+              <img src="https://live.staticflickr.com/8621/16084795888_f31dc0f519_b.jpg" alt="Côte de Koh Ta Kiev" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2537,12 +2636,12 @@
                 <p class="activity-price">Gratuit</p>
               </div>
               <p>Formation rocheuse — randonnée côtière (~45–60 min).</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$0 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/4141/4734545591_25336ff493_b.jpg" alt="Snorkeling au Cambodge" loading="lazy" />
+              <img src="https://live.staticflickr.com/4141/4734545591_25336ff493_b.jpg" alt="Snorkeling au Cambodge" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2550,43 +2649,67 @@
                 <p class="activity-price">$5–15</p>
               </div>
               <p>Location masque / palmes. Récifs et poissons tropicaux autour de l’île.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$10 – $30 · 2 pers.</strong></label></div>
           </div>
         </div>
 
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Hébergements</h3>
           <div class="hotels">
-            <div class="hotel">
+            <div class="hotel" data-nights="2" data-in-budget="0">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/324099/koh-ta-kiev-island-resort/" target="_blank" rel="noopener">Koh Ta Kiev Island Resort</a> ★4.2</p>
+                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/324099/koh-ta-kiev-island-resort/" target="_blank" rel="noopener noreferrer">Koh Ta Kiev Island Resort</a> ★4.2</p>
                 <p class="hotel-price">$35–45</p>
               </div>
               <p class="hotel-meta">~30–40 min d’Elephant Rock à pied</p>
               <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
+            <div class="hotel" data-nights="2" data-in-budget="1">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.kactuscambodia.com/" target="_blank" rel="noopener">Kactus Cambodia</a> ★4.5</p>
-                <p class="hotel-price">$10–90</p>
+                <p class="hotel-name"><a href="https://www.kactuscambodia.com/" target="_blank" rel="noopener noreferrer">Kactus Cambodia</a> ★4.5</p>
+                <p class="hotel-price">$90</p>
               </div>
-              <p class="hotel-meta">Côté sunset · yoga & écovillage</p>
+              <p class="hotel-meta">Côté sunset · yoga &amp; écovillage</p>
+            <label class="budget-pick"><input type="checkbox"> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="0" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
+            <span class="hotel-nights-sub">= $180 (2 nuits)</span>
+          </div></div>
+            <div class="hotel" data-nights="2" data-in-budget="0">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.lastpointisland.com/" target="_blank" rel="noopener">The Last Point</a></p>
+                <p class="hotel-name"><a href="https://www.lastpointisland.com/" target="_blank" rel="noopener noreferrer">The Last Point</a></p>
                 <p class="hotel-price">$0–30</p>
               </div>
-              <p class="hotel-meta">Plage privée est · bungalows jungle & dortoir face mer</p>
+              <p class="hotel-meta">Plage privée est · bungalows jungle &amp; dortoir face mer</p>
               <span class="hotel-atypical">Atypique · camp island</span>
+            <label class="budget-pick"><input type="checkbox"> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="0" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
           </div>
         </div>
 
-        <div class="reveal city-transport">
+        <div class="reveal city-transport visible">
           <h3 class="block-title">Transport depuis les hôtels</h3>
           <div class="transport-list">
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">The Last Point (paddle / bar)</div>
               <div class="transport-modes">
                 <span class="hotel-alt"><strong>The Last Point</strong> — sur place (Gratuit)</span>
@@ -2594,7 +2717,7 @@
                 <span class="hotel-alt"><strong>Island Resort</strong> — ~10–20 min à pied</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Elephant Rock</div>
               <div class="transport-modes">
                 <strong>À pied</strong> (Gratuit)
@@ -2603,7 +2726,7 @@
                 <span class="hotel-alt"><strong>Kactus</strong> — ~45–60 min · 3,6 km (côté sunset)</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Arrivée / départ île</div>
               <div class="transport-modes">
                 <span class="hotel-alt"><strong>The Last Point</strong> — bateau Banana Beach Otres 2 à <strong>12h</strong> · <strong>$15</strong> A/R · <a href="https://www.lastpointisland.com/" target="_blank" rel="noopener">infos</a></span>
@@ -2612,25 +2735,25 @@
               </div>
             </div>
           </div>
-          <div class="transport-leg">
+          <div class="transport-leg" style="position: relative;">
             <div class="transport-leg-top">
               <h4 class="transport-leg-title">Aller à Kampot</h4>
-              <p class="leg-price">$6–60</p>
+              <p class="leg-price">—</p>
             </div>
             <p class="transport-leg-note">Bateau retour le matin (~8h–9h selon resort ; Last Point : confirmer sur place) puis bus / van depuis Otres.</p>
-            <div class="leg-option">
-              <div class="leg-option-name">Bateau → Otres / Ream <span>~$5–15 (souvent inclus A/R) · ~1 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$5–$15">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Bateau → Otres / Ream <span>~$5–15 (souvent inclus A/R) · ~1 h</span></div>
               Confirmer l’horaire de retour avec The Last Point, Kactus ou Island Resort la veille.
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Bus / van Sihanoukville → Kampot <span>~$6–12 · ~2–3 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$6–$12">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Bus / van Sihanoukville → Kampot <span>~$6–12 · ~2–3 h</span></div>
               <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a> ·
               <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a> ·
               <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a> ·
               <a href="https://12go.asia/" target="_blank" rel="noopener">12Go</a>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Taxi privé Otres → Kampot <span>~$40–60 · ~1,5–2 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$40–$60">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Taxi privé Otres → Kampot <span>~$40–60 · ~1,5–2 h</span></div>
               Plus simple avec bagages après le bateau — Grab ou chauffeur via l’hôtel.
             </div>
           </div>
@@ -2639,21 +2762,21 @@
     </article>
 
     <!-- 7. Kampot -->
-    <article class="city" id="kampot" data-nights="3">
+    <article class="city" id="kampot" data-nights="2" data-lat="10.6104" data-lng="104.1819" data-stop-name="Kampot" data-note="Bokor, Kep">
       <div class="city-visual">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Kampot_Riverfront_Scene_-_Kampot_-_Cambodia_%2848501740381%29.jpg/1280px-Kampot_Riverfront_Scene_-_Kampot_-_Cambodia_%2848501740381%29.jpg" alt="Front de rivière à Kampot" loading="lazy" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Kampot_Riverfront_Scene_-_Kampot_-_Cambodia_%2848501740381%29.jpg/1280px-Kampot_Riverfront_Scene_-_Kampot_-_Cambodia_%2848501740381%29.jpg" alt="Front de rivière à Kampot" loading="lazy">
         <div class="city-visual-label">
           <p class="num">Étape 07</p>
           <h2>Kampot</h2>
         </div>
       </div>
       <div class="city-body">
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Activités</h3>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/1406/5139324435_f642e0382c_b.jpg" alt="Bokor Palace, parc national de Bokor" loading="lazy" />
+              <img src="https://live.staticflickr.com/1406/5139324435_f642e0382c_b.jpg" alt="Bokor Palace, parc national de Bokor" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2661,48 +2784,64 @@
                 <p class="activity-price">$15–40</p>
               </div>
               <p>Demi-journée / journée tuktuk ou tour. Plateau, station coloniale, vue golfe.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$30 – $80 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/65535/48347833146_9070b11646_b.jpg" alt="Côte entre Kampot et Kep" loading="lazy" />
+              <img src="https://live.staticflickr.com/65535/48347833146_9070b11646_b.jpg" alt="Côte entre Kampot et Kep" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
-                <h3>Kampot & Kep (avec guide)</h3>
+                <h3>Kampot &amp; Kep (avec guide)</h3>
                 <p class="activity-price">$15–40</p>
               </div>
               <p>Poivre de Kampot et crabes à Kep. Scooter ~$5–10 / jour ou tuktuk demi-journée.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$30 – $80 · 2 pers.</strong></label></div>
           </div>
         </div>
 
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Hébergements</h3>
           <div class="hotels">
-            <div class="hotel">
+            <div class="hotel" data-nights="2" data-in-budget="1">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/272347/karma-traders-kampot/" target="_blank" rel="noopener">Karma Traders Kampot</a> ★4.6</p>
-                <p class="hotel-price">$8–20</p>
+                <p class="hotel-name"><a href="https://www.hostelworld.com/hostels/p/272347/karma-traders-kampot/" target="_blank" rel="noopener noreferrer">Karma Traders Kampot</a> ★4.6</p>
+                <p class="hotel-price">$23</p>
               </div>
               <p class="hotel-meta">~30 min de Bokor et de Kep</p>
               <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
+            <span class="hotel-nights-sub">= $46 (2 nuits)</span>
+          </div></div>
+            <div class="hotel" data-nights="0" data-in-budget="0">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.montagneboutique.asia/en/" target="_blank" rel="noopener">Montagne Boutique</a> ★4.4</p>
+                <p class="hotel-name"><a href="https://www.montagneboutique.asia/en/" target="_blank" rel="noopener noreferrer">Montagne Boutique</a> ★4.4</p>
                 <p class="hotel-price">$40–60</p>
               </div>
               <p class="hotel-meta">Boutique hôtel cosy en ville</p>
+            <label class="budget-pick"><input type="checkbox"> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="0" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
           </div>
         </div>
 
-        <div class="reveal city-transport">
+        <div class="reveal city-transport visible">
           <h3 class="block-title">Transport depuis les hôtels</h3>
           <div class="transport-list">
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Parc de Bokor</div>
               <div class="transport-modes">
                 Scooter <strong>~$5–10 / jour</strong> · tuktuk / voiture journée <strong>~$15–25</strong>
@@ -2710,7 +2849,7 @@
                 <span class="hotel-alt"><strong>Montagne Boutique</strong> — ~30 min · 16,8 km</span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Kep</div>
               <div class="transport-modes">
                 Scooter ou tuktuk · A/R / demi-journée <strong>~$15–25</strong>
@@ -2719,26 +2858,26 @@
               </div>
             </div>
           </div>
-          <div class="transport-leg">
+          <div class="transport-leg" style="position: relative;">
             <div class="transport-leg-top">
               <h4 class="transport-leg-title">Aller à Phnom Penh</h4>
-              <p class="leg-price">$7–80</p>
+              <p class="leg-price">—</p>
             </div>
             <p class="transport-leg-note">Plusieurs bus / jour. Départs tôt le matin fréquents.</p>
-            <div class="leg-option">
-              <div class="leg-option-name">Bus VIP <span>~$7–12 · ~3–4 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$7–$12">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Bus VIP <span>~$7–12 · ~3–4 h</span></div>
               <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a> ·
               <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a> ·
               <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a> ·
               <a href="https://12go.asia/" target="_blank" rel="noopener">12Go</a>
               <span class="hotel-alt">Pick-up possible près de Karma Traders / Montagne — demander à la réception</span>
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Minivan / taxi privé <span>~$50–80 · ~2,5–3,5 h</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$50–$80">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Minivan / taxi privé <span>~$50–80 · ~2,5–3,5 h</span></div>
               Porte-à-porte jusqu’à Cambodiana, Pavilion ou Apsor.
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Via Kep (si jour d’excursion) <span>+~30–45 min</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$30–$45">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Via Kep (si jour d’excursion) <span>+~30–45 min</span></div>
               Possible de remonter Kep → Phnom Penh en bus / van (moins de fréquences).
             </div>
           </div>
@@ -2747,21 +2886,21 @@
     </article>
 
     <!-- 8. Phnom Penh -->
-    <article class="city" id="phnom-penh" data-nights="4">
+    <article class="city" id="phnom-penh" data-nights="7" data-lat="11.5564" data-lng="104.9282" data-stop-name="Phnom Penh" data-note="Palais Royal, musée, croisière">
       <div class="city-visual">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Royal_Palace%2C_Phnom_Penh_Cambodia_1.jpg/1280px-Royal_Palace%2C_Phnom_Penh_Cambodia_1.jpg" alt="Palais Royal de Phnom Penh" loading="lazy" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Royal_Palace%2C_Phnom_Penh_Cambodia_1.jpg/1280px-Royal_Palace%2C_Phnom_Penh_Cambodia_1.jpg" alt="Palais Royal de Phnom Penh" loading="lazy">
         <div class="city-visual-label">
           <p class="num">Étape 08</p>
           <h2>Phnom Penh</h2>
         </div>
       </div>
       <div class="city-body">
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Activités</h3>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/4318/35761843151_6122367723_b.jpg" alt="Palais Royal, Phnom Penh" loading="lazy" />
+              <img src="https://live.staticflickr.com/4318/35761843151_6122367723_b.jpg" alt="Palais Royal, Phnom Penh" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2769,12 +2908,12 @@
                 <p class="activity-price">$10</p>
               </div>
               <p>Entrée. Résidence royale, Pagode d’Argent et architecture khmère.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$20 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/173/408944028_dbf51c394d_b.jpg" alt="Musée national, Phnom Penh" loading="lazy" />
+              <img src="https://live.staticflickr.com/173/408944028_dbf51c394d_b.jpg" alt="Musée national, Phnom Penh" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2783,12 +2922,12 @@
               </div>
               <p>Adultes $10 · 10–17 ans $5. Sculptures khmères et histoire.</p>
               <a href="https://www.nmc.gov.kh/" target="_blank" rel="noopener">Musée national →</a>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$10 – $20 · 2 pers.</strong></label></div>
           </div>
 
-          <div class="activity">
+          <div class="activity visible" data-in-budget="1">
             <div class="activity-thumb">
-              <img src="https://live.staticflickr.com/3775/13240794274_8d835f8d0b_b.jpg" alt="Coucher de soleil sur Phnom Penh" loading="lazy" />
+              <img src="https://live.staticflickr.com/3775/13240794274_8d835f8d0b_b.jpg" alt="Coucher de soleil sur Phnom Penh" loading="lazy">
             </div>
             <div class="activity-info">
               <div class="activity-top">
@@ -2796,42 +2935,66 @@
                 <p class="activity-price">$15–30</p>
               </div>
               <p>Selon formule (croisière / dîner). Vue confluence Tonlé Sap / Mékong.</p>
-            </div>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>$30 – $60 · 2 pers.</strong></label></div>
           </div>
         </div>
 
-        <div class="reveal">
+        <div class="reveal visible">
           <h3 class="block-title">Hébergements</h3>
           <div class="hotels">
-            <div class="hotel">
+            <div class="hotel" data-nights="4" data-in-budget="0">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/hotel-cambodiana.html" target="_blank" rel="noopener">Hotel Cambodiana</a> ★4.2</p>
+                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/hotel-cambodiana.html" target="_blank" rel="noopener noreferrer">Hotel Cambodiana</a> ★4.2</p>
                 <p class="hotel-price">$65–120</p>
               </div>
               <p class="hotel-meta">Embarcadère croisière juste devant</p>
               <span class="hotel-pick">Meilleur rapport emplacement / prix</span>
+            <label class="budget-pick"><input type="checkbox" checked=""> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="2" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
+            <div class="hotel" data-nights="0" data-in-budget="0">
               <div class="hotel-top">
                 <p class="hotel-name"><a href="https://www.thepavilion.asia/" target="_blank" rel="noopener noreferrer">Pavilion Hotel</a> ★4.7</p>
                 <p class="hotel-price">$70–115</p>
               </div>
               <p class="hotel-meta">7 min à pied du Palais Royal</p>
+            <label class="budget-pick"><input type="checkbox"> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="0" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
-            <div class="hotel">
+            <span class="hotel-nights-sub">exclu du budget</span>
+          </div></div>
+            <div class="hotel" data-nights="3" data-in-budget="1">
               <div class="hotel-top">
-                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/apsor-palace-hotel.html" target="_blank" rel="noopener">Apsor Palace Hotel</a> ★4.1</p>
+                <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/apsor-palace-hotel.html" target="_blank" rel="noopener noreferrer">Apsor Palace Hotel</a> ★4.1</p>
                 <p class="hotel-price">$40–115</p>
               </div>
               <p class="hotel-meta">Proche Palais Royal (~7 min à pied)</p>
+            <label class="budget-pick"><input type="checkbox"> Dans le budget · <strong>—</strong></label><div class="hotel-nights">
+            <span class="hotel-nights-label">Nuits</span>
+            <div class="hotel-nights-ctrl">
+              <button type="button" data-night-act="minus" aria-label="Moins une nuit">−</button>
+              <input type="number" min="0" max="60" value="0" aria-label="Nombre de nuits">
+              <button type="button" data-night-act="plus" aria-label="Plus une nuit">+</button>
             </div>
+            <span class="hotel-nights-sub">= $120 – $345 (3 nuits)</span>
+          </div></div>
           </div>
         </div>
 
-        <div class="reveal city-transport">
+        <div class="reveal city-transport visible">
           <h3 class="block-title">Transport depuis les hôtels</h3>
           <div class="transport-list">
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Palais Royal</div>
               <div class="transport-modes">
                 <span class="hotel-alt"><strong>Pavilion</strong> — à pied ~7 min · 0,56 km (Gratuit)</span>
@@ -2839,7 +3002,7 @@
                 <span class="hotel-alt"><strong>Hotel Cambodiana</strong> — à pied ~9 min · 0,71 km · ou Grab <strong>~$1–3</strong></span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Musée national</div>
               <div class="transport-modes">
                 <span class="hotel-alt"><strong>Pavilion</strong> — à pied ~10 min</span>
@@ -2847,7 +3010,7 @@
                 <span class="hotel-alt"><strong>Cambodiana</strong> — à pied ~13 min · ou tuktuk <strong>~$1–3</strong></span>
               </div>
             </div>
-            <div class="transport-row">
+            <div class="transport-row" data-in-budget="0"><label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label>
               <div class="transport-dest">Croisière sunset</div>
               <div class="transport-modes">
                 <span class="hotel-alt"><strong>Hotel Cambodiana</strong> — embarcadère <strong>devant l’hôtel</strong> (0 $)</span>
@@ -2856,18 +3019,18 @@
               </div>
             </div>
           </div>
-          <div class="transport-leg">
+          <div class="transport-leg" style="position: relative;">
             <div class="transport-leg-top">
               <h4 class="transport-leg-title">Départ / aéroport</h4>
-              <p class="leg-price">$9–25</p>
+              <p class="leg-price">—</p>
             </div>
             <p class="transport-leg-note">Aéroport PNH ~30–60 min selon trafic.</p>
-            <div class="leg-option">
-              <div class="leg-option-name">Grab / PassApp / taxi <span>~$9–15</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$9–$15">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Grab / PassApp / taxi <span>~$9–15</span></div>
               Depuis Cambodiana, Pavilion ou Apsor — tarif proche pour les trois (centre-ville).
             </div>
-            <div class="leg-option">
-              <div class="leg-option-name">Transfert hôtel <span>~$15–25</span></div>
+            <div class="leg-option" data-in-budget="0" data-price="$15–$25">
+              <label class="budget-pick"><input type="checkbox"> Choisir · <strong>exclu</strong></label><div class="leg-option-name">Transfert hôtel <span>~$15–25</span></div>
               Réserver la veille à la réception — pratique tôt le matin.
             </div>
           </div>
@@ -2885,7 +3048,7 @@
 
       <div class="practical-grid">
         <ul>
-          <li>Haute saison : réserver tôt, surtout Rainbow Lodge, Canvas & Orchids et les hôtels sur les îles.</li>
+          <li>Haute saison : réserver tôt, surtout Rainbow Lodge, Canvas &amp; Orchids et les hôtels sur les îles.</li>
           <li>Noël / Nouvel An : anticipation encore plus importante pour les hébergements.</li>
           <li>Comparer les prix sur Booking, Agoda et les sites officiels avant de réserver.</li>
           <li>Transferts bateau à prévoir : Sihanoukville ↔ Koh Rong Samloem ↔ Koh Ta Kiev, et pour Tatai / Koh Kong.</li>
@@ -2895,25 +3058,25 @@
           <li>Bus longue distance : <a href="https://www.giantibis.com/" target="_blank" rel="noopener">Giant Ibis</a>, <a href="https://larrytabus.com/" target="_blank" rel="noopener">Larryta</a>, <a href="https://www.vireakbuntham.com/" target="_blank" rel="noopener">Virak Buntham</a>.</li>
         </ul>
         <div class="budget-stack">
-          <div class="budget-box" data-budget="hotels">
+          <div class="budget-box" data-budget="hotels" data-auto="true">
             <h3>Budget hébergement</h3>
-            <p class="budget-amount">$700 – $1200</p>
-            <p class="budget-note">Auto · cases cochées × nuits choisies</p>
+            <p class="budget-amount">$774 – $999</p>
+            <p class="budget-note">Choix · 7 hôtels · 19 nuits · 8 étapes</p>
           </div>
-          <div class="budget-box" data-budget="activities">
+          <div class="budget-box" data-budget="activities" data-auto="true">
             <h3>Budget activités</h3>
-            <p class="budget-amount">$350 – $800</p>
-            <p class="budget-note">Auto · activités cochées × 2 personnes</p>
+            <p class="budget-amount">$467 – $739</p>
+            <p class="budget-note">Choix · 23 activités × 2 personnes</p>
           </div>
-          <div class="budget-box" data-budget="transport">
+          <div class="budget-box" data-budget="transport" data-auto="true">
             <h3>Budget transport</h3>
-            <p class="budget-amount">$200 – $650</p>
-            <p class="budget-note">Auto · trajets cochés × 2 personnes</p>
+            <p class="budget-amount">$256 – $258</p>
+            <p class="budget-note">Choix · 2 trajets × 2 personnes</p>
           </div>
-          <div class="budget-box budget-total" data-budget="total">
+          <div class="budget-box budget-total" data-budget="total" data-auto="true">
             <h3>Total estimé</h3>
-            <p class="budget-amount">$1250 – $2650</p>
-            <p class="budget-note">Uniquement les choix cochés · hors vols &amp; repas</p>
+            <p class="budget-amount">$1497 – $1996</p>
+            <p class="budget-note">Uniquement les éléments cochés · hors vols &amp; repas</p>
           </div>
         </div>
       </div>
@@ -2921,7 +3084,7 @@
   </section>
 
   <footer>
-    <p><span>Cambodge</span> — Voyage décembre · 8 étapes · temples, jungle & îles</p>
+    <p><span>Cambodge</span> — Voyage décembre · 23 jours · 22 nuits · 8 étapes</p>
   </footer>
 
   <div class="fab-bar" id="fabBar">
@@ -2942,6 +3105,10 @@
     <div class="trip-pop-head">
       <h3>Répartition du séjour</h3>
       <button type="button" class="trip-pop-close" id="tripPopClose" aria-label="Fermer">×</button>
+    </div>
+    <div class="trip-start-row">
+      <label for="tripStartDate">Date de début</label>
+      <input type="date" id="tripStartDate" />
     </div>
     <div class="trip-summary">
       <div>
@@ -2966,7 +3133,7 @@
       <button type="button" class="primary" id="tripDistribute">Répartir équitablement</button>
       <button type="button" id="tripApplyHotels">Appliquer aux hôtels</button>
     </div>
-    <p class="trip-pop-note">23 jours ≈ 22 nuits (arrivée J1, départ le dernier jour). Ajuste les nuits par ville : ≈ N nuits = N à N+1 jours sur place.</p>
+    <p class="trip-pop-note">23 jours ≈ 22 nuits. Les dates se calculent depuis la date de début + nuits par ville (départ = arrivée + nuits).</p>
   </aside>
 
   <aside class="budget-pop" id="budgetPop" aria-live="polite" hidden>
@@ -2995,7 +3162,7 @@
   </aside>
 
   <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
-    <p class="edit-hint">En édition : clique le prix transport (ex. $7–12) pour le modifier · pers. · « Calculer le budget »</p>
+    <p class="edit-hint">Édition : transports hôtel↔ville, trajets, prix, dates · puis Enregistrer</p>
     <button type="button" class="primary" id="editSave">Enregistrer</button>
     <button type="button" id="editAddCity">+ Ville</button>
     <button type="button" id="editDownload">Télécharger HTML</button>
@@ -3160,7 +3327,16 @@
           L.marker([s.lat, s.lng], { icon })
             .addTo(mapRouteLayer)
             .bindPopup(
-              `<strong>${s.n}. ${s.name}</strong>${s.note ? "<br>" + s.note : ""}<br>${s.nights || 0} nuit${(s.nights || 0) > 1 ? "s" : ""} · <a href="#${s.id}">Voir l'étape →</a>`
+            .bindPopup(
+              `<strong>${s.n}. ${s.name}</strong>${s.note ? "<br>" + s.note : ""}${
+                document.getElementById(s.id)?.dataset.arrive
+                  ? "<br>" +
+                    (document.getElementById(s.id).dataset.arrive || "") +
+                    " → " +
+                    (document.getElementById(s.id).dataset.depart || "")
+                  : ""
+              }<br>${s.nights || 0} nuit${(s.nights || 0) > 1 ? "s" : ""} · <a href="#${s.id}">Voir l'étape →</a>`
+            );
             );
         });
 
@@ -3197,11 +3373,13 @@
     window.addEventListener("resize", () => map.invalidateSize());
 
     /* —— Mode édition (villes + budget auto) —— */
-    const EDIT_KEY = "voyageCambodgeContent_v9";
-    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4", "voyageCambodgeContent_v5", "voyageCambodgeContent_v6", "voyageCambodgeContent_v7", "voyageCambodgeContent_v8"];
+    const EDIT_KEY = "voyageCambodgeContent_v10";
+    const OLD_EDIT_KEYS = ["voyageCambodgeContent_v1", "voyageCambodgeContent_v2", "voyageCambodgeContent_v3", "voyageCambodgeContent_v4", "voyageCambodgeContent_v5", "voyageCambodgeContent_v6", "voyageCambodgeContent_v7", "voyageCambodgeContent_v8", "voyageCambodgeContent_v9"];
     const PEOPLE_KEY = "voyageCambodgePeople";
+    const TRIP_START_KEY = "voyageCambodgeTripStart";
     const TRIP_DAYS = 23;
     const TRIP_NIGHTS = 22;
+    const DEFAULT_TRIP_START = "2026-12-01";
     const DEFAULT_CITY_NIGHTS = {
       "siem-reap": 4,
       battambang: 2,
@@ -3310,6 +3488,84 @@
       } catch (_) {}
       if (document.body.dataset.people) p = parseInt(document.body.dataset.people, 10) || p;
       setPeople(p);
+    }
+
+    function parseISODate(str) {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec((str || "").trim());
+      if (!m) return null;
+      const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+      return Number.isNaN(d.getTime()) ? null : d;
+    }
+
+    function formatISODate(d) {
+      const y = d.getFullYear();
+      const mo = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${mo}-${day}`;
+    }
+
+    function formatFRDate(d) {
+      return d.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+    }
+
+    function addDays(d, n) {
+      const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      x.setDate(x.getDate() + n);
+      return x;
+    }
+
+    function getTripStart() {
+      return document.body.dataset.tripStart || DEFAULT_TRIP_START;
+    }
+
+    function setTripStart(iso, { recompute = true } = {}) {
+      const d = parseISODate(iso) || parseISODate(DEFAULT_TRIP_START);
+      const val = formatISODate(d);
+      document.body.dataset.tripStart = val;
+      const input = document.getElementById("tripStartDate");
+      if (input && input.value !== val) input.value = val;
+      try {
+        localStorage.setItem(TRIP_START_KEY, val);
+      } catch (_) {}
+      if (recompute) {
+        recomputeCityDates();
+        refreshTripPanel();
+      }
+    }
+
+    function loadTripStart() {
+      let start = DEFAULT_TRIP_START;
+      try {
+        const raw = localStorage.getItem(TRIP_START_KEY);
+        if (raw && parseISODate(raw)) start = raw;
+      } catch (_) {}
+      if (document.body.dataset.tripStart && parseISODate(document.body.dataset.tripStart)) {
+        start = document.body.dataset.tripStart;
+      }
+      setTripStart(start, { recompute: false });
+    }
+
+    function recomputeCityDates() {
+      let cursor = parseISODate(getTripStart()) || parseISODate(DEFAULT_TRIP_START);
+      document.querySelectorAll(".cities-wrap .city").forEach((city) => {
+        const nights = getCityNights(city);
+        const arrive = cursor;
+        const depart = addDays(arrive, nights);
+        city.dataset.arrive = formatISODate(arrive);
+        city.dataset.depart = formatISODate(depart);
+        let badge = city.querySelector(".city-dates");
+        const label = city.querySelector(".city-visual-label");
+        if (label) {
+          if (!badge) {
+            badge = document.createElement("p");
+            badge.className = "city-dates";
+            label.appendChild(badge);
+          }
+          if (nights <= 0) badge.textContent = `Arrivée ${formatFRDate(arrive)} · passage`;
+          else badge.textContent = `${formatFRDate(arrive)} → ${formatFRDate(depart)} · ${nights} nuit${nights > 1 ? "s" : ""}`;
+        }
+        cursor = depart; // prochaine ville le jour du départ
+      });
     }
 
     function optionLabel(opt) {
@@ -3554,6 +3810,7 @@
         .reduce((a, h) => a + (parseInt(h.dataset.nights || "0", 10) || 0), 0);
       city.dataset.nights = String(sum);
       updateCityStayUI(city);
+      recomputeCityDates();
       refreshTripPanel();
     }
 
@@ -3562,6 +3819,7 @@
       city.dataset.nights = String(n);
       updateCityStayUI(city);
       if (applyHotels) syncHotelsFromCity(city);
+      recomputeCityDates();
       refreshTripPanel();
       scheduleBudget();
     }
@@ -3578,6 +3836,7 @@
         }
         city.querySelectorAll(".city-stay").forEach((el) => el.remove());
       });
+      recomputeCityDates();
       refreshTripPanel();
     }
 
@@ -3590,6 +3849,8 @@
       const leftEl = document.getElementById("tripLeftLabel");
       const usedBox = document.getElementById("tripUsedBox");
       const leftBox = document.getElementById("tripLeftBox");
+      const startInput = document.getElementById("tripStartDate");
+      if (startInput && startInput.value !== getTripStart()) startInput.value = getTripStart();
       if (daysEl) daysEl.textContent = `${TRIP_DAYS} jours`;
       if (nightsEl) nightsEl.textContent = `${TRIP_NIGHTS} nuits`;
       if (usedEl) usedEl.textContent = `${used} / ${TRIP_NIGHTS}`;
@@ -3610,8 +3871,13 @@
             city.dataset.stopName ||
             city.querySelector(".city-visual-label h2")?.textContent?.trim() ||
             city.id;
+          const arrive = city.dataset.arrive || "—";
+          const depart = city.dataset.depart || "—";
+          const a = parseISODate(arrive);
+          const b = parseISODate(depart);
+          const dateTxt = a && b ? `${formatFRDate(a)} → ${formatFRDate(b)}` : arrive;
           return `<div class="trip-city-row" data-trip-city="${city.id}">
-            <a href="#${city.id}">${name}<span class="trip-city-meta">${nightsToDaysHint(n)}</span></a>
+            <a href="#${city.id}">${name}<span class="trip-city-meta">${nightsToDaysHint(n)}</span><span class="trip-city-dates">${dateTxt}</span></a>
             <div class="hotel-nights-ctrl">
               <button type="button" data-trip-night-act="minus" aria-label="Moins">−</button>
               <input type="number" min="0" max="${TRIP_NIGHTS}" value="${n}" data-trip-night-input aria-label="Nuits" />
@@ -3647,6 +3913,7 @@
         });
       }
       refreshTripPanel();
+      recomputeCityDates();
       scheduleBudget();
       showToast("Nuits réparties · 22 nuits au total");
     }
@@ -3897,6 +4164,7 @@
           cities: citiesClone.innerHTML,
           budget: budgetClone.innerHTML,
           people: getPeople(),
+          tripStart: getTripStart(),
           savedAt: new Date().toISOString(),
         })
       );
@@ -3911,6 +4179,7 @@
         if (data.cities) citiesWrap.innerHTML = data.cities;
         if (data.budget) budgetStack.innerHTML = data.budget;
         if (data.people) setPeople(data.people);
+        if (data.tripStart) setTripStart(data.tripStart, { recompute: false });
         repairHotelLinks(citiesWrap);
         seedCityCoords();
         document.querySelectorAll(".reveal").forEach((el) => {
@@ -3920,6 +4189,7 @@
         document.querySelectorAll(".activity").forEach((el) => el.classList.add("visible"));
         rebuildItineraryUI();
         ensureHotelNights();
+        recomputeCityDates();
         recalculateBudget();
       } catch (_) {
         /* ignore */
@@ -4025,12 +4295,27 @@
         item.appendChild(btn);
       });
 
-      scope.querySelectorAll(".transport-leg").forEach((leg) => {
-        if (leg.querySelector(".edit-del")) return;
+      scope.querySelectorAll(".transport-row").forEach((row) => {
+        if (row.querySelector(".edit-del")) return;
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "edit-del";
         btn.textContent = "Supprimer";
+        btn.addEventListener("click", () => {
+          if (confirm("Supprimer ce transport local ?")) {
+            row.remove();
+            afterContentChange();
+          }
+        });
+        row.appendChild(btn);
+      });
+
+      scope.querySelectorAll(".transport-leg").forEach((leg) => {
+        if (leg.querySelector(":scope > .edit-del")) return;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "edit-del";
+        btn.textContent = "Supprimer trajet";
         btn.addEventListener("click", () => {
           if (confirm("Supprimer ce trajet ?")) {
             leg.remove();
@@ -4039,6 +4324,21 @@
         });
         leg.style.position = "relative";
         leg.appendChild(btn);
+      });
+
+      scope.querySelectorAll(".leg-option").forEach((opt) => {
+        if (opt.querySelector(".edit-del")) return;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "edit-del";
+        btn.textContent = "Supprimer";
+        btn.addEventListener("click", () => {
+          if (confirm("Supprimer cette option de transport ?")) {
+            opt.remove();
+            afterContentChange();
+          }
+        });
+        opt.appendChild(btn);
       });
 
       scope.querySelectorAll(".hotel-name").forEach((nameEl) => {
@@ -4121,21 +4421,67 @@
         }
 
         const transport = city.querySelector(".city-transport");
-        if (transport && !transport.querySelector(".edit-add-transport")) {
+        if (transport) {
+          const list = transport.querySelector(".transport-list");
+          if (list && !transport.querySelector(".edit-add-local")) {
+            const rowLocal = document.createElement("div");
+            rowLocal.className = "edit-add-row edit-add-local";
+            const btnLocal = document.createElement("button");
+            btnLocal.type = "button";
+            btnLocal.className = "edit-add-btn";
+            btnLocal.textContent = "+ Transport hôtel → lieu";
+            btnLocal.addEventListener("click", () => {
+              list.insertAdjacentHTML(
+                "beforeend",
+                `<div class="transport-row" data-in-budget="0">
+                  <div class="transport-dest">Nouveau lieu</div>
+                  <div class="transport-modes">Tuktuk / taxi · <strong>~$0–0</strong></div>
+                </div>`
+              );
+              afterContentChange();
+            });
+            rowLocal.appendChild(btnLocal);
+            list.after(rowLocal);
+          }
+
+          if (!transport.querySelector(".edit-add-transport")) {
+            const row = document.createElement("div");
+            row.className = "edit-add-row edit-add-transport";
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "edit-add-btn";
+            btn.textContent = "+ Trajet vers autre ville";
+            btn.addEventListener("click", () => {
+              const next = prompt("Vers quelle ville ?", "Prochaine étape");
+              transport.insertAdjacentHTML("beforeend", transportLegTemplate(next || "…"));
+              afterContentChange();
+            });
+            row.appendChild(btn);
+            transport.appendChild(row);
+          }
+        }
+
+        city.querySelectorAll(".transport-leg").forEach((leg) => {
+          if (leg.querySelector(".edit-add-option")) return;
           const row = document.createElement("div");
-          row.className = "edit-add-row edit-add-transport";
+          row.className = "edit-add-row edit-add-option";
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "edit-add-btn";
-          btn.textContent = "+ Ajouter un trajet";
+          btn.textContent = "+ Option transport";
           btn.addEventListener("click", () => {
-            const next = prompt("Vers quelle ville ?", "Prochaine étape");
-            transport.insertAdjacentHTML("beforeend", transportLegTemplate(next || "…"));
+            leg.insertAdjacentHTML(
+              "beforeend",
+              `<div class="leg-option" data-in-budget="0">
+                <div class="leg-option-name">Nouvelle option <span>~$0–0</span></div>
+                Détails du trajet…
+              </div>`
+            );
             afterContentChange();
           });
           row.appendChild(btn);
-          transport.appendChild(row);
-        }
+          leg.appendChild(row);
+        });
       });
     }
 
@@ -4153,29 +4499,40 @@
         ".leg-option-name",
         ".leg-option-name span",
         ".transport-dest",
+        ".transport-modes",
+        ".transport-leg-note",
         ".transport-leg-title",
+        ".hotel-alt",
         ".block-title",
         ".city-visual-label h2",
       ];
       root.querySelectorAll(selectors.join(",")).forEach((el) => {
+        if (el.closest("a") && !el.matches(".hotel-name a")) return;
         el.setAttribute("contenteditable", "true");
         el.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" && !e.shiftKey && el.tagName !== "P") {
+          if (e.key === "Enter" && !e.shiftKey && el.tagName !== "P" && !el.classList.contains("transport-modes")) {
             e.preventDefault();
             el.blur();
           }
         });
         el.addEventListener("blur", () => {
-          if (el.classList.contains("activity-price") || el.classList.contains("leg-price") || el.classList.contains("hotel-price")) {
-            scheduleBudget();
-          }
-          if (el.classList.contains("leg-option-name") || el.matches(".leg-option-name span")) {
-            const opt = el.closest(".leg-option");
-            const span = opt?.querySelector(".leg-option-name span") || (el.matches(".leg-option-name span") ? el : null);
-            if (opt && span) {
-              const formatted = formatPriceInput(parseMoney(span.textContent));
-              if (formatted) opt.dataset.price = formatted;
-              else opt.dataset.price = span.textContent.trim();
+          if (
+            el.classList.contains("activity-price") ||
+            el.classList.contains("leg-price") ||
+            el.classList.contains("hotel-price") ||
+            el.classList.contains("transport-modes") ||
+            el.classList.contains("hotel-alt") ||
+            el.classList.contains("leg-option-name") ||
+            el.matches(".leg-option-name span")
+          ) {
+            if (el.classList.contains("leg-option-name") || el.matches(".leg-option-name span")) {
+              const opt = el.closest(".leg-option");
+              const span = opt?.querySelector(".leg-option-name span") || (el.matches(".leg-option-name span") ? el : null);
+              if (opt && span) {
+                const formatted = formatPriceInput(parseMoney(span.textContent));
+                if (formatted) opt.dataset.price = formatted;
+                else opt.dataset.price = span.textContent.trim();
+              }
             }
             scheduleBudget();
           }
@@ -4183,6 +4540,19 @@
             const city = el.closest(".city");
             if (city) city.dataset.stopName = el.textContent.trim();
             rebuildItineraryUI();
+          }
+        });
+      });
+
+      // Texte libre des options (hors titre)
+      root.querySelectorAll(".leg-option").forEach((opt) => {
+        [...opt.childNodes].forEach((node) => {
+          if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+            const span = document.createElement("span");
+            span.className = "leg-option-detail";
+            span.textContent = node.textContent.trim();
+            span.setAttribute("contenteditable", "true");
+            node.replaceWith(span);
           }
         });
       });
@@ -4260,6 +4630,7 @@
     document.getElementById("tripPopClose").addEventListener("click", closeTripPop);
     document.getElementById("tripDistribute").addEventListener("click", distributeCityNights);
     document.getElementById("tripApplyHotels").addEventListener("click", applyAllCityNightsToHotels);
+    document.getElementById("tripStartDate").addEventListener("change", (e) => setTripStart(e.target.value));
     document.getElementById("tripPop").addEventListener("click", (e) => {
       const row = e.target.closest("[data-trip-city]");
       if (!row) return;
@@ -4291,22 +4662,27 @@
       if (!confirm("Effacer tes modifications et revenir à la version d’origine ?")) return;
       localStorage.removeItem(EDIT_KEY);
       localStorage.removeItem(PEOPLE_KEY);
+      localStorage.removeItem(TRIP_START_KEY);
       OLD_EDIT_KEYS.forEach((k) => localStorage.removeItem(k));
       location.reload();
     });
 
     repairHotelLinks(document);
+    loadTripStart();
     loadPeople();
     loadContent();
     repairHotelLinks(document);
     seedCityCoords();
     rebuildItineraryUI();
     ensureHotelNights();
+    recomputeCityDates();
     if (!localStorage.getItem(EDIT_KEY)) {
       document.querySelectorAll(".cities-wrap .city").forEach((city) => syncHotelsFromCity(city));
       refreshTripPanel();
+      recomputeCityDates();
     }
     // Budget affiché seulement via le bouton « Calculer le budget »
   </script>
-</body>
-</html>
+
+
+</body></html>
