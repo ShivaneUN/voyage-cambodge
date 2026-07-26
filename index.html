@@ -3569,9 +3569,23 @@
     }
 
     function formatBudgetLabel(min, max) {
-      // En édition : euros seulement. Sinon : € + riel dans le résumé.
+      // Labels à côté des cases : € + riel (sauf en édition pour faciliter la saisie)
       if (document.body.classList.contains("edit-mode")) return formatEuroOnly(min, max);
       return formatRange(min, max);
+    }
+
+    function setBudget(key, min, max, note) {
+      const box = budgetStack.querySelector(`[data-budget="${key}"]`);
+      if (box) {
+        const amount = box.querySelector(".budget-amount");
+        const noteEl = box.querySelector(".budget-note");
+        // Toujours € + riel pour hébergement, activités, transport et total
+        if (amount) amount.textContent = formatRange(min, max);
+        if (noteEl && note) noteEl.textContent = note;
+        box.dataset.auto = "true";
+      }
+      const popRow = document.querySelector(`.budget-pop-row[data-pop="${key}"] strong`);
+      if (popRow) popRow.textContent = formatRange(min, max);
     }
 
     function parseMoney(text) {
@@ -3678,9 +3692,6 @@
         if (el.closest?.('[contenteditable="true"]') && document.activeElement === el) return;
         const t = el.textContent || "";
         if (!/៛|≈/.test(t) && !/\$/.test(t)) return;
-        if (/exclu|coché|nuit/i.test(t) && /៛|≈/.test(t)) {
-          // sous-totaux hôtels : garder le texte utile en € seulement
-        }
         if (el.classList.contains("hotel-nights-sub")) {
           if (/exclu|coché|mets/i.test(t)) return;
           const p = parseMoney(t);
@@ -3693,7 +3704,6 @@
         }
         el.textContent = euroOnlyFromText(t);
       });
-      // Modes / textes libres : retirer seulement le suffixe · ≈ … ៛
       root.querySelectorAll(".transport-modes, .hotel-alt, .transport-leg-note, .activity-info > p, .leg-option-detail").forEach((el) => {
         if (!/៛|≈/.test(el.textContent || "")) return;
         const walk = (node) => {
@@ -3702,6 +3712,50 @@
             return;
           }
           if (node.nodeType === Node.ELEMENT_NODE && !node.matches?.("script,style")) {
+            node.childNodes.forEach(walk);
+          }
+        };
+        walk(el);
+      });
+    }
+
+    function addRielBesideEuros(text) {
+      if (!text || /៛/.test(text)) return text;
+      return text.replace(
+        /(~?)€\s*(\d+(?:[.,]\d+)?)(?:\s*[–\-—]\s*€?\s*(\d+(?:[.,]\d+)?))?/g,
+        (_, tilde, a, b) => {
+          const min = parseFloat(String(a).replace(",", "."));
+          const max = b ? parseFloat(String(b).replace(",", ".")) : min;
+          return (tilde || "") + formatRange(min, max);
+        }
+      );
+    }
+
+    function decoratePricesWithRiel(root = document) {
+      if (document.body.classList.contains("edit-mode")) return;
+      const sels = ".hotel-price, .activity-price, .leg-price, .leg-option-name span";
+      root.querySelectorAll(sels).forEach((el) => {
+        const t = (el.textContent || "").trim();
+        if (!t || /gratuit|free|^—$|^-$/i.test(t)) return;
+        const p = parseMoney(t);
+        if (p.min === 0 && p.max === 0 && !/\d/.test(t)) return;
+        const main = t.split(/\s*·\s*≈|\s*≈\s*|៛/)[0].trim();
+        const prefix = /^~/.test(main) ? "~" : "";
+        el.textContent = prefix + formatRange(p.min, p.max);
+      });
+      root.querySelectorAll(".transport-modes, .hotel-alt, .transport-leg-note").forEach((el) => {
+        const walk = (node) => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const next = addRielBesideEuros(node.nodeValue);
+            if (next !== node.nodeValue) node.nodeValue = next;
+            return;
+          }
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (node.matches?.("strong")) {
+              const next = addRielBesideEuros(node.textContent || "");
+              if (next !== node.textContent) node.textContent = next;
+              return;
+            }
             node.childNodes.forEach(walk);
           }
         };
@@ -3934,19 +3988,6 @@
       const clone = name.cloneNode(true);
       clone.querySelectorAll("span").forEach((s) => s.remove());
       return clone.textContent.replace(/\s+/g, " ").trim() || "Option";
-    }
-
-    function setBudget(key, min, max, note) {
-      const box = budgetStack.querySelector(`[data-budget="${key}"]`);
-      if (box) {
-        const amount = box.querySelector(".budget-amount");
-        const noteEl = box.querySelector(".budget-note");
-        if (amount) amount.textContent = formatBudgetLabel(min, max);
-        if (noteEl && note) noteEl.textContent = note;
-        box.dataset.auto = "true";
-      }
-      const popRow = document.querySelector(`.budget-pop-row[data-pop="${key}"] strong`);
-      if (popRow) popRow.textContent = formatBudgetLabel(min, max);
     }
 
     function openBudgetPop() {
@@ -4621,6 +4662,7 @@
         rebuildItineraryUI();
         ensureHotelNights();
         rewriteDollarPrices(document);
+        decoratePricesWithRiel(document);
         recomputeCityDates();
         recalculateBudget();
       } catch (_) {
@@ -5247,6 +5289,7 @@
       document.body.classList.remove("edit-mode");
       cleanEditChrome(document);
       repairHotelLinks(document);
+      decoratePricesWithRiel(document);
       rebuildItineraryUI();
       recalculateBudget();
       showToast("Mode édition quitté");
@@ -5349,6 +5392,7 @@
     repairHotelLinks(document);
     rewriteDollarPrices(document);
     stripRielFromEditablePrices(document);
+    decoratePricesWithRiel(document);
     seedCityCoords();
     rebuildItineraryUI();
     ensureHotelNights();
