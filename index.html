@@ -3347,7 +3347,6 @@
           L.marker([s.lat, s.lng], { icon })
             .addTo(mapRouteLayer)
             .bindPopup(
-            .bindPopup(
               `<strong>${s.n}. ${s.name}</strong>${s.note ? "<br>" + s.note : ""}${
                 document.getElementById(s.id)?.dataset.arrive
                   ? "<br>" +
@@ -3356,7 +3355,6 @@
                     (document.getElementById(s.id).dataset.depart || "")
                   : ""
               }<br>${s.nights || 0} nuit${(s.nights || 0) > 1 ? "s" : ""} · <a href="#${s.id}">Voir l'étape →</a>`
-            );
             );
         });
 
@@ -4712,7 +4710,7 @@
       refreshTripPanel();
       recomputeCityDates();
     }
-    // Budget affiché seulement via le bouton « Calculer le budget »
+    // Budget via bouton Calculer le budget
   </script>
 
 
