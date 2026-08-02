@@ -2,29 +2,29 @@
 <html lang="fr"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Aperçu Temple ink — Cambodge (copie)</title>
+  <title>Aperçu Coastal salt — Cambodge (copie)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Source+Serif+4:opsz,wght@8..60,300;400;500;600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&amp;family=Nunito:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <style>
     :root {
-      --ink: #1a1814;
-      --ink-soft: #4a453c;
-      --sand: #ebe4d6;
-      --sand-deep: #d6ccb8;
-      --moss: #8b3a2f;
-      --moss-deep: #5c241c;
-      --water: #5a6b63;
-      --gold: #9c3b2e;
-      --cream: #f3eee4;
-      --white: #faf7f0;
-      --shadow: rgba(26, 24, 20, 0.14);
-      --font-display: "Cormorant Garamond", Georgia, serif;
-      --font-body: "Source Serif 4", Georgia, serif;
+      --ink: #163532;
+      --ink-soft: #3d5c58;
+      --sand: #e7f3f0;
+      --sand-deep: #cfe4df;
+      --moss: #0d7377;
+      --moss-deep: #095456;
+      --water: #2aa6ad;
+      --gold: #0d7377;
+      --cream: #f4faf8;
+      --white: #ffffff;
+      --shadow: rgba(9, 84, 86, 0.12);
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "Nunito", system-ui, sans-serif;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --lacquer: #9c3b2e;
-      --paper: #f3eee4;
+      --teal: #0d7377;
+      --seafoam: #e8f6f3;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,8 +35,9 @@
       font-family: var(--font-body);
       color: var(--ink);
       background:
-        radial-gradient(ellipse at 20% 0%, rgba(156, 59, 46, 0.04), transparent 45%),
-        linear-gradient(180deg, #f6f1e7 0%, var(--cream) 40%, #efe8db 100%);
+        radial-gradient(ellipse at 80% -10%, rgba(42, 166, 173, 0.18), transparent 50%),
+        radial-gradient(ellipse at 10% 20%, rgba(231, 243, 240, 0.9), transparent 45%),
+        linear-gradient(180deg, #f7fcfb 0%, var(--cream) 35%, #eef7f5 100%);
       line-height: 1.6;
       font-weight: 300;
       overflow-x: hidden;
@@ -67,7 +68,7 @@
     }
 
     .nav.scrolled {
-      background: rgba(243, 238, 228, 0.94);
+      background: rgba(244, 250, 248, 0.94);
       backdrop-filter: blur(12px);
       padding: 0.75rem 2rem;
       box-shadow: 0 1px 0 var(--shadow);
@@ -167,8 +168,8 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(180deg, rgba(26, 24, 20, 0.35) 0%, rgba(26, 24, 20, 0.12) 40%, rgba(26, 24, 20, 0.78) 100%),
-        linear-gradient(90deg, rgba(26, 24, 20, 0.35) 0%, transparent 50%);
+        linear-gradient(180deg, rgba(9, 84, 86, 0.28) 0%, rgba(13, 115, 119, 0.08) 38%, rgba(9, 60, 62, 0.72) 100%),
+        linear-gradient(90deg, rgba(13, 115, 119, 0.22) 0%, transparent 55%);
       z-index: 1;
     }
 
@@ -215,21 +216,22 @@
       align-items: center;
       gap: 0.6rem;
       padding: 0.9rem 1.6rem;
-      background: var(--lacquer);
-      color: #faf7f0;
-      font-weight: 500;
+      background: #0d7377;
+      color: #ffffff;
+      font-weight: 600;
       font-size: 0.9rem;
       letter-spacing: 0.04em;
       text-decoration: none;
       border: none;
+      border-radius: 999px;
       transition: transform 0.3s var(--ease), box-shadow 0.3s, filter 0.3s;
     }
 
     .hero-cta:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-      color: #faf7f0;
-      filter: brightness(1.08);
+      box-shadow: 0 10px 28px rgba(13, 115, 119, 0.35);
+      color: #ffffff;
+      filter: brightness(1.06);
     }
 
     .hero-scroll {
@@ -247,8 +249,8 @@
 
     /* —— Route strip —— */
     .route {
-      background: #1a1814;
-      color: #ebe4d6;
+      background: linear-gradient(120deg, #095456 0%, #0d7377 55%, #2aa6ad 100%);
+      color: #e8f6f3;
       padding: 2.5rem 0;
       overflow: hidden;
     }
@@ -1343,11 +1345,7 @@
     }
 
     .city:nth-child(odd) .city-body {
-      font-family: var(--font-body);
-      color: var(--ink);
-      background:
-        radial-gradient(ellipse at 20% 0%, rgba(156, 59, 46, 0.04), transparent 45%),
-        linear-gradient(180deg, #f6f1e7 0%, var(--cream) 40%, #efe8db 100%);
+      background: var(--cream);
     }
 
     .cities-wrap {
@@ -1902,47 +1900,14 @@
       .section, .city-body { padding-left: 1.25rem; padding-right: 1.25rem; }
       .hero { padding-left: 1.25rem; padding-right: 1.25rem; }
     }
-
-    /* —— Aperçu Temple ink (copie) —— */
-    .preview-banner {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      padding: 0.55rem 1rem;
-      background: #1a1814;
-      color: #f3eee4;
-      font-family: var(--font-body);
-      font-size: 0.82rem;
-      letter-spacing: 0.02em;
-      border-bottom: 2px solid #9c3b2e;
-    }
-    .preview-banner strong { color: #f0c9c0; font-weight: 600; }
-    .preview-banner a {
-      color: #faf7f0;
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
-    body { padding-top: 2.4rem; }
-    .nav { top: 2.4rem; }
-    @media (max-width: 640px) {
-      .preview-banner { font-size: 0.75rem; padding: 0.45rem 0.75rem; }
-      body { padding-top: 3.2rem; }
-      .nav { top: 3.2rem; }
-    }
   </style>
-</head>
+<style type="text/css"></style><style type="text/css"></style></head>
 <body data-people="2" data-trip-start="2026-12-07" data-trip-end="2026-12-30" class="">
+
   <div class="preview-banner" role="status">
-    <strong>Aperçu Temple ink</strong>
-    <span>— copie de test, le site actuel n’est pas modifié</span>
-    <a href="../index.html">← Revenir à la version actuelle</a>
+    <strong>Aperçu Coastal salt</strong>
+    <span>— style image 2 · copie de test (site actuel inchangé)</span>
+    <a href="../index.html">← Version actuelle</a>
   </div>
 
 
@@ -1956,7 +1921,7 @@
 
   <header class="hero" id="top">
     <div class="hero-bg">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Angkor_Wat_with_its_reflection_%28cropped%29.jpg/1920px-Angkor_Wat_with_its_reflection_%28cropped%29.jpg" alt="Angkor Wat et son reflet, Siem Reap" width="1920" height="1080">
+      <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?auto=format&fit=crop&w=1920&q=80" alt="Mer turquoise et cocotiers, ambiance îles" width="1920" height="1080">
     </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
