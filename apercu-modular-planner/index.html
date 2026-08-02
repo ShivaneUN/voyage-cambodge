@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aperçu · Planner modulaire — Cambodge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a2420;
+      --ink-soft: #4a5a52;
+      --sand: #f3efe6;
+      --sand-2: #e7e1d4;
+      --panel: #fffcf7;
+      --line: rgba(26, 36, 32, 0.1);
+      --moss: #245c4a;
+      --moss-deep: #16362c;
+      --teal: #2f6f6a;
+      --muted: #6b7a72;
+      --shadow: 0 10px 28px rgba(22, 40, 34, 0.08);
+      --font-display: "Fraunces", Georgia, serif;
+      --font-body: "Source Sans 3", system-ui, sans-serif;
+      --sidebar: 280px;
+      --rail: 260px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: var(--font-body);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 500px at 10% -10%, rgba(47, 111, 106, 0.08), transparent 55%),
+        linear-gradient(180deg, #efe9dc 0%, var(--sand) 40%, #ebe4d7 100%);
+    }
+
+    a { color: inherit; }
+
+    .preview-banner {
+      background: var(--moss-deep);
+      color: #f4f0e8;
+      text-align: center;
+      padding: 0.55rem 1rem;
+      font-size: 0.84rem;
+      letter-spacing: 0.01em;
+    }
+    .preview-banner a {
+      color: #c8e6d8;
+      text-underline-offset: 2px;
+    }
+
+    .shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1rem 1rem 2.5rem;
+    }
+
+    /* —— Top utility —— */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      background: rgba(255, 252, 247, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 0.85rem 1rem;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      min-width: 11rem;
+    }
+    .brand-mark {
+      width: 2.1rem;
+      height: 2.1rem;
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(36, 92, 74, 0.15), rgba(47, 111, 106, 0.08)),
+        var(--panel);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      color: var(--moss);
+      font-size: 1.1rem;
+    }
+    .brand strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 650;
+      line-height: 1.1;
+    }
+    .brand span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .meta {
+      display: flex;
+      flex: 1;
+      gap: 0.55rem;
+      flex-wrap: wrap;
+      align-items: stretch;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.7rem;
+      border-radius: 10px;
+      background: var(--sand);
+      border: 1px solid transparent;
+      min-height: 2.6rem;
+    }
+    .meta-item b {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .meta-item small {
+      display: block;
+      color: var(--muted);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .meta-ico {
+      width: 1.55rem;
+      height: 1.55rem;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      background: rgba(36, 92, 74, 0.1);
+      color: var(--moss);
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .btn {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      font: inherit;
+      font-weight: 600;
+      font-size: 0.86rem;
+      padding: 0.65rem 0.95rem;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.15s ease;
+    }
+    .btn:hover { background: var(--sand-2); }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary {
+      background: var(--moss);
+      border-color: var(--moss);
+      color: #f7faf8;
+    }
+    .btn-primary:hover { background: var(--moss-deep); }
+    .btn-ghost {
+      background: transparent;
+    }
+
+    /* —— Layout —— */
+    .layout {
+      display: grid;
+      grid-template-columns: var(--sidebar) minmax(0, 1fr) var(--rail);
+      gap: 1rem;
+      margin-top: 1rem;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    /* Sidebar steps */
+    .sidebar {
+      padding: 0.85rem;
+      position: sticky;
+      top: 0.75rem;
+      max-height: calc(100vh - 1.5rem);
+      overflow: auto;
+    }
+    .sidebar-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      padding: 0 0.15rem;
+    }
+    .sidebar-head h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 650;
+    }
+    .add-step {
+      width: 100%;
+      margin-bottom: 0.65rem;
+      border-style: dashed;
+      color: var(--moss);
+      border-color: rgba(36, 92, 74, 0.35);
+      background: rgba(36, 92, 74, 0.04);
+    }
+
+    .steps { display: flex; flex-direction: column; gap: 0.45rem; list-style: none; margin: 0; padding: 0; }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 0.45rem;
+      align-items: center;
+      padding: 0.55rem 0.5rem;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      background: transparent;
+      text-align: left;
+      width: 100%;
+      font: inherit;
+      color: inherit;
+      transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .step:hover { background: var(--sand); }
+    .step.active {
+      background: #fff;
+      border-color: rgba(36, 92, 74, 0.28);
+      box-shadow: 0 4px 14px rgba(22, 40, 34, 0.06);
+    }
+
+    .step-move {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+    .step-move button {
+      width: 1.35rem;
+      height: 1.15rem;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: 5px;
+      cursor: pointer;
+      color: var(--ink-soft);
+      font-size: 0.65rem;
+      line-height: 1;
+      padding: 0;
+    }
+    .step-move button:hover { background: var(--sand-2); color: var(--ink); }
+    .step-move button:disabled { opacity: 0.35; cursor: default; }
+
+    .step-num {
+      width: 1.55rem;
+      height: 1.55rem;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--sand-2);
+      color: var(--ink-soft);
+      margin-right: 0.15rem;
+    }
+    .step.active .step-num {
+      background: var(--moss);
+      color: #fff;
+    }
+
+    .step-body { min-width: 0; }
+    .step-body strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 0.98rem;
+      font-weight: 650;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .step-body small {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .step-ico {
+      width: 1.8rem;
+      height: 1.8rem;
+      border-radius: 8px;
+      background: rgba(47, 111, 106, 0.1);
+      color: var(--teal);
+      display: grid;
+      place-items: center;
+      font-size: 0.95rem;
+    }
+
+    .budget-chip {
+      margin-top: 0.85rem;
+      padding: 0.85rem 0.9rem;
+      border-radius: 12px;
+      background: linear-gradient(160deg, rgba(36, 92, 74, 0.1), rgba(47, 111, 106, 0.05));
+      border: 1px solid rgba(36, 92, 74, 0.15);
+    }
+    .budget-chip span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .budget-chip strong {
+      display: block;
+      margin-top: 0.2rem;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 650;
+    }
+    .budget-chip a {
+      display: inline-block;
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      color: var(--moss);
+      font-weight: 600;
+    }
+
+    /* Main */
+    .main { padding: 1.15rem 1.2rem 1.35rem; min-height: 34rem; }
+
+    .main-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      margin-bottom: 0.9rem;
+    }
+    .main-head h1 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: clamp(1.7rem, 2.4vw, 2.15rem);
+      font-weight: 650;
+      line-height: 1.1;
+    }
+    .main-head p {
+      margin: 0.35rem 0 0;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.15rem;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 1rem;
+      overflow-x: auto;
+    }
+    .tab {
+      border: none;
+      background: transparent;
+      font: inherit;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--muted);
+      padding: 0.7rem 0.85rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .tab:hover { color: var(--ink); }
+    .tab.active {
+      color: var(--moss);
+      border-bottom-color: var(--moss);
+    }
+
+    .hotel {
+      display: grid;
+      grid-template-columns: 118px 1fr auto;
+      gap: 0.9rem;
+      align-items: center;
+      padding: 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      margin-bottom: 0.65rem;
+      background: #fff;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .hotel:hover {
+      border-color: rgba(36, 92, 74, 0.28);
+      box-shadow: 0 6px 16px rgba(22, 40, 34, 0.05);
+    }
+    .hotel img {
+      width: 118px;
+      height: 78px;
+      object-fit: cover;
+      border-radius: 9px;
+      display: block;
+      background: var(--sand-2);
+    }
+    .hotel h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 650;
+      font-family: var(--font-display);
+    }
+    .hotel .meta-line {
+      margin-top: 0.25rem;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .hotel .price {
+      text-align: right;
+      min-width: 5.5rem;
+    }
+    .hotel .price b {
+      display: block;
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+    .hotel .price small {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .more-link {
+      display: inline-flex;
+      margin-top: 0.35rem;
+      color: var(--moss);
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+    .more-link:hover { text-decoration: underline; }
+
+    .acts {
+      margin-top: 1.4rem;
+    }
+    .acts-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.7rem;
+    }
+    .acts-head h2 {
+      margin: 0;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+    }
+    .acts-head a {
+      color: var(--moss);
+      font-weight: 600;
+      font-size: 0.86rem;
+      text-decoration: none;
+    }
+    .act-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.65rem;
+    }
+    .act {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      min-height: 8.5rem;
+      isolation: isolate;
+    }
+    .act img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .act::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 35%, rgba(14, 24, 20, 0.72));
+    }
+    .act span {
+      position: absolute;
+      left: 0.7rem;
+      right: 0.7rem;
+      bottom: 0.7rem;
+      z-index: 1;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    /* Right rail */
+    .rail { display: flex; flex-direction: column; gap: 0.85rem; position: sticky; top: 0.75rem; }
+    .map-box {
+      padding: 0.75rem;
+    }
+    .map-box h3 {
+      margin: 0 0 0.55rem;
+      font-size: 0.92rem;
+      font-weight: 650;
+    }
+    .map-frame {
+      border-radius: 10px;
+      overflow: hidden;
+      height: 180px;
+      background:
+        linear-gradient(135deg, rgba(47, 111, 106, 0.18), rgba(36, 92, 74, 0.08)),
+        url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Angkor_Wat_with_its_reflection_%28cropped%29.jpg/640px-Angkor_Wat_with_its_reflection_%28cropped%29.jpg") center/cover;
+      position: relative;
+      border: 1px solid var(--line);
+    }
+    .map-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(22, 40, 34, 0.18);
+    }
+    .pin {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--moss);
+      border: 2px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+      z-index: 1;
+    }
+    .near {
+      padding: 0.9rem 1rem 1rem;
+    }
+    .near h3 {
+      margin: 0 0 0.7rem;
+      font-size: 0.95rem;
+      font-family: var(--font-display);
+      font-weight: 650;
+    }
+    .near-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.55rem 0;
+      border-top: 1px solid var(--line);
+      font-size: 0.86rem;
+    }
+    .near-item:first-of-type { border-top: none; padding-top: 0; }
+    .near-item small { color: var(--muted); white-space: nowrap; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 1.25rem;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--moss-deep);
+      color: #f4f0e8;
+      padding: 0.65rem 1rem;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      opacity: 0;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 250px minmax(0, 1fr); }
+      .rail { display: none; }
+    }
+    @media (max-width: 820px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; max-height: none; }
+      .hotel { grid-template-columns: 88px 1fr; }
+      .hotel .price { grid-column: 2; text-align: left; }
+      .act-row { grid-template-columns: 1fr; }
+      .meta { width: 100%; }
+      .brand { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="preview-banner">
+    Aperçu style n°2 · <strong>Planner modulaire</strong> — n’affecte pas le site principal ·
+    <a href="../">← Retour au voyage</a>
+  </div>
+
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">⌂</div>
+        <div>
+          <strong>Cambodge</strong>
+          <span>Mon voyage</span>
+        </div>
+      </div>
+      <div class="meta">
+        <div class="meta-item">
+          <div class="meta-ico">📅</div>
+          <div>
+            <small>Dates</small>
+            <b>7 → 30 déc. 2026</b>
+          </div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-ico">☾</div>
+          <div>
+            <small>Durée</small>
+            <b>23 nuits</b>
+          </div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-ico">👤</div>
+          <div>
+            <small>Voyageurs</small>
+            <b>2 pers.</b>
+          </div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-ico">€</div>
+          <div>
+            <small>Budget total</small>
+            <b>~1 780 €</b>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" id="exportBtn">Exporter</button>
+    </header>
+
+    <div class="layout">
+      <aside class="panel sidebar">
+        <div class="sidebar-head">
+          <h2>Itinéraire</h2>
+        </div>
+        <button type="button" class="btn add-step" id="addStepTop">+ Ajouter une étape</button>
+        <ul class="steps" id="steps"></ul>
+        <button type="button" class="btn add-step" id="addStepBottom">+ Ajouter une étape</button>
+        <div class="budget-chip">
+          <span>Budget estimé</span>
+          <strong>~1 780 €</strong>
+          <a href="#" id="budgetDetail">Voir le détail</a>
+        </div>
+      </aside>
+
+      <main class="panel main">
+        <div class="main-head">
+          <div>
+            <h1 id="cityTitle">Siem Reap</h1>
+            <p id="citySub">4 nuits · hébergements & activités</p>
+          </div>
+          <button type="button" class="btn btn-ghost" id="mapBtn">Voir sur la carte</button>
+        </div>
+
+        <div class="tabs" role="tablist">
+          <button type="button" class="tab" data-tab="resume">Résumé</button>
+          <button type="button" class="tab active" data-tab="hotels">Hébergements</button>
+          <button type="button" class="tab" data-tab="acts">Activités</button>
+          <button type="button" class="tab" data-tab="transport">Transports</button>
+          <button type="button" class="tab" data-tab="notes">Notes</button>
+        </div>
+
+        <section id="panelHotels">
+          <div id="hotelList"></div>
+          <a class="more-link" href="#" id="moreHotels">Voir plus d’hébergements</a>
+        </section>
+
+        <section class="acts" id="actsBlock">
+          <div class="acts-head">
+            <h2>Activités recommandées</h2>
+            <a href="#" id="allActs">Voir tout</a>
+          </div>
+          <div class="act-row" id="actRow"></div>
+        </section>
+      </main>
+
+      <aside class="rail">
+        <div class="panel map-box">
+          <h3>Carte de l’étape</h3>
+          <div class="map-frame" id="mapFrame">
+            <span class="pin" style="left:42%;top:48%"></span>
+            <span class="pin" style="left:58%;top:36%"></span>
+          </div>
+        </div>
+        <div class="panel near">
+          <h3>À voir près de l’hébergement</h3>
+          <div id="nearList"></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script>
+    const cities = [
+      {
+        id: "siem-reap",
+        name: "Siem Reap",
+        nights: 4,
+        ico: "🛕",
+        hotel: {
+          name: "Hello Cambodia Boutique",
+          meta: "Centre · note élevée",
+          price: "€64",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Angkor_Wat_with_its_reflection_%28cropped%29.jpg/640px-Angkor_Wat_with_its_reflection_%28cropped%29.jpg",
+        },
+        acts: [
+          { name: "Angkor Wat au lever du soleil", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Angkor_Wat_with_its_reflection_%28cropped%29.jpg/640px-Angkor_Wat_with_its_reflection_%28cropped%29.jpg" },
+          { name: "Bayon & Terrasse des Éléphants", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Bayon_temple_Angkor_Thom_Cambodia.jpg/640px-Bayon_temple_Angkor_Thom_Cambodia.jpg" },
+          { name: "Tonlé Sap / village flottant", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Floating_village_on_Tonle_Sap.jpg/640px-Floating_village_on_Tonle_Sap.jpg" },
+        ],
+        near: [
+          ["Angkor Wat", "20–30 min"],
+          ["Pub Street", "5–10 min"],
+          ["Marché de nuit", "10 min"],
+        ],
+      },
+      {
+        id: "battambang",
+        name: "Battambang",
+        nights: 2,
+        ico: "🚂",
+        hotel: {
+          name: "Blue Diamond Hostel",
+          meta: "Centre-ville",
+          price: "€25",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Bamboo_Train_Battambang.jpg/640px-Bamboo_Train_Battambang.jpg",
+        },
+        acts: [
+          { name: "Bamboo Train", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Bamboo_Train_Battambang.jpg/640px-Bamboo_Train_Battambang.jpg" },
+          { name: "Phnom Sampeau", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Phnom_Sampeau.jpg/640px-Phnom_Sampeau.jpg" },
+          { name: "Vieille ville", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Battambang_Province.jpg/640px-Battambang_Province.jpg" },
+        ],
+        near: [
+          ["Gare bamboo", "15 min"],
+          ["Marché central", "8 min"],
+          ["Musée", "12 min"],
+        ],
+      },
+      {
+        id: "koh-kong",
+        name: "Koh Kong",
+        nights: 2,
+        ico: "🌿",
+        hotel: {
+          name: "JJs Residence",
+          meta: "Proche centre",
+          price: "€45",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cardamom_Mountains.jpg/640px-Cardamom_Mountains.jpg",
+        },
+        acts: [
+          { name: "Cascades Tatai", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Cardamom_Mountains.jpg/640px-Cardamom_Mountains.jpg" },
+          { name: "Mangroves", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Mangrove.jpg/640px-Mangrove.jpg" },
+          { name: "Coucher de soleil fleuve", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5a/Sunset_over_water.jpg/640px-Sunset_over_water.jpg" },
+        ],
+        near: [
+          ["Pont", "10 min"],
+          ["Marché", "8 min"],
+          ["Départ bateau", "15 min"],
+        ],
+      },
+      {
+        id: "sihanoukville",
+        name: "Sihanoukville",
+        nights: 2,
+        ico: "⚓",
+        hotel: {
+          name: "Sok Sabay Resort",
+          meta: "Plage / ferry",
+          price: "€55",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Occheuteal_Beach_Sihanoukville.jpg/640px-Occheuteal_Beach_Sihanoukville.jpg",
+        },
+        acts: [
+          { name: "Départ ferry îles", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Occheuteal_Beach_Sihanoukville.jpg/640px-Occheuteal_Beach_Sihanoukville.jpg" },
+          { name: "Plage Ochheuteal", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Serendipity_Beach_Sihanoukville.jpg/640px-Serendipity_Beach_Sihanoukville.jpg" },
+          { name: "Port", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Sihanoukville_port.jpg/640px-Sihanoukville_port.jpg" },
+        ],
+        near: [
+          ["Terminal ferry", "15–25 min"],
+          ["Plage", "10 min"],
+          ["Centre", "20 min"],
+        ],
+      },
+      {
+        id: "koh-rong",
+        name: "Koh Rong Samloem",
+        nights: 5,
+        ico: "🏝️",
+        hotel: {
+          name: "KAMAKU Bungalows — Sunset Beach",
+          meta: "Sunset Beach",
+          price: "€190",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Koh_Rong_Sanloem.jpg/640px-Koh_Rong_Sanloem.jpg",
+        },
+        acts: [
+          { name: "Snorkelling", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Koh_Rong_Sanloem.jpg/640px-Koh_Rong_Sanloem.jpg" },
+          { name: "Sunset Beach", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Tropical_beach.jpg/640px-Tropical_beach.jpg" },
+          { name: "Kayak / planche", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Kayak.jpg/640px-Kayak.jpg" },
+        ],
+        near: [
+          ["Sunset Beach", "à pied"],
+          ["Saracen Bay", "25–40 min"],
+          ["Jungle trail", "20 min"],
+        ],
+      },
+      {
+        id: "kampot",
+        name: "Kampot",
+        nights: 3,
+        ico: "🌶️",
+        hotel: {
+          name: "Eden Eco Village",
+          meta: "Rivière / nature",
+          price: "€95",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Kampot_River.jpg/640px-Kampot_River.jpg",
+        },
+        acts: [
+          { name: "Poivre de Kampot", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Kampot_River.jpg/640px-Kampot_River.jpg" },
+          { name: "Bokor", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Bokor_Hill_Station.jpg/640px-Bokor_Hill_Station.jpg" },
+          { name: "Promenade rivière", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Kampot_town.jpg/640px-Kampot_town.jpg" },
+        ],
+        near: [
+          ["Centre Kampot", "15–25 min"],
+          ["Plantations", "20 min"],
+          ["Salt fields", "25 min"],
+        ],
+      },
+      {
+        id: "phnom-penh",
+        name: "Phnom Penh",
+        nights: 5,
+        ico: "🏛️",
+        hotel: {
+          name: "Check Inn Phnom Penh Royal Palace",
+          meta: "Palais Royal",
+          price: "€140",
+          img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Royal_Palace_Phnom_Penh.jpg/640px-Royal_Palace_Phnom_Penh.jpg",
+        },
+        acts: [
+          { name: "Palais Royal", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Royal_Palace_Phnom_Penh.jpg/640px-Royal_Palace_Phnom_Penh.jpg" },
+          { name: "Musée national", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/National_Museum_of_Cambodia.jpg/640px-National_Museum_of_Cambodia.jpg" },
+          { name: "Quais du Mékong", img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/Phnom_Penh_Riverside.jpg/640px-Phnom_Penh_Riverside.jpg" },
+        ],
+        near: [
+          ["Palais Royal", "5–10 min"],
+          ["Riverside", "10 min"],
+          ["Russian Market", "20 min"],
+        ],
+      },
+    ];
+
+    let activeId = cities[0].id;
+    const stepsEl = document.getElementById("steps");
+    const toast = document.getElementById("toast");
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function renderSteps() {
+      stepsEl.innerHTML = "";
+      cities.forEach((c, i) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <div class="step ${c.id === activeId ? "active" : ""}" data-id="${c.id}" role="button" tabindex="0">
+            <div class="step-move">
+              <button type="button" data-move="-1" aria-label="Monter" ${i === 0 ? "disabled" : ""}>▲</button>
+              <button type="button" data-move="1" aria-label="Descendre" ${i === cities.length - 1 ? "disabled" : ""}>▼</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.35rem;min-width:0">
+              <span class="step-num">${i + 1}</span>
+              <div class="step-body">
+                <strong>${c.name}</strong>
+                <small>${c.nights} nuit${c.nights > 1 ? "s" : ""}</small>
+              </div>
+            </div>
+            <div class="step-ico" aria-hidden="true">${c.ico}</div>
+          </div>`;
+        stepsEl.appendChild(li);
+      });
+    }
+
+    function renderMain() {
+      const c = cities.find((x) => x.id === activeId) || cities[0];
+      document.getElementById("cityTitle").textContent = c.name;
+      document.getElementById("citySub").textContent = `${c.nights} nuit${c.nights > 1 ? "s" : ""} · hébergements & activités`;
+
+      document.getElementById("hotelList").innerHTML = `
+        <article class="hotel">
+          <img src="${c.hotel.img}" alt="" loading="lazy" />
+          <div>
+            <h3>${c.hotel.name}</h3>
+            <div class="meta-line">${c.hotel.meta} · choix budget</div>
+          </div>
+          <div class="price">
+            <b>${c.hotel.price}</b>
+            <small>${c.nights} nuit${c.nights > 1 ? "s" : ""}</small>
+          </div>
+        </article>`;
+
+      document.getElementById("actRow").innerHTML = c.acts
+        .map(
+          (a) => `
+        <article class="act">
+          <img src="${a.img}" alt="" loading="lazy" onerror="this.style.background='#d4cbb8'" />
+          <span>${a.name}</span>
+        </article>`
+        )
+        .join("");
+
+      document.getElementById("nearList").innerHTML = c.near
+        .map(
+          ([n, t]) => `
+        <div class="near-item">
+          <span>${n}</span>
+          <small>${t}</small>
+        </div>`
+        )
+        .join("");
+
+      const map = document.getElementById("mapFrame");
+      map.style.backgroundImage = `linear-gradient(135deg, rgba(47,111,106,0.18), rgba(36,92,74,0.12)), url("${c.hotel.img}")`;
+    }
+
+    function moveCity(id, dir) {
+      const i = cities.findIndex((c) => c.id === id);
+      const j = i + dir;
+      if (i < 0 || j < 0 || j >= cities.length) return;
+      const [item] = cities.splice(i, 1);
+      cities.splice(j, 0, item);
+      renderSteps();
+      showToast("Étape déplacée");
+    }
+
+    stepsEl.addEventListener("click", (e) => {
+      const moveBtn = e.target.closest("[data-move]");
+      const step = e.target.closest(".step");
+      if (moveBtn && step) {
+        e.stopPropagation();
+        moveCity(step.dataset.id, Number(moveBtn.dataset.move));
+        return;
+      }
+      if (step) {
+        activeId = step.dataset.id;
+        renderSteps();
+        renderMain();
+      }
+    });
+
+    document.querySelectorAll(".tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        showToast(`Onglet « ${tab.textContent} » (aperçu)`);
+      });
+    });
+
+    function demoAdd() {
+      showToast("Aperçu · l’ajout réel est sur le site principal");
+    }
+    document.getElementById("addStepTop").addEventListener("click", demoAdd);
+    document.getElementById("addStepBottom").addEventListener("click", demoAdd);
+    document.getElementById("exportBtn").addEventListener("click", () => showToast("Export (aperçu)"));
+    document.getElementById("budgetDetail").addEventListener("click", (e) => {
+      e.preventDefault();
+      showToast("Budget détail (aperçu)");
+    });
+    document.getElementById("mapBtn").addEventListener("click", () => showToast("Carte (aperçu)"));
+    document.getElementById("moreHotels").addEventListener("click", (e) => {
+      e.preventDefault();
+      showToast("Plus d’hôtels (aperçu)");
+    });
+    document.getElementById("allActs").addEventListener("click", (e) => {
+      e.preventDefault();
+      showToast("Toutes les activités (aperçu)");
+    });
+
+    renderSteps();
+    renderMain();
+  </script>
+</body>
+</html>
