@@ -5,7 +5,7 @@
   <title>Cambodge — Voyage Décembre</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&amp;family=Outfit:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <style>
     :root {
@@ -20,12 +20,8 @@
       --cream: #f7f4ee;
       --white: #fffcf7;
       --shadow: rgba(20, 32, 26, 0.12);
-      --font-display: "Fraunces", Georgia, serif;
-      --font-body: "Source Sans 3", system-ui, sans-serif;
-      --planner-sand: #f3efe6;
-      --planner-panel: #fffcf7;
-      --planner-line: rgba(26, 36, 32, 0.1);
-      --teal: #2f6f6a;
+      --font-display: "Cormorant Garamond", Georgia, serif;
+      --font-body: "Outfit", system-ui, sans-serif;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
 
@@ -38,7 +34,7 @@
       color: var(--ink);
       background: var(--cream);
       line-height: 1.6;
-      font-weight: 400;
+      font-weight: 300;
       overflow-x: hidden;
     }
 
@@ -743,26 +739,12 @@
 
     .hotel-name {
       font-weight: 500;
-      font-size: 1rem;
-      line-height: 1.35;
-      font-family: var(--font-body);
-    }
-
-    .hotel-name a,
-    .hotel-name a * {
-      color: var(--ink) !important;
-      text-decoration: none !important;
-      font-size: 1rem !important;
-      font-weight: 500 !important;
-      font-family: var(--font-body) !important;
-      line-height: 1.35 !important;
-      background: transparent !important;
-      letter-spacing: normal !important;
-      white-space: normal !important;
+      font-size: 0.95rem;
     }
 
     .hotel-name a {
-      display: inline;
+      color: var(--ink);
+      text-decoration: none;
     }
 
     .hotel-name a:hover,
@@ -809,66 +791,6 @@
       color: inherit;
       text-decoration: none;
     }
-
-
-    /* Prix compacts : € + riel discret */
-    .price-eur { font-weight: 600; }
-    .price-riel {
-      display: block;
-      margin-top: 0.15rem;
-      font-size: 0.72em;
-      font-weight: 400;
-      color: var(--ink-soft);
-      opacity: 0.9;
-      line-height: 1.2;
-    }
-    .budget-pick .price-riel,
-    .budget-amount .price-riel,
-    .budget-pop-row .price-riel {
-      display: inline;
-      margin-top: 0;
-      margin-left: 0.35rem;
-      font-size: 0.78em;
-    }
-    .hotel-price, .activity-price, .leg-price {
-      white-space: normal;
-    }
-
-    .edit-city-bar {
-      display: none;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-      margin: 0.65rem 0 0;
-    }
-    body.edit-mode .edit-city-bar { display: flex; }
-    .edit-city-bar button {
-      border: 1px solid rgba(255,255,255,0.45);
-      background: rgba(0,0,0,0.35);
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 500;
-      padding: 0.35rem 0.55rem;
-      cursor: pointer;
-    }
-    .edit-img-btn {
-      display: none;
-      position: absolute;
-      top: 0.5rem;
-      left: 0.5rem;
-      z-index: 5;
-      border: 1px solid var(--moss);
-      background: rgba(255,252,247,0.95);
-      color: var(--moss-deep);
-      font-size: 0.68rem;
-      font-weight: 600;
-      padding: 0.25rem 0.45rem;
-      cursor: pointer;
-    }
-    body.edit-mode .edit-img-btn { display: inline-block; }
-    .city-visual, .activity-thumb, .hero-bg {
-      position: relative;
-    }
-    .hero-bg .edit-img-btn { top: 4.5rem; left: 1rem; }
 
     .edit-link-btn,
     .edit-add-link-btn {
@@ -1852,6 +1774,16 @@
 
     body.edit-mode .edit-del-city { display: block; }
 
+    .edit-city-bar {
+      display: none;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0 0;
+      padding: 0 1.25rem 1rem;
+    }
+
+    body.edit-mode .edit-city-bar { display: flex; }
+
     .budget-box[data-auto="true"] .budget-amount {
       border-bottom: 1px dashed rgba(201, 162, 77, 0.5);
     }
@@ -1961,280 +1893,6 @@
       .section, .city-body { padding-left: 1.25rem; padding-right: 1.25rem; }
       .hero { padding-left: 1.25rem; padding-right: 1.25rem; }
     }
-
-    /* —— Planner modulaire (style n°2) injecté —— */
-    body.planner-skin {
-      background:
-        radial-gradient(1200px 500px at 8% -8%, rgba(47, 111, 106, 0.08), transparent 55%),
-        linear-gradient(180deg, #efe9dc 0%, var(--planner-sand, #f3efe6) 42%, #ebe4d7 100%);
-    }
-    body.planner-skin .nav {
-      background: rgba(255, 252, 247, 0.92);
-      border-bottom: 1px solid var(--planner-line, rgba(26,36,32,0.1));
-      backdrop-filter: blur(10px);
-      box-shadow: none;
-    }
-    body.planner-skin .nav-brand {
-      font-family: var(--font-display);
-      font-weight: 650;
-      letter-spacing: 0;
-    }
-    body.planner-skin .hero {
-      min-height: 42vh;
-      max-height: 52vh;
-      border-radius: 0 0 18px 18px;
-      overflow: hidden;
-      margin: 0.75rem 1rem 0;
-      width: auto;
-    }
-    body.planner-skin .hero-title {
-      font-family: var(--font-display);
-      font-weight: 650;
-    }
-    body.planner-skin .hero-brand {
-      font-family: var(--font-display);
-      font-weight: 650;
-      letter-spacing: 0.04em;
-    }
-    body.planner-skin .hero-cta {
-      border-radius: 10px;
-      font-weight: 600;
-    }
-    body.planner-skin .route {
-      display: none;
-    }
-    body.planner-skin .planner-shell {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 1rem 2rem;
-    }
-    body.planner-skin .planner-layout {
-      display: grid;
-      grid-template-columns: 270px minmax(0, 1fr);
-      gap: 1rem;
-      align-items: start;
-      margin-top: 1rem;
-    }
-    body.planner-skin .planner-sidebar {
-      position: sticky;
-      top: 4.5rem;
-      max-height: calc(100vh - 5rem);
-      overflow: auto;
-      background: var(--planner-panel, #fffcf7);
-      border: 1px solid var(--planner-line, rgba(26,36,32,0.1));
-      border-radius: 14px;
-      padding: 0.85rem;
-      box-shadow: 0 10px 28px rgba(22, 40, 34, 0.08);
-    }
-    body.planner-skin .planner-sidebar h2 {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 650;
-      margin: 0 0 0.75rem;
-    }
-    body.planner-skin .planner-steps {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      margin: 0;
-      padding: 0;
-    }
-    body.planner-skin .planner-step {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.4rem;
-      align-items: center;
-      width: 100%;
-      text-align: left;
-      border: 1px solid transparent;
-      background: transparent;
-      border-radius: 12px;
-      padding: 0.5rem;
-      cursor: pointer;
-      font: inherit;
-      color: inherit;
-      transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-    }
-    body.planner-skin .planner-step:hover { background: var(--sand); }
-    body.planner-skin .planner-step.active {
-      background: #fff;
-      border-color: rgba(47, 93, 74, 0.3);
-      box-shadow: 0 4px 14px rgba(22, 40, 34, 0.06);
-    }
-    body.planner-skin .planner-step-move {
-      display: flex;
-      flex-direction: column;
-      gap: 0.12rem;
-    }
-    body.planner-skin .planner-step-move button {
-      width: 1.3rem;
-      height: 1.1rem;
-      border: 1px solid var(--planner-line, rgba(26,36,32,0.1));
-      background: #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      color: var(--ink-soft);
-      font-size: 0.62rem;
-      line-height: 1;
-      padding: 0;
-    }
-    body.planner-skin .planner-step-move button:disabled { opacity: 0.35; cursor: default; }
-    body.planner-skin .planner-step-main {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      min-width: 0;
-    }
-    body.planner-skin .planner-num {
-      width: 1.5rem;
-      height: 1.5rem;
-      border-radius: 999px;
-      display: grid;
-      place-items: center;
-      font-size: 0.72rem;
-      font-weight: 700;
-      background: var(--sand-deep);
-      color: var(--ink-soft);
-      flex-shrink: 0;
-    }
-    body.planner-skin .planner-step.active .planner-num {
-      background: var(--moss);
-      color: #fff;
-    }
-    body.planner-skin .planner-step-text {
-      min-width: 0;
-    }
-    body.planner-skin .planner-step-text strong {
-      display: block;
-      font-family: var(--font-display);
-      font-size: 0.95rem;
-      font-weight: 650;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    body.planner-skin .planner-step-text small {
-      color: var(--ink-soft);
-      font-size: 0.75rem;
-    }
-    body.planner-skin .planner-budget {
-      margin-top: 0.85rem;
-      padding: 0.85rem 0.9rem;
-      border-radius: 12px;
-      background: linear-gradient(160deg, rgba(47, 93, 74, 0.1), rgba(58, 125, 122, 0.05));
-      border: 1px solid rgba(47, 93, 74, 0.15);
-    }
-    body.planner-skin .planner-budget span {
-      display: block;
-      font-size: 0.7rem;
-      color: var(--ink-soft);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    body.planner-skin .planner-budget strong {
-      display: block;
-      margin-top: 0.15rem;
-      font-family: var(--font-display);
-      font-size: 1.25rem;
-      font-weight: 650;
-    }
-    body.planner-skin .planner-main {
-      min-width: 0;
-    }
-    body.planner-skin .map-section,
-    body.planner-skin .cities-wrap,
-    body.planner-skin .practical {
-      background: var(--planner-panel, #fffcf7);
-      border: 1px solid var(--planner-line, rgba(26,36,32,0.1));
-      border-radius: 14px;
-      box-shadow: 0 10px 28px rgba(22, 40, 34, 0.06);
-      margin-left: 0;
-      margin-right: 0;
-    }
-    body.planner-skin .map-section {
-      padding: 1.1rem 1.15rem 1.25rem;
-      margin-bottom: 1rem;
-    }
-    body.planner-skin .map-section .section-inner { max-width: none; padding: 0; }
-    body.planner-skin .cities-wrap {
-      padding: 0.35rem 0.35rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    body.planner-skin .city {
-      border: 1px solid var(--planner-line, rgba(26,36,32,0.1));
-      border-radius: 12px;
-      overflow: hidden;
-      background: #fff;
-      margin: 0;
-    }
-    body.planner-skin .city-visual {
-      min-height: 200px;
-      max-height: 260px;
-    }
-    body.planner-skin .city-visual-label h2 {
-      font-family: var(--font-display);
-      font-weight: 650;
-    }
-    body.planner-skin .city-body {
-      padding: 1rem 1.1rem 1.2rem;
-    }
-    body.planner-skin .hotel {
-      border: 1px solid var(--planner-line, rgba(26,36,32,0.1));
-      border-radius: 12px;
-      padding: 0.85rem 1rem;
-      background: #fff;
-      margin-bottom: 0.65rem;
-    }
-    body.planner-skin .hotel-name,
-    body.planner-skin .hotel-name a,
-    body.planner-skin .hotel-name a * {
-      font-family: var(--font-display) !important;
-      font-size: 1.05rem !important;
-      font-weight: 650 !important;
-    }
-    body.planner-skin .hotel-price {
-      font-weight: 700;
-    }
-    body.planner-skin .activity {
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--planner-line, rgba(26,36,32,0.08));
-    }
-    body.planner-skin .practical {
-      padding: 1.2rem;
-      margin-top: 1rem;
-    }
-    body.planner-skin .fab-bar {
-      gap: 0.45rem;
-    }
-    body.planner-skin .trip-fab,
-    body.planner-skin .budget-fab,
-    body.planner-skin .edit-fab,
-    body.planner-skin .people-fab {
-      border-radius: 10px;
-    }
-    body.planner-skin .classic-link {
-      display: inline-block;
-      margin: 0.65rem 1rem 0;
-      font-size: 0.82rem;
-      color: var(--moss-deep);
-      font-weight: 600;
-    }
-    @media (max-width: 900px) {
-      body.planner-skin .planner-layout { grid-template-columns: 1fr; }
-      body.planner-skin .planner-sidebar {
-        position: static;
-        max-height: none;
-      }
-      body.planner-skin .hero {
-        margin: 0.5rem 0.65rem 0;
-        min-height: 36vh;
-      }
-    }
-
   </style>
 <style type="text/css"></style><style type="text/css"></style></head>
 <body data-people="2" data-trip-start="2026-12-07" data-trip-end="2026-12-30" class="">
@@ -2246,7 +1904,6 @@
     </button>
     <ul class="nav-links" id="navLinks"><li><a href="#carte">Carte</a></li><li><a href="#siem-reap">Siem Reap</a></li><li><a href="#battambang">Battambang</a></li><li><a href="#koh-kong">KHEMARAK PHOUMIN (KOH RONG)</a></li><li><a href="#sihanoukville">Sihanoukville</a></li><li><a href="#koh-rong">Koh Rong Samloem</a></li><li><a href="#kampot">Kampot</a></li><li><a href="#phnom-penh">Phnom Penh</a></li></ul>
   </nav>
-  <a class="classic-link" href="apercu-classique/">← Version classique (copie)</a>
 
   <header class="hero" id="top">
     <div class="hero-bg">
@@ -2355,7 +2012,7 @@
             
           <div class="hotel" data-nights="4" data-in-budget="1">
         <div class="hotel-top">
-          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/hello-cambodia-boutique.fr.html?label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=b822778e32324b26df9ccf30ba5aec33&amp;aid=2198091&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-07&amp;checkout=2026-12-11&amp;dest_id=-1032755&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=8&amp;hapos=8&amp;sr_order=price&amp;nflt=review_score%3D90%3Breview_score%3D80%3Bht_id%3D204&amp;srpvid=81585add09940490&amp;srepoch=1785676100&amp;all_sr_blocks=307874402_150487263_2_42_0&amp;highlighted_blocks=307874402_150487263_2_42_0&amp;matching_block_id=307874402_150487263_2_42_0&amp;sr_pri_blocks=307874402_150487263_2_42_0__7173&amp;from=searchresults#map_closed" target="_blank" rel="noopener noreferrer">Hello Cambodia Boutique</a></p>
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/hello-cambodia-boutique.fr.html?label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=b822778e32324b26df9ccf30ba5aec33&amp;aid=2198091&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-07&amp;checkout=2026-12-11&amp;dest_id=-1032755&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=8&amp;hapos=8&amp;sr_order=price&amp;nflt=review_score%3D90%3Breview_score%3D80%3Bht_id%3D204&amp;srpvid=81585add09940490&amp;srepoch=1785676100&amp;all_sr_blocks=307874402_150487263_2_42_0&amp;highlighted_blocks=307874402_150487263_2_42_0&amp;matching_block_id=307874402_150487263_2_42_0&amp;sr_pri_blocks=307874402_150487263_2_42_0__7173&amp;from=searchresults#map_closed" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/hello-cambodia-boutique.fr.html?label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=b822778e32324b26df9ccf30ba5aec33&amp;aid=2198091&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-07&amp;checkout=2026-12-11&amp;dest_id=-1032755&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=8&amp;hapos=8&amp;sr_order=price&amp;nflt=review_score%3D90%3Breview_score%3D80%3Bht_id%3D204&amp;srpvid=81585add09940490&amp;srepoch=1785676100&amp;all_sr_blocks=307874402_150487263_2_42_0&amp;highlighted_blocks=307874402_150487263_2_42_0&amp;matching_block_id=307874402_150487263_2_42_0&amp;sr_pri_blocks=307874402_150487263_2_42_0__7173&amp;from=searchresults#map_closed" target="_blank" rel="noopener noreferrer">Hello Cambodia Boutique</a></h2><p></p>
           <p class="hotel-price">€15,98</p>
         </div>
         <p class="hotel-meta">Emplacement / note</p>
@@ -2440,7 +2097,7 @@
             
           <div class="hotel" data-nights="2" data-in-budget="1">
         <div class="hotel-top">
-          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/blue-diamond.fr.html?aid=318615&amp;label=New_French_FR_FR_21427169785-Jt2Do6A*80cSmr5wOnHnTgS217289923597%253Apl%253Ata%253Ap1%253Ap2%253Aac%253Aap%253Aneg&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-11&amp;checkout=2026-12-13&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=2&amp;hapos=2&amp;sr_order=price&amp;srpvid=b02d5e77ae320dac&amp;srepoch=1785072386&amp;all_sr_blocks=247546711_274220102_0_42_0&amp;highlighted_blocks=247546711_274220102_0_42_0&amp;matching_block_id=247546711_274220102_0_42_0&amp;sr_pri_blocks=247546711_274220102_0_42_0__1260&amp;from=searchresults" target="_blank" rel="noopener noreferrer">Blue Diamond Hostel</a></p>
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/blue-diamond.fr.html?aid=318615&amp;label=New_French_FR_FR_21427169785-Jt2Do6A*80cSmr5wOnHnTgS217289923597%253Apl%253Ata%253Ap1%253Ap2%253Aac%253Aap%253Aneg&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-11&amp;checkout=2026-12-13&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=2&amp;hapos=2&amp;sr_order=price&amp;srpvid=b02d5e77ae320dac&amp;srepoch=1785072386&amp;all_sr_blocks=247546711_274220102_0_42_0&amp;highlighted_blocks=247546711_274220102_0_42_0&amp;matching_block_id=247546711_274220102_0_42_0&amp;sr_pri_blocks=247546711_274220102_0_42_0__1260&amp;from=searchresults" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/blue-diamond.fr.html?aid=318615&amp;label=New_French_FR_FR_21427169785-Jt2Do6A*80cSmr5wOnHnTgS217289923597%253Apl%253Ata%253Ap1%253Ap2%253Aac%253Aap%253Aneg&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-11&amp;checkout=2026-12-13&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=2&amp;hapos=2&amp;sr_order=price&amp;srpvid=b02d5e77ae320dac&amp;srepoch=1785072386&amp;all_sr_blocks=247546711_274220102_0_42_0&amp;highlighted_blocks=247546711_274220102_0_42_0&amp;matching_block_id=247546711_274220102_0_42_0&amp;sr_pri_blocks=247546711_274220102_0_42_0__1260&amp;from=searchresults" target="_blank" rel="noopener noreferrer">Blue Diamond Hostel</a></h2><p></p>
           <p class="hotel-price">€5,5</p>
         </div>
         <p class="hotel-meta">113 Street 507, Phum Wat Vatleab, Chamcasomron 3 11/13</p>
@@ -2547,7 +2204,7 @@
             
           <div class="hotel" data-nights="2" data-in-budget="1">
         <div class="hotel-top">
-          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/jjs-residence.fr.html?label=New_French_FR_FR_21427169425-I*n8A2uBL5TnDLGr3TnoqQS217288619968%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg&amp;aid=318615&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-13&amp;checkout=2026-12-15&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=2&amp;hapos=2&amp;sr_order=distance_from_search&amp;srpvid=73f16a13c2cd07e5&amp;srepoch=1785078319&amp;all_sr_blocks=1540275301_434197388_3_0_0&amp;highlighted_blocks=1540275301_434197388_3_0_0&amp;matching_block_id=1540275301_434197388_3_0_0&amp;sr_pri_blocks=1540275301_434197388_3_0_0__11000&amp;from=searchresults" target="_blank" rel="noopener noreferrer">JJs Residence</a></p>
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/jjs-residence.fr.html?label=New_French_FR_FR_21427169425-I*n8A2uBL5TnDLGr3TnoqQS217288619968%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg&amp;aid=318615&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-13&amp;checkout=2026-12-15&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=2&amp;hapos=2&amp;sr_order=distance_from_search&amp;srpvid=73f16a13c2cd07e5&amp;srepoch=1785078319&amp;all_sr_blocks=1540275301_434197388_3_0_0&amp;highlighted_blocks=1540275301_434197388_3_0_0&amp;matching_block_id=1540275301_434197388_3_0_0&amp;sr_pri_blocks=1540275301_434197388_3_0_0__11000&amp;from=searchresults" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/jjs-residence.fr.html?label=New_French_FR_FR_21427169425-I*n8A2uBL5TnDLGr3TnoqQS217288619968%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg&amp;aid=318615&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-13&amp;checkout=2026-12-15&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=2&amp;hapos=2&amp;sr_order=distance_from_search&amp;srpvid=73f16a13c2cd07e5&amp;srepoch=1785078319&amp;all_sr_blocks=1540275301_434197388_3_0_0&amp;highlighted_blocks=1540275301_434197388_3_0_0&amp;matching_block_id=1540275301_434197388_3_0_0&amp;sr_pri_blocks=1540275301_434197388_3_0_0__11000&amp;from=searchresults" target="_blank" rel="noopener noreferrer">JJs Residence</a></h2><p></p>
           <p class="hotel-price">€47,8</p>
         </div>
         <p class="hotel-meta">Situé à Koh Kong</p>
@@ -2644,7 +2301,7 @@
             
           <div class="hotel" data-nights="2" data-in-budget="1">
         <div class="hotel-top">
-          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/sok-sabay-hotel.fr.html?label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-15&amp;checkout=2026-12-17&amp;dest_id=-1023795&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=7&amp;hapos=7&amp;sr_order=price&amp;srpvid=982f6c4cb32801be&amp;srepoch=1785079776&amp;all_sr_blocks=153932101_0_2_0_0&amp;highlighted_blocks=153932101_0_2_0_0&amp;matching_block_id=153932101_0_2_0_0&amp;sr_pri_blocks=153932101_0_2_0_0__5322&amp;from=searchresults" target="_blank" rel="noopener noreferrer">Sok Sabay Resort</a></p>
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/sok-sabay-hotel.fr.html?label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-15&amp;checkout=2026-12-17&amp;dest_id=-1023795&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=7&amp;hapos=7&amp;sr_order=price&amp;srpvid=982f6c4cb32801be&amp;srepoch=1785079776&amp;all_sr_blocks=153932101_0_2_0_0&amp;highlighted_blocks=153932101_0_2_0_0&amp;matching_block_id=153932101_0_2_0_0&amp;sr_pri_blocks=153932101_0_2_0_0__5322&amp;from=searchresults" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/sok-sabay-hotel.fr.html?label=kampong-saom-VDUozG6j6Mxa9vznEjZjTQS556484496460%3Apl%3Ata%3Ap1%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-302512758840%3Alp9056035%3Ali%3Adec%3Adm&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2198091&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-15&amp;checkout=2026-12-17&amp;dest_id=-1023795&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=7&amp;hapos=7&amp;sr_order=price&amp;srpvid=982f6c4cb32801be&amp;srepoch=1785079776&amp;all_sr_blocks=153932101_0_2_0_0&amp;highlighted_blocks=153932101_0_2_0_0&amp;matching_block_id=153932101_0_2_0_0&amp;sr_pri_blocks=153932101_0_2_0_0__5322&amp;from=searchresults" target="_blank" rel="noopener noreferrer">Sok Sabay Resort</a></h2><p></p>
           <p class="hotel-price">€25</p>
         </div>
         <p class="hotel-meta"></p>
@@ -2768,7 +2425,7 @@
             
           <div class="hotel" data-nights="5" data-in-budget="1">
         <div class="hotel-top">
-          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/kamaku-bungalows.fr.html?label=koh-rong-samlon-biKnKGHNcKYFEY6rlpHbZgS166829843012%3Apl%3Ata%3Ap135%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-31526186669%3Alp9056035%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YSNxgVPQVI7AMnn1KDvPMRs&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=301664&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-17&amp;checkout=2026-12-21&amp;dest_id=900051497&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=3&amp;hapos=3&amp;sr_order=popularity&amp;srpvid=6a226e3854db0607&amp;srepoch=1785080451&amp;all_sr_blocks=895054502_416943554_0_0_0&amp;highlighted_blocks=895054502_416943554_0_0_0&amp;matching_block_id=895054502_416943554_0_0_0&amp;sr_pri_blocks=895054502_416943554_0_0_0__16848&amp;from=searchresults" target="_blank" rel="noopener noreferrer">KAMAKU Bungalows - Sunset Beach</a></p>
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/kamaku-bungalows.fr.html?label=koh-rong-samlon-biKnKGHNcKYFEY6rlpHbZgS166829843012%3Apl%3Ata%3Ap135%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-31526186669%3Alp9056035%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YSNxgVPQVI7AMnn1KDvPMRs&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=301664&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-17&amp;checkout=2026-12-21&amp;dest_id=900051497&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=3&amp;hapos=3&amp;sr_order=popularity&amp;srpvid=6a226e3854db0607&amp;srepoch=1785080451&amp;all_sr_blocks=895054502_416943554_0_0_0&amp;highlighted_blocks=895054502_416943554_0_0_0&amp;matching_block_id=895054502_416943554_0_0_0&amp;sr_pri_blocks=895054502_416943554_0_0_0__16848&amp;from=searchresults" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px;"><a href="https://www.booking.com/hotel/kh/kamaku-bungalows.fr.html?label=koh-rong-samlon-biKnKGHNcKYFEY6rlpHbZgS166829843012%3Apl%3Ata%3Ap135%3Ap2%3Aac%3Aap%3Aneg%3Afi%3Atikwd-31526186669%3Alp9056035%3Ali%3Adec%3Adm%3Appccp%3DUmFuZG9tSVYkc2RlIyh9YSNxgVPQVI7AMnn1KDvPMRs&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=301664&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-17&amp;checkout=2026-12-21&amp;dest_id=900051497&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=3&amp;hapos=3&amp;sr_order=popularity&amp;srpvid=6a226e3854db0607&amp;srepoch=1785080451&amp;all_sr_blocks=895054502_416943554_0_0_0&amp;highlighted_blocks=895054502_416943554_0_0_0&amp;matching_block_id=895054502_416943554_0_0_0&amp;sr_pri_blocks=895054502_416943554_0_0_0__16848&amp;from=searchresults" target="_blank" rel="noopener noreferrer">KAMAKU Bungalows - Sunset Beach</a></h2><p></p>
           <p class="hotel-price">€79,4</p>
         </div>
         <p class="hotel-meta">Koh Rong Sanloem,</p>
@@ -2870,7 +2527,7 @@
             
           <div class="hotel" data-nights="3" data-in-budget="1">
         <div class="hotel-top">
-          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/eden-eco-village.fr.html?label=top10%3ACjwKCAjwpqHTBhAcEiwAj2AfugXs5GSykA-fyPEJ1TgLjXwpJLXTeo8lfFpdEpqwhgyotH7xKuX_VRoCwn8QAvD_BwE&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2378099&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-22&amp;checkout=2026-12-25&amp;dest_id=-1023825&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=1&amp;hapos=1&amp;sr_order=popularity&amp;srpvid=6a6f9929fd9b0abc&amp;srepoch=1785275240&amp;all_sr_blocks=166912904_112079195_2_42_0&amp;highlighted_blocks=166912904_112079195_2_42_0&amp;matching_block_id=166912904_112079195_2_42_0&amp;sr_pri_blocks=166912904_112079195_2_42_0__6000&amp;from=searchresults#hotelTmpl" target="_blank" rel="noopener noreferrer">Eden Eco Village</a></p>
+          <p class="hotel-name"><a href="https://www.booking.com/hotel/kh/eden-eco-village.fr.html?label=top10%3ACjwKCAjwpqHTBhAcEiwAj2AfugXs5GSykA-fyPEJ1TgLjXwpJLXTeo8lfFpdEpqwhgyotH7xKuX_VRoCwn8QAvD_BwE&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2378099&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-22&amp;checkout=2026-12-25&amp;dest_id=-1023825&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=1&amp;hapos=1&amp;sr_order=popularity&amp;srpvid=6a6f9929fd9b0abc&amp;srepoch=1785275240&amp;all_sr_blocks=166912904_112079195_2_42_0&amp;highlighted_blocks=166912904_112079195_2_42_0&amp;matching_block_id=166912904_112079195_2_42_0&amp;sr_pri_blocks=166912904_112079195_2_42_0__6000&amp;from=searchresults#hotelTmpl" target="_blank" rel="noopener noreferrer"></a></p><h2 class="ddb12f4f86 pp-header__title" style="font-size: 24px; line-height: 32px; font-family: &quot;Blue Sans&quot;, BlinkMacSystemFont, -apple-system, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; color: rgb(26, 26, 26); margin-block: 0px; margin: 4px 0px 0px; background-color: rgb(255, 255, 255);"><a href="https://www.booking.com/hotel/kh/eden-eco-village.fr.html?label=top10%3ACjwKCAjwpqHTBhAcEiwAj2AfugXs5GSykA-fyPEJ1TgLjXwpJLXTeo8lfFpdEpqwhgyotH7xKuX_VRoCwn8QAvD_BwE&amp;sid=cf48f2f50d57d6229db3ce54eae5b376&amp;aid=2378099&amp;ucfs=1&amp;arphpl=1&amp;checkin=2026-12-22&amp;checkout=2026-12-25&amp;dest_id=-1023825&amp;dest_type=city&amp;group_adults=2&amp;req_adults=2&amp;no_rooms=1&amp;group_children=0&amp;req_children=0&amp;hpos=1&amp;hapos=1&amp;sr_order=popularity&amp;srpvid=6a6f9929fd9b0abc&amp;srepoch=1785275240&amp;all_sr_blocks=166912904_112079195_2_42_0&amp;highlighted_blocks=166912904_112079195_2_42_0&amp;matching_block_id=166912904_112079195_2_42_0&amp;sr_pri_blocks=166912904_112079195_2_42_0__6000&amp;from=searchresults#hotelTmpl" target="_blank" rel="noopener noreferrer">Eden Eco Village</a></h2><p></p>
           <p class="hotel-price">€21,9</p>
         </div>
         <p class="hotel-meta">Mak Prang kampot à 11 km de Phnom Chisor</p>
@@ -3091,98 +2748,18 @@
     </div>
   </section>
 
-    <footer>
+  <footer>
     <p><span>Cambodge</span> — Voyage · 7→30 · 24 jours · 23 nuits · 7 étapes</p>
   </footer>
 
-  <div class="fab-bar" id="fabBar">
-    <button type="button" class="trip-fab" id="tripFab">Dates · nuits</button>
-    <div class="people-fab" id="peopleCtrl" title="Nombre de personnes">
-      <span>Pers.</span>
-      <div class="hotel-nights-ctrl">
-        <button type="button" data-people-act="minus" aria-label="Moins une personne">−</button>
-        <input type="number" id="peopleCount" min="1" max="20" value="2" aria-label="Nombre de personnes" />
-        <button type="button" data-people-act="plus" aria-label="Plus une personne">+</button>
-      </div>
-    </div>
-    <button type="button" class="budget-fab" id="budgetFab">Calculer le budget</button>
-    <button type="button" class="edit-fab" id="editFab" title="Modifier le contenu">Modifier</button>
-  </div>
+  
 
-  <aside class="trip-pop" id="tripPop" aria-live="polite" hidden>
-    <div class="trip-pop-head">
-      <h3>Répartition du séjour</h3>
-      <button type="button" class="trip-pop-close" id="tripPopClose" aria-label="Fermer">×</button>
-    </div>
-    <div class="trip-start-row">
-      <label for="tripStartDate">Date d’arrivée</label>
-      <input type="date" id="tripStartDate" />
-    </div>
-    <div class="trip-start-row">
-      <label for="tripEndDate">Date de départ</label>
-      <input type="date" id="tripEndDate" />
-    </div>
-    <div class="trip-summary">
-      <div>
-        Durée voyage
-        <strong id="tripDaysLabel">24 jours</strong>
-      </div>
-      <div>
-        Nuits d’hôtel
-        <strong id="tripNightsLabel">23 nuits</strong>
-      </div>
-      <div id="tripUsedBox">
-        Nuits allouées
-        <strong id="tripUsedLabel">0 / 23</strong>
-      </div>
-      <div id="tripLeftBox">
-        Nuits restantes
-        <strong id="tripLeftLabel">23</strong>
-      </div>
-    </div>
-    <div id="tripCityList"></div>
-    <div class="trip-pop-actions">
-      <button type="button" class="primary" id="tripDistribute">Répartir équitablement</button>
-      <button type="button" id="tripApplyHotels">Appliquer aux hôtels</button>
-    </div>
-    <p class="trip-pop-note">Change l’arrivée ou le départ librement : la durée et les nuits par ville se recalculent. Tu peux ensuite ajuster ville par ville.</p>
-  </aside>
+  
 
-  <aside class="budget-pop" id="budgetPop" aria-live="polite" hidden>
-    <div class="budget-pop-head">
-      <h3>Budget estimé</h3>
-      <button type="button" class="budget-pop-close" id="budgetPopClose" aria-label="Fermer">×</button>
-    </div>
-    <div class="budget-pop-row" data-pop="hotels">
-      <span>Hébergement</span>
-      <strong>—</strong>
-    </div>
-    <div class="budget-pop-row" data-pop="activities">
-      <span>Activités</span>
-      <strong>—</strong>
-    </div>
-    <div class="budget-pop-row" data-pop="transport">
-      <span>Transport</span>
-      <strong>—</strong>
-    </div>
-    <div class="budget-pop-row is-total" data-pop="total">
-      <span>Total</span>
-      <strong>—</strong>
-    </div>
-    <p class="budget-pop-note" id="budgetPopNote">Basé sur tes cases « Dans le budget » · montants en € · ≈ riel khmer (1 € ≈ 4 600 ៛).</p>
-    <div class="budget-pop-details" id="budgetPopDetails"></div>
-  </aside>
+  
 
-  <div class="edit-panel" id="editPanel" role="toolbar" aria-label="Outils d'édition">
-    <p class="edit-hint">Modules étapes ↑↓ · Image · Lien · ajouter/supprimer · Enregistrer</p>
-    <button type="button" class="primary" id="editSave">Enregistrer</button>
-    <button type="button" id="editAddCity">+ Ville</button>
-    <button type="button" id="editDownload">Télécharger HTML</button>
-    <button type="button" id="editReset">Réinitialiser</button>
-    <button type="button" id="editExit">Quitter</button>
-  </div>
-  <div class="edit-toast" id="editToast" aria-live="polite"></div>
-
+  
+  
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script>
@@ -3476,29 +3053,10 @@
       return `${formatEuroOnly(min, max)} · ≈ ${formatKhrRange(min, max)}`;
     }
 
-    function formatRangeHTML(min, max) {
-      if (document.body.classList.contains("edit-mode")) {
-        return formatEuroOnly(min, max);
-      }
-      return `<span class="price-eur">${formatEuroOnly(min, max)}</span><span class="price-riel">≈ ${formatKhrRange(min, max)}</span>`;
-    }
-
-    function setMoneyHTML(el, min, max) {
-      if (!el) return;
-      if (document.body.classList.contains("edit-mode")) {
-        el.textContent = formatEuroOnly(min, max);
-      } else {
-        el.innerHTML = formatRangeHTML(min, max);
-      }
-    }
-
     function formatBudgetLabel(min, max) {
+      // Labels à côté des cases : € + riel (sauf en édition pour faciliter la saisie)
       if (document.body.classList.contains("edit-mode")) return formatEuroOnly(min, max);
       return formatRange(min, max);
-    }
-
-    function formatBudgetLabelHTML(min, max) {
-      return formatRangeHTML(min, max);
     }
 
     function setBudget(key, min, max, note) {
@@ -3506,12 +3064,13 @@
       if (box) {
         const amount = box.querySelector(".budget-amount");
         const noteEl = box.querySelector(".budget-note");
-        if (amount) amount.innerHTML = formatRangeHTML(min, max);
+        // Toujours € + riel pour hébergement, activités, transport et total
+        if (amount) amount.textContent = formatRange(min, max);
         if (noteEl && note) noteEl.textContent = note;
         box.dataset.auto = "true";
       }
       const popRow = document.querySelector(`.budget-pop-row[data-pop="${key}"] strong`);
-      if (popRow) popRow.innerHTML = formatRangeHTML(min, max);
+      if (popRow) popRow.textContent = formatRange(min, max);
     }
 
     function parseMoney(text) {
@@ -3667,7 +3226,7 @@
         if (p.min === 0 && p.max === 0 && !/\d/.test(t)) return;
         const main = t.split(/\s*·\s*≈|\s*≈\s*|៛/)[0].trim();
         const prefix = /^~/.test(main) ? "~" : "";
-        el.innerHTML = prefix + formatRangeHTML(p.min, p.max);
+        el.textContent = prefix + formatRange(p.min, p.max);
       });
       root.querySelectorAll(".transport-modes, .hotel-alt, .transport-leg-note").forEach((el) => {
         const walk = (node) => {
@@ -3945,7 +3504,7 @@
         const p = parseMoney(act.querySelector(".activity-price")?.textContent || "");
         const name = act.querySelector(".activity-top h3")?.textContent?.trim() || "Activité";
         const tag = act.querySelector(".budget-pick strong");
-        if (tag) if (on) { tag.innerHTML = formatBudgetLabelHTML(p.min * people, p.max * people) + ` · ${persLabel}`; } else { tag.textContent = "exclu"; }
+        if (tag) tag.textContent = on ? formatBudgetLabel(p.min * people, p.max * people) + ` · ${persLabel}` : "exclu";
         if (!on) return;
         actMin += p.min * people;
         actMax += p.max * people;
@@ -3968,7 +3527,7 @@
         if (tag) {
           if (!on) tag.textContent = "exclu";
           else if (p.min === 0 && p.max === 0) tag.textContent = "gratuit / à confirmer";
-          else tag.innerHTML = formatBudgetLabelHTML(p.min * mult, p.max * mult) + ` · ${shareNote}`;
+          else tag.textContent = formatBudgetLabel(p.min * mult, p.max * mult) + ` · ${shareNote}`;
         }
         if (!on) return;
         if (p.min === 0 && p.max === 0) return;
@@ -3992,7 +3551,7 @@
           if (tag) {
             if (!on) tag.textContent = "exclu";
             else if (p.min === 0 && p.max === 0) tag.textContent = `prix à confirmer · ${persLabel}`;
-            else tag.innerHTML = formatBudgetLabelHTML(p.min * people, p.max * people) + ` · ${persLabel}`;
+            else tag.textContent = formatBudgetLabel(p.min * people, p.max * people) + ` · ${persLabel}`;
           }
           if (!on) return;
           legMin += p.min;
@@ -4008,7 +3567,7 @@
         const priceEl = leg.querySelector(".leg-price");
         if (priceEl && !priceEl.matches(":focus") && document.activeElement !== priceEl) {
           if (legPicked === 0) priceEl.textContent = "—";
-          else setMoneyHTML(priceEl, legMin, legMax);
+          else priceEl.textContent = formatBudgetLabel(legMin, legMax);
         }
       });
 
@@ -4033,7 +3592,7 @@
           } else if (nights <= 0) {
             subEl.textContent = "coché · mets au moins 1 nuit";
           } else {
-            subEl.innerHTML = `= ${formatBudgetLabelHTML(p.min * nights, p.max * nights)} (${nights} nuit${nights > 1 ? "s" : ""})`;
+            subEl.textContent = `= ${formatBudgetLabel(p.min * nights, p.max * nights)} (${nights} nuit${nights > 1 ? "s" : ""})`;
           }
         }
 
@@ -4502,7 +4061,7 @@
     });
 
     function cleanEditChrome(root) {
-      root.querySelectorAll(".edit-del, .edit-add-row, .edit-link-btn, .edit-add-link-btn, .edit-del-city, .edit-city-bar, .edit-img-btn").forEach((el) => el.remove());
+      root.querySelectorAll(".edit-del, .edit-add-row, .edit-link-btn, .edit-add-link-btn, .edit-del-city, .edit-city-bar").forEach((el) => el.remove());
       // Déballer les wraps de liens ajoutés en édition
       root.querySelectorAll(".item-link-wrap").forEach((wrap) => {
         const a = wrap.querySelector("a");
@@ -4517,53 +4076,29 @@
     function repairHotelLinks(root) {
       root.querySelectorAll(".hotel-name").forEach((nameEl) => {
         let a = nameEl.querySelector("a");
-        let href = a ? (a.getAttribute("href") || "").trim() : "#";
-
-        const stray = [];
-        let sib = nameEl.nextSibling;
-        while (sib) {
-          const next = sib.nextSibling;
-          if (sib.nodeType === Node.TEXT_NODE) {
-            if (sib.textContent.trim()) stray.push(sib);
-          } else if (sib.nodeType === Node.ELEMENT_NODE) {
-            if (sib.matches(".hotel-price, .hotel-meta, .budget-pick, .hotel-nights, .hotel-top, .hotel-pick, .hotel-atypical")) break;
-            if (
-              sib.matches("h1, h2, h3, h4, span, div, p, a, strong") ||
-              (sib.getAttribute && sib.getAttribute("style")) ||
-              /pp-header|ddb12|bui-|hp__/.test(sib.className || "")
-            ) {
-              stray.push(sib);
-            } else break;
-          } else break;
-          sib = next;
+        if (!a) {
+          const text = nameEl.textContent.replace(/★.*$/, "").trim() || "Hôtel";
+          const stars = (nameEl.textContent.match(/★[0-9.]+/) || [""])[0];
+          nameEl.innerHTML = "";
+          a = document.createElement("a");
+          a.href = "#";
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.textContent = text;
+          nameEl.appendChild(a);
+          if (stars) nameEl.appendChild(document.createTextNode(" " + stars));
+        } else {
+          a.setAttribute("target", "_blank");
+          a.setAttribute("rel", "noopener noreferrer");
+          let href = (a.getAttribute("href") || "").trim();
+          if (href.startsWith("http://www.thecommunitytravel.com")) href = "https://www.thecommunitytravel.com/";
+          else if (href.startsWith("http://rainbowlodgecambodia.com")) href = href.replace("http://", "https://");
+          else if (href.includes("islandcenterpoint.asia")) href = "https://islandcenterpoint.asia/";
+          else if (href.includes("thepavilion.asia")) href = "https://www.thepavilion.asia/";
+          else if (href.includes("islandspeedferry.com")) href = "https://islandspeedferry.com/";
+          else if (href.startsWith("http://") && !href.includes("cambanalariviere.com")) href = href.replace(/^http:\/\//, "https://");
+          a.setAttribute("href", href || "#");
         }
-
-        let title = (a && a.textContent.replace(/\s+/g, " ").trim()) || "";
-        if (!title && stray.length) {
-          title = stray.map((n) => n.textContent || "").join(" ").replace(/\s+/g, " ").trim();
-        }
-        if (!title) title = nameEl.textContent.replace(/\s+/g, " ").trim();
-
-        const starsMatch = title.match(/★\s*[\d.]+/);
-        const stars = starsMatch ? starsMatch[0].replace(/\s+/g, "") : "";
-        title = title.replace(/★\s*[\d.]+/g, "").replace(/\s+/g, " ").trim() || "Hôtel";
-
-        if (href.startsWith("http://www.thecommunitytravel.com")) href = "https://www.thecommunitytravel.com/";
-        else if (href.startsWith("http://rainbowlodgecambodia.com")) href = href.replace("http://", "https://");
-        else if (href.includes("islandcenterpoint.asia")) href = "https://islandcenterpoint.asia/";
-        else if (href.includes("thepavilion.asia")) href = "https://www.thepavilion.asia/";
-        else if (href.includes("islandspeedferry.com")) href = "https://islandspeedferry.com/";
-        else if (href.startsWith("http://") && !href.includes("cambanalariviere.com")) href = href.replace(/^http:\/\//, "https://");
-
-        nameEl.innerHTML = "";
-        a = document.createElement("a");
-        a.href = href || "#";
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        a.textContent = title;
-        nameEl.appendChild(a);
-        if (stars) nameEl.appendChild(document.createTextNode(" " + stars));
-        stray.forEach((n) => n.remove && n.remove());
       });
     }
 
@@ -4637,7 +4172,7 @@
         </div>
         <div class="activity-info">
           <div class="activity-top">
-            <h3><a href="#" target="_blank" rel="noopener noreferrer">Nouvelle activité</a></h3>
+            <h3>Nouvelle activité</h3>
             <p class="activity-price">€0</p>
           </div>
           <p>Description de l’activité…</p>
@@ -4986,80 +4521,6 @@
       });
     }
 
-    function moveCity(city, dir) {
-      const wrap = document.querySelector(".cities-wrap");
-      if (!wrap || !city) return;
-      if (dir < 0 && city.previousElementSibling) {
-        wrap.insertBefore(city, city.previousElementSibling);
-      } else if (dir > 0 && city.nextElementSibling) {
-        wrap.insertBefore(city.nextElementSibling, city);
-      } else return;
-      afterContentChange();
-      showToast("Étape déplacée");
-      city.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    function wireCityReorder() {
-      document.querySelectorAll(".cities-wrap .city").forEach((city) => {
-        const label = city.querySelector(".city-visual-label");
-        if (!label) return;
-        let bar = city.querySelector(".edit-city-bar");
-        if (!bar) {
-          bar = document.createElement("div");
-          bar.className = "edit-city-bar";
-          const up = document.createElement("button");
-          up.type = "button";
-          up.textContent = "↑ Monter";
-          up.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            moveCity(city, -1);
-          });
-          const down = document.createElement("button");
-          down.type = "button";
-          down.textContent = "↓ Descendre";
-          down.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            moveCity(city, 1);
-          });
-          bar.appendChild(up);
-          bar.appendChild(down);
-          label.appendChild(bar);
-        }
-      });
-    }
-
-    function wireImageEdit(scope = document) {
-      const targets = [
-        ...scope.querySelectorAll(".city-visual"),
-        ...scope.querySelectorAll(".activity-thumb"),
-        ...scope.querySelectorAll(".hero-bg"),
-      ];
-      targets.forEach((wrap) => {
-        if (wrap.querySelector(".edit-img-btn")) return;
-        const img = wrap.querySelector("img");
-        if (!img) return;
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "edit-img-btn";
-        btn.textContent = "Image";
-        btn.title = "Changer l’image (URL)";
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const url = prompt("URL de la nouvelle image :", img.getAttribute("src") || "");
-          if (url === null) return;
-          const next = url.trim();
-          if (!next) return;
-          img.setAttribute("src", next);
-          if (!img.getAttribute("alt")) img.setAttribute("alt", "Image");
-          showToast("Image mise à jour");
-        });
-        wrap.appendChild(btn);
-      });
-    }
-
     function wireCityControls() {
       document.querySelectorAll(".cities-wrap .city").forEach((city) => {
         const visual = city.querySelector(".city-visual");
@@ -5078,8 +4539,6 @@
           visual.appendChild(btn);
         }
       });
-      wireCityReorder();
-      wireImageEdit(document);
     }
 
     function wireAddButtons() {
@@ -5212,12 +4671,6 @@
       root.querySelectorAll(selectors.join(",")).forEach((el) => {
         if (el.closest("a") && !el.matches(".hotel-name a, .activity-top h3 a, .transport-dest a, .leg-option-name > a")) return;
         el.setAttribute("contenteditable", "true");
-        el.addEventListener("paste", (e) => {
-          if (!el.matches(".hotel-name a, .activity-top h3 a, .city-visual-label h2, .transport-dest a, .leg-option-name > a")) return;
-          e.preventDefault();
-          const text = (e.clipboardData || window.clipboardData).getData("text/plain").replace(/\s+/g, " ").trim();
-          document.execCommand("insertText", false, text);
-        });
         el.addEventListener("keydown", (e) => {
           if (e.key === "Enter" && !e.shiftKey && el.tagName !== "P" && !el.classList.contains("transport-modes")) {
             e.preventDefault();
@@ -5225,10 +4678,6 @@
           }
         });
         el.addEventListener("blur", () => {
-          if (el.matches(".hotel-name a, .activity-top h3 a")) {
-            const plain = (el.textContent || "").replace(/\s+/g, " ").trim() || (el.matches(".hotel-name a") ? "Hôtel" : "Activité");
-            el.textContent = plain;
-          }
             if (
             el.classList.contains("activity-price") ||
             el.classList.contains("leg-price") ||
@@ -5318,7 +4767,7 @@
       wireCityControls();
       enableEditable(document);
       scheduleBudget();
-      showToast("Édition · ↑↓ étapes · Image · Lien · +/−");
+      showToast("Mode édition · prix en € sans conversion riel");
     }
 
     function exitEditMode() {
@@ -5341,7 +4790,7 @@
       rebuildItineraryUI();
       recalculateBudget();
       const clone = document.documentElement.cloneNode(true);
-      /* garder fab / édition pour pouvoir recharger le fichier */
+      clone.querySelectorAll(".fab-bar, .edit-fab, .budget-fab, .people-fab, .trip-fab, .edit-panel, .edit-toast, .budget-pop, .trip-pop").forEach((el) => el.remove());
       const mapClone = clone.querySelector("#itineraire-map");
       if (mapClone) {
         mapClone.innerHTML = "";
@@ -5439,109 +4888,6 @@
       refreshTripPanel();
       recomputeCityDates();
     }
-
-    /* Planner shell */
-    (function initPlannerSkin() {
-      document.body.classList.add("planner-skin");
-
-      const citiesWrap = document.querySelector(".cities-wrap");
-      const mapSection = document.querySelector(".map-section");
-      const practical = document.querySelector(".practical");
-      if (!citiesWrap || document.querySelector(".planner-layout")) return;
-
-      const shell = document.createElement("div");
-      shell.className = "planner-shell";
-      const layout = document.createElement("div");
-      layout.className = "planner-layout";
-      const sidebar = document.createElement("aside");
-      sidebar.className = "planner-sidebar";
-      sidebar.innerHTML = '<h2>Itinéraire</h2><ul class="planner-steps" id="plannerSteps"></ul><div class="planner-budget"><span>Budget estimé</span><strong id="plannerBudgetLabel">—</strong></div>';
-      const mainCol = document.createElement("div");
-      mainCol.className = "planner-main";
-
-      const anchor = mapSection || citiesWrap;
-      anchor.parentNode.insertBefore(shell, anchor);
-      shell.appendChild(layout);
-      layout.appendChild(sidebar);
-      layout.appendChild(mainCol);
-
-      if (mapSection) mainCol.appendChild(mapSection);
-      mainCol.appendChild(citiesWrap);
-      if (practical) mainCol.appendChild(practical);
-
-      let activeId = citiesWrap.querySelector(".city")?.id || "";
-
-      function syncBudgetLabel() {
-        const total = document.querySelector('[data-budget="total"] .budget-amount');
-        const label = document.getElementById("plannerBudgetLabel");
-        if (label && total) label.textContent = (total.textContent || "—").replace(/\s+/g, " ").trim();
-      }
-
-      function renderPlannerSteps() {
-        const list = document.getElementById("plannerSteps");
-        if (!list) return;
-        const cities = [...document.querySelectorAll(".cities-wrap .city")];
-        list.innerHTML = "";
-        cities.forEach((city, i) => {
-          const name = city.dataset.stopName || city.querySelector("h2")?.textContent || "Étape";
-          const nights = city.dataset.nights || "?";
-          const li = document.createElement("li");
-          li.innerHTML = `
-            <div class="planner-step ${city.id === activeId ? "active" : ""}" data-city-id="${city.id}">
-              <div class="planner-step-move">
-                <button type="button" data-move="-1" aria-label="Monter" ${i === 0 ? "disabled" : ""}>▲</button>
-                <button type="button" data-move="1" aria-label="Descendre" ${i === cities.length - 1 ? "disabled" : ""}>▼</button>
-              </div>
-              <div class="planner-step-main">
-                <span class="planner-num">${i + 1}</span>
-                <div class="planner-step-text">
-                  <strong>${name}</strong>
-                  <small>${nights} nuit${Number(nights) > 1 ? "s" : ""}</small>
-                </div>
-              </div>
-            </div>`;
-          list.appendChild(li);
-        });
-        syncBudgetLabel();
-      }
-
-      document.getElementById("plannerSteps")?.addEventListener("click", (e) => {
-        const moveBtn = e.target.closest("[data-move]");
-        const step = e.target.closest(".planner-step");
-        if (!step) return;
-        const id = step.dataset.cityId;
-        const city = document.getElementById(id);
-        if (moveBtn && city && typeof moveCity === "function") {
-          e.preventDefault();
-          e.stopPropagation();
-          moveCity(city, Number(moveBtn.dataset.move));
-          activeId = id;
-          renderPlannerSteps();
-          return;
-        }
-        activeId = id;
-        renderPlannerSteps();
-        city?.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-
-      const _rebuild = window.rebuildItineraryUI;
-      // Hook afterContentChange path: patch rebuildItineraryUI if in scope — call render after known updates
-      const obs = new MutationObserver(() => {
-        renderPlannerSteps();
-      });
-      obs.observe(citiesWrap, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-nights", "data-stop-name"] });
-
-      // Also refresh when budget updates
-      const budgetStack = document.querySelector(".budget-stack");
-      if (budgetStack) {
-        new MutationObserver(syncBudgetLabel).observe(budgetStack, { childList: true, subtree: true, characterData: true });
-      }
-
-      renderPlannerSteps();
-      setTimeout(syncBudgetLabel, 800);
-      setTimeout(syncBudgetLabel, 2000);
-    })();
-
     scheduleBudget();
     // Budget via bouton Calculer le budget
   </script>
